@@ -4,27 +4,18 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import frc.lib.math.Conversions;
 import frc.lib.util.CTREModuleState;
 import frc.lib.util.SwerveModuleConstants;
 
-import com.ctre.phoenix.ErrorCode;
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.revrobotics.AbsoluteEncoder;
+import com.ctre.phoenix6.hardware.DeviceIdentifier;
+import com.ctre.phoenix6.configs.*;
+
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkAbsoluteEncoder;
-import frc.lib.util.CanCoderAbsoluteConfiguration;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-
-// import frc.lib.util.CANCoderUtil; TODO: imports don't work
-// import frc.lib.util.CANCoderUtil.CCUsage;
 
 
 public class SwerveModule {
@@ -37,10 +28,17 @@ public class SwerveModule {
     
     private RelativeEncoder driveEncoder;
     private RelativeEncoder integratedAngleEncoder;
-    private CANcoder angleEncoder;
-
+   
+    
     private final SparkPIDController driveController;
     private final SparkPIDController angleController;
+
+    private CANcoderConfigurator angleConfigurator;
+    private CANcoderConfiguration angleConfig;
+     private CANcoder angleEncoder;
+
+    private CANcoderConfigurator AbsoluteConfigurator;
+    DeviceIdentifier DevIdentifier;
 
     public double CANcoderInitTime = 0.0;
 
@@ -52,12 +50,14 @@ public class SwerveModule {
         
         /* Angle Encoder Config */ 
         
+        
         /* -- designating a canbus explicitly states where the motor controller is passing from, default seems to be roborio -- */
         angleEncoder = new CANcoder(moduleConstants.cancoderID);
+        angleConfigurator = angleEncoder.getConfigurator();
         configAngleEncoder();
         configAngleEncoder();
         configAngleEncoder();
-
+        
         /* Angle Motor Config */ 
         mAngleMotor = new CANSparkFlex(moduleConstants.angleMotorID, MotorType.kBrushless);
         integratedAngleEncoder = mAngleMotor.getEncoder();
@@ -75,6 +75,8 @@ public class SwerveModule {
         configDriveMotor();
 
         lastAngle = getState().angle;
+
+        // angleConfig.MagnetSensor.MagnetOffset = 0; //for each mod, reference to offset
     }
 
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop){
@@ -137,38 +139,59 @@ public class SwerveModule {
         integratedAngleEncoder.setPosition(absolutePosition);
     }
 
-    private void configAngleEncoder(){        
-        angleEncoder.configFactoryDefault();
-        cancoderutil.setCANCoderBusUsage(angleEncoder, CCUsage.kMinimal);
-        angleEncoder.configAllSettings(Robot.ctreConfigs.swerveCanCoderConfig);
+    private void configAngleEncoder(){       
+
+        angleEncoder.getConfigurator().apply(new CANcoderConfiguration());
+
+        //CANSparkMaxUtil.setCANCoderBusUsage(angleEncoder, null);
+        //angleEncoder.configAllSettings(Robot.ctreConfigs.swerveCanCoderConfig);
     }
 
-    private void configAngleMotor(){
-        mAngleMotor.configFactoryDefault();
-        mAngleMotor.configAllSettings(Robot.ctreConfigs.swerveAngleFXConfig);
-        mAngleMotor.setInverted(Constants.Swerve.angleMotorInvert);
-        mAngleMotor.setNeutralMode(Constants.Swerve.angleNeutralMode);
+    private void configAngleMotor(){        
+        mAngleMotor.restoreFactoryDefaults();
+        //CANSparkMaxUtil.setCANSparkMaxBusUsage(mAngleMotor, Usage.kPositionOnly);
+        mAngleMotor.setSmartCurrentLimit(Constants.Swerve.angleContinuousCurrentLimit);
+        mAngleMotor.setInverted(true);
+        mAngleMotor.setIdleMode(Constants.Swerve.angleNeutralMode);
+        integratedAngleEncoder.setPositionConversionFactor(Constants.Swerve.angleConversionFactor);
+        angleController.setP(Constants.Swerve.angleKP);
+        angleController.setI(Constants.Swerve.angleKI);
+        angleController.setD(Constants.Swerve.angleKD);
+        angleController.setFF(Constants.Swerve.angleKF);
+        mAngleMotor.enableVoltageCompensation(Constants.Swerve.voltageComp);
+        mAngleMotor.burnFlash();
         resetToAbsolute();
+    
     }
 
     private void configDriveMotor(){        
-        mDriveMotor.configFactoryDefault();
-        mDriveMotor.configAllSettings(Robot.ctreConfigs.swerveDriveFXConfig);
+        mDriveMotor.restoreFactoryDefaults();
+        //CANSparkMaxUtil.setCANSparkMaxBusUsage(mDriveMotor, Usage.kAll);
+        mDriveMotor.setSmartCurrentLimit(Constants.Swerve.driveContinuousCurrentLimit);
         mDriveMotor.setInverted(Constants.Swerve.driveMotorInvert);
-        mDriveMotor.setNeutralMode(Constants.Swerve.driveNeutralMode);
-        mDriveMotor.setSelectedSensorPosition(0);
+        mDriveMotor.setIdleMode(Constants.Swerve.driveNeutralMode);
+        driveEncoder.setVelocityConversionFactor(Constants.Swerve.driveConversionVelocityFactor);
+        driveEncoder.setPositionConversionFactor(Constants.Swerve.driveConversionPositionFactor);
+        driveController.setP(Constants.Swerve.angleKP);
+        driveController.setI(Constants.Swerve.angleKI);
+        driveController.setD(Constants.Swerve.angleKD);
+        driveController.setFF(Constants.Swerve.angleKF);
+        mDriveMotor.enableVoltageCompensation(Constants.Swerve.voltageComp);
+        mDriveMotor.burnFlash();
+        driveEncoder.setPosition(0.0);
     }
 
     public SwerveModuleState getState(){
-        return new SwerveModuleState(
-            Conversions.falconToMPS(mDriveMotor.getSelectedSensorVelocity(), Constants.Swerve.wheelCircumference, Constants.Swerve.driveGearRatio), 
-            getAngle()
-        ); 
+        return new SwerveModuleState(driveEncoder.getVelocity(), getAngle());
+        // return new SwerveModuleState(
+        //     Conversions.falconToMPS(mDriveMotor.getSelectedSensorVelocity(), Constants.Swerve.wheelCircumference, Constants.Swerve.driveGearRatio), 
+        //     getAngle()
+        // ); 
     }
 
     public SwerveModulePosition getPosition(){
         return new SwerveModulePosition(
-            Conversions.falconToMeters(mDriveMotor.getSelectedSensorPosition(), Constants.Swerve.wheelCircumference, Constants.Swerve.driveGearRatio), 
+            Conversions.falconToMeters(7168, Constants.Swerve.wheelCircumference, Constants.Swerve.driveGearRatio), 
             getAngle()
         );
     }

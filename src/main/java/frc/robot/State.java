@@ -29,25 +29,24 @@ public class State {
         SCORE_CONE_HIGH,
     };
 
-    // intake flipper state
-    public enum FState {
-        HOME,
-        LOAD_LOW,
-        LOAD_CONE,
-        RAMP_CUBE,
-        RAMP_CONE,
-        SCORE_CUBE_LOW,
-        SCORE_CONE_LOW,
-        SCORE_CUBE_HIGH,
-        SCORE_CONE_HIGH,
-        FLIPPED
-    };
-
-    // intake spinner state
-    public enum SState {
-        HOME,
+    // intake Pneumatic state
+    public enum iState {
         STOP,
         IN,
         OUT
-    }; 
+    };
+
+    // Trapper/Amp Spinning State
+    public enum tState {
+        STOP,
+        IN,
+        OUT
+    };
+
+    //Feeder Spinning State
+    public enum fState {
+        STOP,
+        IN,
+        OUT
+    };
 }

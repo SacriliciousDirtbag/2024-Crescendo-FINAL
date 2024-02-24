@@ -7,7 +7,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
-import com.ctre.phoenix.sensors.Pigeon2;
+import com.ctre.phoenix6.configs.Pigeon2Configuration;
+import com.ctre.phoenix6.configs.Pigeon2Configurator;
+import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -22,9 +24,20 @@ public class Swerve extends SubsystemBase {
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
 
+    public Pigeon2Configuration gyroConfig;
+    public Pigeon2Configurator gyroConfigurator;
+
      public Swerve() {
+        
         gyro = new Pigeon2(Constants.Swerve.pigeonID, "1056_Canivore");
-        gyro.configFactoryDefault();
+
+        gyroConfigurator =  gyro.getConfigurator();
+        gyroConfig = new Pigeon2Configuration();
+        gyroConfigurator.apply(gyroConfig);
+
+        //Config factory default
+        gyro.getConfigurator().apply(new Pigeon2Configuration());
+       
         zeroGyro();
 
         mSwerveMods = new SwerveModule[] {
@@ -104,7 +117,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public Rotation2d getYaw() {
-        return (Constants.Swerve.invertGyro) ? Rotation2d.fromDegrees(360 - gyro.getYaw()) : Rotation2d.fromDegrees(gyro.getYaw());
+        return (Constants.Swerve.invertGyro) ? Rotation2d.fromDegrees(360 - gyro.getYaw().getValue()) : Rotation2d.fromDegrees(gyro.getYaw().getValue());
     }
 
     /*public Rotation2d getPitch() {
@@ -117,25 +130,13 @@ public class Swerve extends SubsystemBase {
         }
     }
 
-    public boolean isTiltedForward(){
-        return gyro.getRoll() < -4;
-    }
-
-    public boolean isTiltedBackwards(){
-        return gyro.getRoll() > 4;
-    }
 
     @Override
     public void periodic(){
-        isTiltedBackwards();
-        isTiltedForward();
 
         swerveOdometry.update(getYaw(), getModulePositions());
-        SmartDashboard.putNumber("Gyro Yaw", gyro.getYaw());
-        SmartDashboard.putNumber("Gyro Pitch", gyro.getRoll());
-
-        SmartDashboard.putBoolean("IsTiltedForward", isTiltedForward());
-        SmartDashboard.putBoolean("isTiltedBack", isTiltedBackwards());
+        SmartDashboard.putNumber("Gyro Yaw", gyro.getYaw().getValue());
+        SmartDashboard.putNumber("Gyro Pitch", gyro.getRoll().getValue());
 
 
         for(SwerveModule mod : mSwerveMods){

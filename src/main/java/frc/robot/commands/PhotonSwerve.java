@@ -1,28 +1,14 @@
 package frc.robot.commands;
 
-import java.util.ArrayList;
-
-import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonUtils;
-
-import com.ctre.phoenix6.sim.ChassisReference;
-import com.fasterxml.jackson.core.TreeNode;
-
 import frc.robot.Constants;
-import frc.robot.SwerveModule;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import edu.wpi.first.math.geometry.Transform3d;
 
 import frc.robot.subsystems.Swerve;
@@ -75,10 +61,10 @@ public class PhotonSwerve extends Command{
     {
         currentTransform3d = camera.getTransform3d();
         angle = camera.getYaw(); 
-        theataCaluclation = -theataPidController.calculate(s_Swerve.gyro.getYaw()  % 360- angle); //Units.degreesToRadians(angle - s_Swerve.getYaw().getDegrees())
+        theataCaluclation = -theataPidController.calculate(s_Swerve.gyro.getYaw().getValue()  % 360- angle); //Units.degreesToRadians(angle - s_Swerve.getYaw().getDegrees())
         //if camera > gyro
-        if((Math.abs(s_Swerve.gyro.getYaw()) - Math.abs(angle)) < 0){ //Added Math.abs to both so neither are impacted by negatives
-            theataCaluclation = -theataPidController.calculate(-(s_Swerve.gyro.getYaw() % 360 - angle));
+        if((Math.abs(s_Swerve.gyro.getYaw().getValue()) - Math.abs(angle)) < 0){ //Added Math.abs to both so neither are impacted by negatives
+            theataCaluclation = -theataPidController.calculate(-(s_Swerve.gyro.getYaw().getValue() % 360 - angle));
         }
 
         xCalculation = -xPidController.calculate(currentTransform3d.getX());

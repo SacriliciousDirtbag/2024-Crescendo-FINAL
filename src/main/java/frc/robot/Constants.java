@@ -1,7 +1,7 @@
 package frc.robot;
 
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -30,11 +30,12 @@ public final class Constants {
         public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
 
         public static final COTSFalconSwerveConstants chosenModule = 
-            COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L1);
+            COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L2);
 
         /* Drivetrain Constants */
-        public static final double trackWidth = Units.inchesToMeters(24.5);
+        public static final double trackWidth = Units.inchesToMeters(23.5);
         public static final double wheelBase = Units.inchesToMeters(24.5);
+        public static final double wheelDiameter = Units.inchesToMeters(4.0);
         public static final double wheelCircumference = chosenModule.wheelCircumference;
 
         /* Swerve Kinematics 
@@ -53,8 +54,13 @@ public final class Constants {
         public static final boolean angleMotorInvert = chosenModule.angleMotorInvert;
         public static final boolean driveMotorInvert = chosenModule.driveMotorInvert;
 
+        
+
         /* Angle Encoder Invert */
         public static final boolean canCoderInvert = chosenModule.canCoderInvert;
+
+        /* Swerve Voltage Compensation */
+        public static final double voltageComp = 12.0;
 
         /* Swerve Current Limiting */
         public static final int angleContinuousCurrentLimit = 25;
@@ -90,6 +96,14 @@ public final class Constants {
         public static final double driveKV = (1.51 / 12);
         public static final double driveKA = (0.27 / 12);
 
+        
+        /* Drive Motor Conversion Factors */
+    public static final double driveConversionPositionFactor =
+    (wheelDiameter * Math.PI) / driveGearRatio;
+    public static final double driveConversionVelocityFactor = driveConversionPositionFactor / 60.0;
+    public static final double angleConversionFactor = 360.0 / angleGearRatio;
+
+
         /* Swerve Profiling Values */
         /** Meters per Second */
         public static final double maxSpeed = 3.3; //was 4
@@ -97,8 +111,8 @@ public final class Constants {
         public static final double maxAngularVelocity = 2.5; //was 10
 
         /* Neutral Modes */
-        public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
-        public static final NeutralMode driveNeutralMode = NeutralMode.Brake;
+        public static final IdleMode angleNeutralMode = IdleMode.kCoast;
+        public static final IdleMode driveNeutralMode = IdleMode.kBrake;
 
         /* Module Specific Constants */
         /* Front Left Module - Module 0 */
@@ -158,22 +172,12 @@ public final class Constants {
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
     }
     
-    public static final class Elevator{
+    public static final class feederSubsystem{
 
-        public static final class ElevatorRise {
-            public static final int ElevatorMotorID = 15; //Talon
-            //Uncomment if any other motors are to be called for this system
-            //public static final int angleMotorID = ___;
-            //public static final int canCoderID = ___;
-        }
+        public static final int leftMotorID = 16;
+        public static final int rightMotorID = 15;
 
-        public static final class ElevatorExtend {
-            public static final int extendMotorID = 16; //Falcon
-            //Uncomment if any other motors are to be called for this system
-            //public static final int angleMotorID = ____;
-            //public static final int canCoderID = ____;
 
-        }
 
         /*public static final int forwardMotorID = 0;
         public static final int reverseMotorID = 0;
@@ -183,18 +187,11 @@ public final class Constants {
     }
 
     public static final class IntakeSystem {
-        public static final class IntakeFlip {
-            public static final int flipMotorID = 17; //Talon
-            //Uncomment if any other motors are to be called for this system
-            //public static final int angleMotorID = ____;
-            //public static final int canCoderID = ____;
-        }
-
+            
         public static final class IntakeWheel {
-            public static final int inMotorID = 18; //Talon
-            //Uncomment if any other motors are to be called for this system
-            //public static final int angleMotorID = ____;
-            //public static final int canCoderID = ____;
+            public static final int frontMotorID = 13; //Neo
+           public static final int wheelMotorID = 14; //Vortex
+            public static final int backMotorID = 15; //Vortex
         } 
     } 
 
@@ -234,4 +231,5 @@ public final class Constants {
     }
 
 }
+
 
