@@ -42,7 +42,7 @@ public class aimingSubsystem extends SubsystemBase {
     private double aPos() {
         return a_Encoder.getAbsolutePosition() * 360;
     }
-
+    
     @Override
     public void periodic(){
         SmartDashboard.putNumber("Arm Encoder Rot:", aPos());
