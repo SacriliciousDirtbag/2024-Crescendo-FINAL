@@ -184,8 +184,8 @@ public final class Constants {
     } 
 
     public static final class shooterAimingSystem {
-        public static final int m_aim2 = 18;
-        public static final int m_aim1 = 19;
+        public static final int m_aim2 = 18; //Vortex
+        public static final int m_aim1 = 19; //Vortex
         
 
     }
@@ -193,8 +193,8 @@ public final class Constants {
 
     public static final class feederSubsystem{
 
-        public static final int rightMotorID = 20; //Neo
-        public static final int leftMotorID = 21; //Neo
+        public static final int rightMotorID = 20; //Vortex
+        public static final int leftMotorID = 21; //Vortex
         
 
     }
