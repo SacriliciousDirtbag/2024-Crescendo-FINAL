@@ -52,7 +52,7 @@ public class SwerveModule {
         
         
         /* -- designating a canbus explicitly states where the motor controller is passing from, default seems to be roborio -- */
-        angleEncoder = new CANcoder(moduleConstants.cancoderID);
+        angleEncoder = new CANcoder(moduleConstants.cancoderID, "rio");
         angleConfigurator = angleEncoder.getConfigurator();
         configAngleEncoder();
         configAngleEncoder();

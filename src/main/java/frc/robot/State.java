@@ -50,14 +50,17 @@ public class State {
         OUT
     };
 
+    //Flywheel State
     public enum sState {
         STOP,
+        IN,
         OUT
     };
 
+    //Feeder ARM State
     public enum aState {
-        FAR,
-        CLOSE,
-        INTAKE
+        INTAKE_POS,
+        TRAP_POS,
+        AIM_POS
     };
 }

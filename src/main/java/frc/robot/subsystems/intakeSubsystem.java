@@ -1,13 +1,15 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.State.iState;
 
 public class intakeSubsystem extends SubsystemBase {
-    public CANSparkMax m_intakeMotor;
+    public CANSparkFlex m_wheelMotor;
     public iState Istate;
 
     private double spinSpeed;
@@ -15,7 +17,7 @@ public class intakeSubsystem extends SubsystemBase {
     
 
     public intakeSubsystem(){
-        m_intakeMotor = new CANSparkMax(0, MotorType.kBrushless);
+        m_wheelMotor = new CANSparkFlex(Constants.IntakeSystem.IntakeWheel.wheelMotorID, MotorType.kBrushless);
 
 
         Istate = frc.robot.State.iState.STOP;
@@ -24,13 +26,13 @@ public class intakeSubsystem extends SubsystemBase {
 
     @Override
     public void periodic(){
-        m_intakeMotor.setIdleMode(IdleMode.kBrake);
-        m_intakeMotor.set(spinSpeed);
+        m_wheelMotor.setIdleMode(IdleMode.kBrake);
+        m_wheelMotor.set(spinSpeed);
 
     }
 
     public double IPos(){
-        return m_intakeMotor.getEncoder().getPosition();
+        return m_wheelMotor.getEncoder().getPosition();
     }
 
     public void goIstate(iState state){

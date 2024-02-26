@@ -7,8 +7,8 @@ import frc.robot.State.*;
 public class intakeIn extends Command {
     private intakeSubsystem s_IntakeSubsystem;
 
-    public intakeIn(intakeSubsystem feed) {
-        s_IntakeSubsystem = feed;
+    public intakeIn(intakeSubsystem intake) {
+        s_IntakeSubsystem = intake;
       
     }
 

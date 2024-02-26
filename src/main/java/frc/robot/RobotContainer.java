@@ -18,21 +18,27 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.autos.*;
 import frc.robot.commands.*;
-import frc.robot.commands.shooterCmds.shooterOut;
-import frc.robot.commands.shooterCmds.shooterStop;
+
+import frc.robot.commands.feederCmds.feedIn;
+import frc.robot.commands.feederCmds.feedOut;
+import frc.robot.commands.feederCmds.feedStop;
+import frc.robot.commands.feederCmds.flyIn;
+import frc.robot.commands.feederCmds.flyOut;
+import frc.robot.commands.feederCmds.flyStop;
 import frc.robot.commands.trapCmds.trapIn;
 import frc.robot.commands.trapCmds.trapOut;
-import frc.robot.commands.feederCmds.feedIn;
-import frc.robot.commands.feederCmds.feedStop;
+
+
 import frc.robot.commands.intakeCmds.intakeIn;
 import frc.robot.commands.intakeCmds.intakeStop;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.TrapAmpSubsystem;
 import frc.robot.subsystems.intakeSubsystem;
 import frc.robot.subsystems.photonSubsystem;
-import frc.robot.subsystems.shooterSubsystem;
+import frc.robot.subsystems.feederSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.*;
 
@@ -74,11 +80,19 @@ public class RobotContainer {
     //INTAKE SUBSYSTEM
     private final JoystickButton spinToggle = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
 
-    
+    //FEEDER SUBSYSTEM
+    private final JoystickButton spinFeeder = new JoystickButton(driver, XboxController.Button.kX.value);
+
+    //SHOOTER SUBSYSTEM
+    private final JoystickButton spinShooter = new JoystickButton(driver, XboxController.Button.kY.value);
+
+    //AMP SUBSYSTEM
+    private final JoystickButton spinAmp = new JoystickButton(driver, XboxController.Button.kY.value);
+
     private final JoystickButton zeroGyro = new JoystickButton(driver, 4); //TODO: Implement As Button
     private final JoystickButton robotCentric = new JoystickButton(driver2, XboxController.Button.kLeftBumper.value);
    
-    
+
     private final JoystickButton safeButton = new JoystickButton(driver2, 12); //Reset Button - use later for Assist Controller
     // private final JoystickButton safeButton2 = new JoystickButton(driver2, 12); //Reset Button
     
@@ -89,21 +103,26 @@ public class RobotContainer {
     public final LEDSubsystem s_lightSubsystem = new LEDSubsystem();
     public final TrapAmpSubsystem s_TrapAmpSubsystem = new TrapAmpSubsystem();
     public final feederSubsystem s_feederSubsystem = new feederSubsystem();
-    public final shooterSubsystem s_ShooterSubsystem = new shooterSubsystem();
     public final intakeSubsystem s_IntakeSubsystem = new intakeSubsystem();
     
     
-    public final Command c_shooterStart = new shooterOut(s_ShooterSubsystem); 
-    public final Command c_shooterStop = new shooterStop(s_ShooterSubsystem);
+    
     public final Command c_feederStart = new feedIn(s_feederSubsystem);
     public final Command c_feederStop = new feedStop(s_feederSubsystem);
 
     public final trapIn s_trapIn = new trapIn(s_TrapAmpSubsystem);
-    public final trapOut s_TrapOut = new trapOut(s_TrapAmpSubsystem);
+    public final trapOut s_trapOut = new trapOut(s_TrapAmpSubsystem);
 
     public final intakeIn s_IntakeIn = new intakeIn(s_IntakeSubsystem);
     public final intakeStop s_IntakeStop = new intakeStop(s_IntakeSubsystem);
 
+    public final feedIn s_FeedIn = new feedIn(s_feederSubsystem);
+    public final feedOut s_FeedOut = new feedOut(s_feederSubsystem);
+    public final feedStop s_FeedStop = new feedStop(s_feederSubsystem);
+
+    public final flyIn s_flyIn = new flyIn(s_feederSubsystem);
+    public final flyOut s_flyOut = new flyOut(s_feederSubsystem);
+    public final flyStop s_FlyStop = new flyStop(s_feederSubsystem);
 
 
     //PHOTON
@@ -160,14 +179,20 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
 
-        photonToggle.onTrue(c_shooterStart);
-        photonToggle.onFalse(c_shooterStop);
-
         trapToggle.onTrue(c_feederStart);
         trapToggle.onFalse(c_feederStop);
 
         spinToggle.onTrue(s_IntakeIn);
         spinToggle.onFalse(s_IntakeStop);
+
+        spinAmp.onTrue(s_trapIn);
+        spinAmp.onFalse(s_trapOut);
+        
+        spinFeeder.onTrue(s_FeedIn);
+        spinFeeder.onFalse(s_FeedStop);
+       
+        spinShooter.onTrue(s_flyIn);
+        spinShooter.onFalse(s_FlyStop);
         // photonToggle.onTrue(m_photonCommand);
         // photonToggle.onFalse(new InstantCommand(() -> s_Swerve.drive(new Translation2d(), 0,false, false)));
         // //TODO: Change PostCondition

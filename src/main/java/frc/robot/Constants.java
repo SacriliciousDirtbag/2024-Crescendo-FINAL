@@ -118,7 +118,7 @@ public final class Constants {
         /* Front Left Module - Module 0 */
          public static final class Mod0 { 
             public static final int driveMotorID = 1;
-            public static final int angleMotorID = 2;
+            public static final int angleMotorID = 2; //arbitrary TODO: wierd,change
             public static final int canCoderID = 3;
             public static final Rotation2d angleOffset = Rotation2d.fromDegrees(243.63); /*197.22 */
             public static final SwerveModuleConstants constants = 
@@ -172,19 +172,7 @@ public final class Constants {
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
     }
     
-    public static final class feederSubsystem{
-
-        public static final int leftMotorID = 16;
-        public static final int rightMotorID = 15;
-
-
-
-        /*public static final int forwardMotorID = 0;
-        public static final int reverseMotorID = 0;
-        public static final int extendMotorID = 0;
-        public static final int riseMotorID = 0;*/
-
-    }
+    
 
     public static final class IntakeSystem {
             
@@ -194,19 +182,37 @@ public final class Constants {
             public static final int backMotorID = 15; //Vortex
         } 
     } 
-    public static final class shooterSystem {
-        public static final int m_shoot1 = 20;
-        public static final int m_shoot2 = 21;
-    }
+
     public static final class shooterAimingSystem {
-        public static final int m_aim1 = 19;
         public static final int m_aim2 = 18;
-        public static final float farAngle = 0;
-        public static final float closeAngle = 0;
-        public static final float intakeAngle = 0;
+        public static final int m_aim1 = 19;
+        
+
     }
 
 
+    public static final class feederSubsystem{
+
+        public static final int rightMotorID = 20; //Neo
+        public static final int leftMotorID = 21; //Neo
+        
+
+    }
+
+    
+    public static final class shooterSystem {
+        public static final int m_shoot1 = 22;
+        public static final int m_shoot2 = 23;
+    }
+    
+
+    public static final class AmpSystem {
+        public static final int m_aim2 = 16;
+        public static final int m_aim1 = 17;
+        
+        
+        public static final int m_scorer = 24;
+    }
 
 
     public static final class autoConfigs {

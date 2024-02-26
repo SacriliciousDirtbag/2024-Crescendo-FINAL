@@ -4,17 +4,17 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.feederSubsystem;
 import frc.robot.State.*;
 
-public class feedIn extends Command {
+public class flyOut extends Command {
     public feederSubsystem s_feederSubsystem;
 
-    public feedIn(feederSubsystem feed) {
+    public flyOut(feederSubsystem feed) {
         s_feederSubsystem = feed;
       
     }
 
     @Override
     public void initialize() {
-        s_feederSubsystem.goFstate(fState.IN);
+        s_feederSubsystem.gosState(sState.OUT);
     }
 
     @Override
