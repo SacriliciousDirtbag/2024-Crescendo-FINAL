@@ -18,14 +18,23 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.autos.*;
 import frc.robot.commands.*;
+import frc.robot.commands.shooterCmds.shooterOut;
+import frc.robot.commands.shooterCmds.shooterStop;
 import frc.robot.commands.trapCmds.trapIn;
 import frc.robot.commands.trapCmds.trapOut;
+import frc.robot.commands.feederCmds.feedIn;
+import frc.robot.commands.feederCmds.feedStop;
+import frc.robot.commands.intakeCmds.intakeIn;
+import frc.robot.commands.intakeCmds.intakeStop;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.TrapAmpSubsystem;
+import frc.robot.subsystems.intakeSubsystem;
 import frc.robot.subsystems.photonSubsystem;
+import frc.robot.subsystems.shooterSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.*;
 
 
 /**
@@ -58,8 +67,12 @@ public class RobotContainer {
 
     //DRIVE
     private final JoystickButton photonToggle = new JoystickButton(driver, XboxController.Button.kA.value); //TODO: Implement As Button
-        private final JoystickButton trapToggle = new JoystickButton(driver, XboxController.Button.kB.value);
+    
+    //TRAP AMP SUBSYSTEM
+    private final JoystickButton trapToggle = new JoystickButton(driver, XboxController.Button.kB.value);
 
+    //INTAKE SUBSYSTEM
+    private final JoystickButton spinToggle = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
 
     
     private final JoystickButton zeroGyro = new JoystickButton(driver, 4); //TODO: Implement As Button
@@ -67,7 +80,7 @@ public class RobotContainer {
    
     
     private final JoystickButton safeButton = new JoystickButton(driver2, 12); //Reset Button - use later for Assist Controller
-    private final JoystickButton safeButton2 = new JoystickButton(driver2, 12); //Reset Button
+    // private final JoystickButton safeButton2 = new JoystickButton(driver2, 12); //Reset Button
     
  
 
@@ -75,6 +88,23 @@ public class RobotContainer {
     public final Swerve s_Swerve = new Swerve();
     public final LEDSubsystem s_lightSubsystem = new LEDSubsystem();
     public final TrapAmpSubsystem s_TrapAmpSubsystem = new TrapAmpSubsystem();
+    public final feederSubsystem s_feederSubsystem = new feederSubsystem();
+    public final shooterSubsystem s_ShooterSubsystem = new shooterSubsystem();
+    public final intakeSubsystem s_IntakeSubsystem = new intakeSubsystem();
+    
+    
+    public final Command c_shooterStart = new shooterOut(s_ShooterSubsystem); 
+    public final Command c_shooterStop = new shooterStop(s_ShooterSubsystem);
+    public final Command c_feederStart = new feedIn(s_feederSubsystem);
+    public final Command c_feederStop = new feedStop(s_feederSubsystem);
+
+    public final trapIn s_trapIn = new trapIn(s_TrapAmpSubsystem);
+    public final trapOut s_TrapOut = new trapOut(s_TrapAmpSubsystem);
+
+    public final intakeIn s_IntakeIn = new intakeIn(s_IntakeSubsystem);
+    public final intakeStop s_IntakeStop = new intakeStop(s_IntakeSubsystem);
+
+
 
     //PHOTON
     public final photonSubsystem s_PhotonSubsystem = new photonSubsystem(); //TODO: Finish
@@ -99,10 +129,8 @@ public class RobotContainer {
     public final Command s_swerveMovement = new SequentialCommandGroup(
         new choreoTest(s_Swerve)
     );
+   
 
-    //Subsystem Commands
-    public final trapIn s_trapIn = new trapIn(s_TrapAmpSubsystem);
-    public final trapOut s_TrapOut = new trapOut(s_TrapAmpSubsystem);
 
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -132,12 +160,20 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
 
-        photonToggle.onTrue(m_photonCommand);
-        photonToggle.onFalse(new InstantCommand(() -> s_Swerve.drive(new Translation2d(), 0,false, false)));
-        //TODO: Change PostCondition
+        photonToggle.onTrue(c_shooterStart);
+        photonToggle.onFalse(c_shooterStop);
 
-        trapToggle.onTrue(new InstantCommand(()-> s_trapIn.initialize()));
-        trapToggle.onFalse(new InstantCommand(()-> s_TrapAmpSubsystem.stopWheels()));
+        trapToggle.onTrue(c_feederStart);
+        trapToggle.onFalse(c_feederStop);
+
+        spinToggle.onTrue(s_IntakeIn);
+        spinToggle.onFalse(s_IntakeStop);
+        // photonToggle.onTrue(m_photonCommand);
+        // photonToggle.onFalse(new InstantCommand(() -> s_Swerve.drive(new Translation2d(), 0,false, false)));
+        // //TODO: Change PostCondition
+
+        // trapToggle.onTrue(new InstantCommand(()-> s_trapIn.initialize()));
+        // trapToggle.onFalse(new InstantCommand(()-> s_TrapAmpSubsystem.stopWheels()));
 
 
 

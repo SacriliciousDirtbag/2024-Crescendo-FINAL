@@ -49,4 +49,15 @@ public class State {
         IN,
         OUT
     };
+
+    public enum sState {
+        STOP,
+        OUT
+    };
+
+    public enum aState {
+        FAR,
+        CLOSE,
+        INTAKE
+    };
 }

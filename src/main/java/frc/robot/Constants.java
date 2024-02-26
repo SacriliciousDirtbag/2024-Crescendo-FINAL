@@ -190,12 +190,21 @@ public final class Constants {
             
         public static final class IntakeWheel {
             public static final int frontMotorID = 13; //Neo
-           public static final int wheelMotorID = 14; //Vortex
+            public static final int wheelMotorID = 14; //Vortex
             public static final int backMotorID = 15; //Vortex
         } 
     } 
-
-
+    public static final class shooterSystem {
+        public static final int m_shoot1 = 20;
+        public static final int m_shoot2 = 21;
+    }
+    public static final class shooterAimingSystem {
+        public static final int m_aim1 = 19;
+        public static final int m_aim2 = 18;
+        public static final float farAngle = 0;
+        public static final float closeAngle = 0;
+        public static final float intakeAngle = 0;
+    }
 
 
 

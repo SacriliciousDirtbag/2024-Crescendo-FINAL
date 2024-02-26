@@ -35,11 +35,11 @@ public class intakeSubsystem extends SubsystemBase {
 
     public void goIstate(iState state){
         if(state == frc.robot.State.iState.IN){
-            spinSpeed = -0.75;
+            spinSpeed = -0.4;
         }
 
         if(state == frc.robot.State.iState.OUT){
-            spinSpeed = 0.75;
+            spinSpeed = 0.4;
             
         }
 
