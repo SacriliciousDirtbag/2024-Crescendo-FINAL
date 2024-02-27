@@ -195,6 +195,8 @@ public final class Constants {
 
         public static final int rightMotorID = 20; //Vortex
         public static final int leftMotorID = 21; //Vortex
+
+        public static final int feederEncoderID = 0;  //TODO: Find PWM Channel
         
 
     }
@@ -212,6 +214,8 @@ public final class Constants {
         
         
         public static final int m_scorer = 24; //Neo
+
+        public static final int ampEncoderID = 0; //TODO: Find PWM Channel
     }
 
 

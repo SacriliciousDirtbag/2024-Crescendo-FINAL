@@ -72,10 +72,18 @@ public class RobotContainer {
     // XBOX CONTROLLER //
 
     //DRIVE
-    private final JoystickButton photonToggle = new JoystickButton(driver, XboxController.Button.kA.value); //TODO: Implement As Button
+    private final JoystickButton photonToggle = new JoystickButton(driver, XboxController.Button.kA.value); //TODO: Implement Photon As Button
     
     //TRAP AMP SUBSYSTEM
-    private final JoystickButton trapToggle = new JoystickButton(driver, XboxController.Button.kB.value);
+    private final JoystickButton trapToggle = new JoystickButton(driver, XboxController.Button.kB.value); //HOLD
+
+    //AMP
+    private final JoystickButton ampScoreButton = new JoystickButton(driver, XboxController.Button.kY.value); //POSITION
+    
+    //TRAP
+    private final JoystickButton trapScoreButton = new JoystickButton(driver, XboxController.Button.kY.value); //POSITION
+
+
 
     //INTAKE SUBSYSTEM
     private final JoystickButton spinToggle = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
@@ -83,13 +91,19 @@ public class RobotContainer {
     //FEEDER SUBSYSTEM
     private final JoystickButton spinFeeder = new JoystickButton(driver, XboxController.Button.kX.value);
 
-    //SHOOTER SUBSYSTEM
+    //SHOOTER
     private final JoystickButton spinShooter = new JoystickButton(driver, XboxController.Button.kY.value);
+    
+    private final JoystickButton aimFarButton = new JoystickButton(driver, XboxController.Button.kY.value); //TODO: Remap all Buttons
+    private final JoystickButton aimNearButton = new JoystickButton(driver, XboxController.Button.kY.value);
+
+
+
 
     //AMP SUBSYSTEM
     private final JoystickButton spinAmp = new JoystickButton(driver, XboxController.Button.kY.value);
 
-    private final JoystickButton zeroGyro = new JoystickButton(driver, 4); //TODO: Implement As Button
+    private final JoystickButton zeroGyro = new JoystickButton(driver, 4); //TODO: Implement ZerGyro As Button
     private final JoystickButton robotCentric = new JoystickButton(driver2, XboxController.Button.kLeftBumper.value);
    
 
@@ -126,7 +140,7 @@ public class RobotContainer {
 
 
     //PHOTON
-    public final photonSubsystem s_PhotonSubsystem = new photonSubsystem(); //TODO: Finish
+    public final photonSubsystem s_PhotonSubsystem = new photonSubsystem(); //TODO: Finish Photon if Possible
 
     public final Command m_leftCommand = new left(s_Swerve);
     public final Command m_middleCommand = new middle(s_Swerve);    
@@ -195,7 +209,7 @@ public class RobotContainer {
         spinShooter.onFalse(s_FlyStop);
         // photonToggle.onTrue(m_photonCommand);
         // photonToggle.onFalse(new InstantCommand(() -> s_Swerve.drive(new Translation2d(), 0,false, false)));
-        // //TODO: Change PostCondition
+        // 
 
         // trapToggle.onTrue(new InstantCommand(()-> s_trapIn.initialize()));
         // trapToggle.onFalse(new InstantCommand(()-> s_TrapAmpSubsystem.stopWheels()));

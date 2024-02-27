@@ -51,7 +51,7 @@ public class TrapAmpSubsystem extends SubsystemBase {
 
 
         
-        t_Encoder = new DutyCycleEncoder(0); //PWM Channel
+        t_Encoder = new DutyCycleEncoder(frc.robot.Constants.AmpSystem.ampEncoderID); //PWM Channel
         
         double ffP = 0;
         double ffI = 0;
@@ -64,10 +64,9 @@ public class TrapAmpSubsystem extends SubsystemBase {
 
 
         //ARM SETPOINTS
-        toHome = 0; //TODO: calibrate
-        toTrap = 0; //TODO: calibrate
-        toAim = 0; //TODO: calibrate
-    
+        toHome = 0; //TODO: calibrate Trap ARM Setpoints
+        toTrap = 0; 
+        toAim = 0; 
     }
 
     private double tPos() {

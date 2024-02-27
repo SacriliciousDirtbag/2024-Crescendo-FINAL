@@ -61,7 +61,7 @@ public class feederSubsystem extends SubsystemBase {
         m_AimingMotor1.setIdleMode(IdleMode.kCoast);
         m_AimingMotor2.setIdleMode(IdleMode.kCoast);
 
-        a_Encoder = new DutyCycleEncoder(0); //PWM Channel
+        a_Encoder = new DutyCycleEncoder(frc.robot.Constants.feederSubsystem.feederEncoderID); //PWM Channel
         
         double ffP = 0;
         double ffI = 0;
@@ -74,9 +74,9 @@ public class feederSubsystem extends SubsystemBase {
 
 
         //ARM SETPOINTS
-        toIntake = 0; //TODO: calibrate
-        toTrap = 0; //TODO: calibrate
-        toFar = 0; //TODO: calibrate
+        toIntake = 0; //TODO: calibrate Feeder ARM Setpoints
+        toTrap = 0; 
+        toFar = 0;
         toNear = 0;
     
     }
