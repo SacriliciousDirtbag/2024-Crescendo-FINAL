@@ -20,14 +20,13 @@ public class intakeSubsystem extends SubsystemBase {
         m_wheelMotor = new CANSparkFlex(Constants.IntakeSystem.IntakeWheel.wheelMotorID, MotorType.kBrushless);
 
 
-        
+
         Istate = frc.robot.State.iState.STOP;
     }
 
 
     @Override
     public void periodic(){
-        m_wheelMotor.setIdleMode(IdleMode.kBrake);
         m_wheelMotor.set(spinSpeed);
 
     }

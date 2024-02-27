@@ -25,7 +25,7 @@ public class robotPoseEstimator extends SubsystemBase
   //update swerve pose estimator
   public void periodic()
   {
-    swervePose.update(s_Swerve.getYaw(), s_Swerve.getModulePositions());
+    //swervePose.update(s_Swerve.getYaw(), s_Swerve.getModulePositions()); //Commenting out to check for BUS Usage
   }
 
   public void setCurrentPose(Pose2d newPose) {

@@ -13,10 +13,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.State.eState;
 import frc.robot.State.tState;
 
+import frc.lib.util.CANSparkMaxUtil;
+import frc.lib.util.CANSparkMaxUtil.Usage;
+
 public class TrapAmpSubsystem extends SubsystemBase {
     public CANSparkMax m_trapMotor;
-    public CANSparkMax m_trapArmMotor1;
-    public CANSparkMax m_trapArmMotor2;
+    public CANSparkMax m_RightArmMotor;
+    public CANSparkMax m_LeftArmMotor;
     public tState tState; //Spinner
     public eState eState; //Arm
 
@@ -39,13 +42,13 @@ public class TrapAmpSubsystem extends SubsystemBase {
     
 
     public TrapAmpSubsystem(){
-        m_trapMotor = new CANSparkMax(frc.robot.Constants.AmpSystem.m_scorer, MotorType.kBrushless);
-        m_trapArmMotor1 = new CANSparkMax(frc.robot.Constants.AmpSystem.m_aim1, MotorType.kBrushless);
-        m_trapArmMotor2 = new CANSparkMax(frc.robot.Constants.AmpSystem.m_aim2, MotorType.kBrushless);
+        m_trapMotor = new CANSparkMax(frc.robot.Constants.AmpSystem.trapScorerID, MotorType.kBrushless);
+        m_RightArmMotor = new CANSparkMax(frc.robot.Constants.AmpSystem.RightAimMotorID, MotorType.kBrushless);
+        m_LeftArmMotor = new CANSparkMax(frc.robot.Constants.AmpSystem.LeftAimMotorID, MotorType.kBrushless);
         
         m_trapMotor.setIdleMode(IdleMode.kBrake);
-        m_trapArmMotor1.setIdleMode(IdleMode.kBrake);
-        m_trapArmMotor2.setIdleMode(IdleMode.kBrake);
+        m_RightArmMotor.setIdleMode(IdleMode.kBrake);
+        m_LeftArmMotor.setIdleMode(IdleMode.kBrake);
 
         tState = frc.robot.State.tState.STOP;
 
@@ -67,6 +70,12 @@ public class TrapAmpSubsystem extends SubsystemBase {
         toHome = 0; //TODO: calibrate Trap ARM Setpoints
         toTrap = 0; 
         toAim = 0; 
+
+
+        //CANBUS USAGE
+        CANSparkMaxUtil.setCANSparkMaxBusUsage(m_trapMotor, Usage.kVelocityOnly);
+        CANSparkMaxUtil.setCANSparkMaxBusUsage(m_RightArmMotor, Usage.kPositionOnly);
+        CANSparkMaxUtil.setCANSparkMaxBusUsage(m_LeftArmMotor, Usage.kPositionOnly);
     }
 
     private double tPos() {
@@ -83,8 +92,8 @@ public class TrapAmpSubsystem extends SubsystemBase {
         //ARM
         tPV = tPos();
         double tOutput = tPID.calculate(tPV, tSetPoint);
-        m_trapArmMotor1.set(tOutput);
-        m_trapArmMotor2.set(tOutput);
+        m_RightArmMotor.set(tOutput);
+        m_LeftArmMotor.set(tOutput);
 
         SmartDashboard.putNumber("Arm Encoder Rot:", tPos());
 

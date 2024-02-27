@@ -16,13 +16,16 @@ import frc.robot.State.fState;
 import frc.robot.State.sState;
 import frc.robot.Constants;
 
+import frc.lib.util.CANSparkMaxUtil;
+import frc.lib.util.CANSparkMaxUtil.Usage;
+
 public class feederSubsystem extends SubsystemBase {
     public CANSparkFlex m_LeftFeederMotor;
     public CANSparkFlex m_RightFeederMotor;
     public fState fstate;
 
     private double spinSpeed;
-    private double spinCurrentLimit;
+    private CANSparkMaxUtil canSparkMaxUtil;
 
     //ARM MOVEMENT
     public CANSparkFlex m_RightAimingMotor;
@@ -49,14 +52,11 @@ public class feederSubsystem extends SubsystemBase {
     
 
     public feederSubsystem(){
+        canSparkMaxUtil = new CANSparkMaxUtil();
+
         //SPINNER MOVEMENT
         m_LeftFeederMotor = new CANSparkFlex(Constants.feederSubsystem.leftMotorID, MotorType.kBrushless); //Fixed, Had to Reconfigure Motor 21
         m_RightFeederMotor = new CANSparkFlex(Constants.feederSubsystem.rightMotorID, MotorType.kBrushless);
-
-        //LMIT CAN USAGE
-        m_LeftFeederMotor.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus2, 20);
-
-
 
 
         //ARM MOVEMENT
@@ -84,6 +84,9 @@ public class feederSubsystem extends SubsystemBase {
         toFar = 0;
         toNear = 0;
 
+        //CANBUS USAGE CONSTRAINTS
+        m_LeftFeederMotor.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus2, 20); //TODO: Set Appropriate CanSparkFlex Bus Usage
+
         fstate = frc.robot.State.fState.STOP;
         sState = frc.robot.State.sState.STOP;
     }
@@ -96,10 +99,8 @@ public class feederSubsystem extends SubsystemBase {
     @Override
     public void periodic(){
         //SPINNER
-        m_LeftFeederMotor.setIdleMode(IdleMode.kBrake);
         m_LeftFeederMotor.set(spinSpeed);
 
-        m_RightFeederMotor.setIdleMode(IdleMode.kBrake);
         m_RightFeederMotor.set(spinSpeed);
 
         //ARM
