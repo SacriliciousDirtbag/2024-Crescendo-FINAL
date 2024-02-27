@@ -47,7 +47,7 @@ public class feederSubsystem extends SubsystemBase {
 
     public feederSubsystem(){
         //SPINNER MOVEMENT
-        m_feederMotor1 = new CANSparkFlex(Constants.feederSubsystem.leftMotorID, MotorType.kBrushless); //wierd, errors if is CanSparkFlex, errors if it is CanSparkMax
+        m_feederMotor1 = new CANSparkFlex(Constants.feederSubsystem.leftMotorID, MotorType.kBrushless); //Fixed, Had to Reconfigure Motor 21
         m_feederMotor2 = new CANSparkFlex(Constants.feederSubsystem.rightMotorID, MotorType.kBrushless);
 
         fstate = frc.robot.State.fState.STOP;

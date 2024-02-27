@@ -201,17 +201,17 @@ public final class Constants {
 
     
     public static final class shooterSystem {
-        public static final int m_shoot1 = 22;
-        public static final int m_shoot2 = 23;
+        public static final int m_shoot1 = 22; //Neo
+        public static final int m_shoot2 = 23; //Neo
     }
     
 
     public static final class AmpSystem {
-        public static final int m_aim2 = 16;
-        public static final int m_aim1 = 17;
+        public static final int m_aim2 = 16; //Neo
+        public static final int m_aim1 = 17; //Neo
         
         
-        public static final int m_scorer = 24;
+        public static final int m_scorer = 24; //Neo
     }
 
 
