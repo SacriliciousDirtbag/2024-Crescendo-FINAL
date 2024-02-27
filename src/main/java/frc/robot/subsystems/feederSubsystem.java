@@ -40,9 +40,11 @@ public class feederSubsystem extends SubsystemBase {
     private double aSetPoint; //destination we want to go to
 
     //POSE PARAMETERS
+    double toHome;
     double toIntake;
     double toTrap;
-    double toAim; //Arbitrary value based on distance, shoots
+    double toFar;//Arbitrary value based on distance, shoots
+    double toNear;//Arbitrary value based on distance, shoots
     
 
     public feederSubsystem(){
@@ -74,7 +76,8 @@ public class feederSubsystem extends SubsystemBase {
         //ARM SETPOINTS
         toIntake = 0; //TODO: calibrate
         toTrap = 0; //TODO: calibrate
-        toAim = 0; //TODO: calibrate
+        toFar = 0; //TODO: calibrate
+        toNear = 0;
     
     }
 
@@ -155,7 +158,7 @@ public class feederSubsystem extends SubsystemBase {
     }
 
     //ARM MOVEMENT STATE
-     public void goaState(aState state){ 
+     public void goAState(aState state){ 
         if (state == frc.robot.State.aState.INTAKE_POS) {
             setASetPoint(toIntake);
             aState = frc.robot.State.aState.INTAKE_POS;
@@ -166,10 +169,15 @@ public class feederSubsystem extends SubsystemBase {
             setASetPoint(toTrap);
             aState = frc.robot.State.aState.TRAP_POS;
         }
-        if (state == frc.robot.State.aState.AIM_POS) {
+        if (state == frc.robot.State.aState.AIM_FAR) {
             //she P on my I till i D
-            setASetPoint(toAim);
-            aState = frc.robot.State.aState.AIM_POS;
+            setASetPoint(toFar);
+            aState = frc.robot.State.aState.AIM_FAR;
+        }
+        if (state == frc.robot.State.aState.AIM_NEAR) {
+            //she P on my I till i D
+            setASetPoint(toNear);
+            aState = frc.robot.State.aState.AIM_NEAR;
         }
     }
 

@@ -1,65 +1,47 @@
 package frc.robot;
 
 public class State {
-
-    // horizontal carriage state
-    public enum HState {
-        HOME,
-        LOAD_LOW,
-        LOAD_CONE,
-        RAMP_CUBE,
-        RAMP_CONE,
-        SCORE_CUBE_LOW,
-        SCORE_CONE_LOW,
-        SCORE_CUBE_HIGH,
-        SCORE_CONE_HIGH,
-        EXTENDED
-    };
-
-    // vertical lift state
-    public enum VState {
-        HOME,
-        LOAD_LOW,
-        LOAD_CONE,
-        RAMP_CUBE,  // load from
-        RAMP_CONE,  // load from
-        SCORE_CUBE_LOW,
-        SCORE_CONE_LOW,
-        SCORE_CUBE_HIGH,
-        SCORE_CONE_HIGH,
-    };
-
-    // intake Pneumatic state
+    
+    // Intake Spinning State
     public enum iState {
-        STOP,
-        IN,
-        OUT
+        IN, 
+        OUT, 
+        STOP
     };
 
     // Trapper/Amp Spinning State
     public enum tState {
-        STOP,
         IN,
-        OUT
+        OUT,
+        STOP
     };
 
     //Feeder Spinning State
     public enum fState {
-        STOP,
         IN,
-        OUT
+        OUT,
+        STOP
     };
 
-    //Flywheel State
+    //Flywheel Spinning State
     public enum sState {
-        STOP,
         IN,
-        OUT
+        OUT,
+        STOP
     };
 
     //Feeder ARM State
     public enum aState {
+        HOME,
         INTAKE_POS,
+        TRAP_POS,
+        AIM_FAR,
+        AIM_NEAR
+    };
+
+    //Trap ARM State
+    public enum eState {
+        HOME,
         TRAP_POS,
         AIM_POS
     };

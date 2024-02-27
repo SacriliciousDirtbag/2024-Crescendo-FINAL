@@ -245,6 +245,11 @@ public final class Constants {
         public static final double cameraPitchRadians = Units.degreesToRadians(0);
     }
 
+
+    public static final class PhotonConfig
+    {
+
+    }
 }
 
 
