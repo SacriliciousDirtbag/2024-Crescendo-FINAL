@@ -20,6 +20,7 @@ public class intakeSubsystem extends SubsystemBase {
         m_wheelMotor = new CANSparkFlex(Constants.IntakeSystem.IntakeWheel.wheelMotorID, MotorType.kBrushless);
 
 
+        
         Istate = frc.robot.State.iState.STOP;
     }
 

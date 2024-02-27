@@ -7,11 +7,11 @@ import frc.robot.State.*;
 
 public class FeedertoTrap extends Command {
     private feederSubsystem s_feederSubsystem;
-    private intakeSubsystem s_IntakeSubsystem;
+
 
     public FeedertoTrap(feederSubsystem feed, intakeSubsystem intake) {
         s_feederSubsystem = feed;
-        s_IntakeSubsystem = intake;
+  
     
     }
 

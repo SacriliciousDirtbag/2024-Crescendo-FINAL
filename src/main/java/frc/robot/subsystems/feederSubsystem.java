@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkFlex;
+import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -16,16 +17,16 @@ import frc.robot.State.sState;
 import frc.robot.Constants;
 
 public class feederSubsystem extends SubsystemBase {
-    public CANSparkFlex m_feederMotor1;
-    public CANSparkFlex m_feederMotor2;
+    public CANSparkFlex m_LeftFeederMotor;
+    public CANSparkFlex m_RightFeederMotor;
     public fState fstate;
 
     private double spinSpeed;
     private double spinCurrentLimit;
 
     //ARM MOVEMENT
-    public CANSparkFlex m_AimingMotor1;
-    public CANSparkFlex m_AimingMotor2;
+    public CANSparkFlex m_RightAimingMotor;
+    public CANSparkFlex m_LeftAimingMotor;
     public sState sState; 
     public aState aState;
 
@@ -49,17 +50,21 @@ public class feederSubsystem extends SubsystemBase {
 
     public feederSubsystem(){
         //SPINNER MOVEMENT
-        m_feederMotor1 = new CANSparkFlex(Constants.feederSubsystem.leftMotorID, MotorType.kBrushless); //Fixed, Had to Reconfigure Motor 21
-        m_feederMotor2 = new CANSparkFlex(Constants.feederSubsystem.rightMotorID, MotorType.kBrushless);
+        m_LeftFeederMotor = new CANSparkFlex(Constants.feederSubsystem.leftMotorID, MotorType.kBrushless); //Fixed, Had to Reconfigure Motor 21
+        m_RightFeederMotor = new CANSparkFlex(Constants.feederSubsystem.rightMotorID, MotorType.kBrushless);
 
-        fstate = frc.robot.State.fState.STOP;
+        //LMIT CAN USAGE
+        m_LeftFeederMotor.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus2, 20);
+
+
 
 
         //ARM MOVEMENT
-        m_AimingMotor1 = new CANSparkFlex(frc.robot.Constants.shooterAimingSystem.m_aim1, MotorType.kBrushless);
-        m_AimingMotor2 = new CANSparkFlex(frc.robot.Constants.shooterAimingSystem.m_aim2, MotorType.kBrushless);
-        m_AimingMotor1.setIdleMode(IdleMode.kCoast);
-        m_AimingMotor2.setIdleMode(IdleMode.kCoast);
+        m_RightAimingMotor = new CANSparkFlex(frc.robot.Constants.shooterAimingSystem.m_aim1, MotorType.kBrushless);
+        m_LeftAimingMotor = new CANSparkFlex(frc.robot.Constants.shooterAimingSystem.m_aim2, MotorType.kBrushless);
+
+        m_RightAimingMotor.setIdleMode(IdleMode.kCoast);
+        m_LeftAimingMotor.setIdleMode(IdleMode.kCoast);
 
         a_Encoder = new DutyCycleEncoder(frc.robot.Constants.feederSubsystem.feederEncoderID); //PWM Channel
         
@@ -68,9 +73,9 @@ public class feederSubsystem extends SubsystemBase {
         double ffD = 0;
         aPID = new PIDController(ffP, ffI, ffD);
 
-        aFeedforward = new ArmFeedforward(0, 0.2, 0); //-0.15
+        aFeedforward = new ArmFeedforward(0, 0.2, 0); //TODO: Tune Feeder Feedforward
 
-        sState = frc.robot.State.sState.STOP;
+        
 
 
         //ARM SETPOINTS
@@ -78,7 +83,9 @@ public class feederSubsystem extends SubsystemBase {
         toTrap = 0; 
         toFar = 0;
         toNear = 0;
-    
+
+        fstate = frc.robot.State.fState.STOP;
+        sState = frc.robot.State.sState.STOP;
     }
 
     private double aPos() {
@@ -89,28 +96,28 @@ public class feederSubsystem extends SubsystemBase {
     @Override
     public void periodic(){
         //SPINNER
-        m_feederMotor1.setIdleMode(IdleMode.kBrake);
-        m_feederMotor1.set(spinSpeed);
+        m_LeftFeederMotor.setIdleMode(IdleMode.kBrake);
+        m_LeftFeederMotor.set(spinSpeed);
 
-        m_feederMotor2.setIdleMode(IdleMode.kBrake);
-        m_feederMotor2.set(spinSpeed);
+        m_RightFeederMotor.setIdleMode(IdleMode.kBrake);
+        m_RightFeederMotor.set(spinSpeed);
 
         //ARM
         aPV = aPos();
         double aOutput = aPID.calculate(aPV, aSetPoint);
-        m_AimingMotor1.set(aOutput);
-        m_AimingMotor2.set(aOutput);
+        m_RightAimingMotor.set(aOutput);
+        m_LeftAimingMotor.set(aOutput);
 
-        SmartDashboard.putNumber("Arm Encoder Rot:", aPos());
+        //SmartDashboard.putNumber("Arm Encoder Rot:", aPos());
 
     }
 
     public double FPos1(){
-        return m_feederMotor1.getEncoder().getPosition();
+        return m_LeftFeederMotor.getEncoder().getPosition();
     }
 
     public double FPos2(){
-        return m_feederMotor2.getEncoder().getPosition();
+        return m_RightFeederMotor.getEncoder().getPosition();
     }
 
 
