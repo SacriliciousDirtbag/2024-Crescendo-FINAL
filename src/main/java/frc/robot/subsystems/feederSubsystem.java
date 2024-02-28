@@ -19,13 +19,26 @@ import frc.robot.Constants;
 import frc.lib.util.CANSparkMaxUtil;
 import frc.lib.util.CANSparkMaxUtil.Usage;
 
+import frc.lib.util.CANSparkFlexUtil;
+
+
+
+
 public class feederSubsystem extends SubsystemBase {
+    
+    //FEEDER MOVEMENT
     public CANSparkFlex m_LeftFeederMotor;
     public CANSparkFlex m_RightFeederMotor;
     public fState fstate;
 
-    private double spinSpeed;
-    private CANSparkMaxUtil canSparkMaxUtil;
+    private double FeederSpinSpeed;
+
+
+    //FLYWHEEL MOVEMENT
+    public CANSparkMax m_leftFlyMotor;
+    public CANSparkMax m_rightFlyMotor;
+
+    private double FlywheelSpinSpeed;
 
     //ARM MOVEMENT
     public CANSparkFlex m_RightAimingMotor;
@@ -52,11 +65,15 @@ public class feederSubsystem extends SubsystemBase {
     
 
     public feederSubsystem(){
-        canSparkMaxUtil = new CANSparkMaxUtil();
 
-        //SPINNER MOVEMENT
+        //FEEDER SPINNER
         m_LeftFeederMotor = new CANSparkFlex(Constants.feederSubsystem.leftMotorID, MotorType.kBrushless); //Fixed, Had to Reconfigure Motor 21
         m_RightFeederMotor = new CANSparkFlex(Constants.feederSubsystem.rightMotorID, MotorType.kBrushless);
+
+
+        //FLYWHEEL SPINNER
+        m_leftFlyMotor = new CANSparkMax(Constants.shooterSystem.LeftFlyWheelID, MotorType.kBrushless);
+        m_rightFlyMotor = new CANSparkMax(Constants.shooterSystem.RightFlyWheelID, MotorType.kBrushless);
 
 
         //ARM MOVEMENT
@@ -68,7 +85,7 @@ public class feederSubsystem extends SubsystemBase {
 
         a_Encoder = new DutyCycleEncoder(frc.robot.Constants.feederSubsystem.feederEncoderID); //PWM Channel
         
-        double ffP = 0;
+        double ffP = 0.05;
         double ffI = 0;
         double ffD = 0;
         aPID = new PIDController(ffP, ffI, ffD);
@@ -85,7 +102,14 @@ public class feederSubsystem extends SubsystemBase {
         toNear = 0;
 
         //CANBUS USAGE CONSTRAINTS
-        m_LeftFeederMotor.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus2, 20); //TODO: Set Appropriate CanSparkFlex Bus Usage
+        CANSparkFlexUtil.setCANSparkFlexBusUsage(m_LeftAimingMotor, CANSparkFlexUtil.Usage.kPositionOnly);
+        CANSparkFlexUtil.setCANSparkFlexBusUsage(m_RightAimingMotor, CANSparkFlexUtil.Usage.kPositionOnly);
+
+        CANSparkMaxUtil.setCANSparkMaxBusUsage(m_leftFlyMotor, Usage.kVelocityOnly);
+        CANSparkMaxUtil.setCANSparkMaxBusUsage(m_rightFlyMotor, Usage.kVelocityOnly);
+
+
+
 
         fstate = frc.robot.State.fState.STOP;
         sState = frc.robot.State.sState.STOP;
@@ -99,10 +123,14 @@ public class feederSubsystem extends SubsystemBase {
     @Override
     public void periodic(){
         //SPINNER
-        m_LeftFeederMotor.set(spinSpeed);
+        m_LeftFeederMotor.set(FeederSpinSpeed);
 
-        m_RightFeederMotor.set(spinSpeed);
+        m_RightFeederMotor.set(FeederSpinSpeed);
 
+        //FLY
+        m_leftFlyMotor.set(FlywheelSpinSpeed);
+        m_RightFeederMotor.set(FlywheelSpinSpeed);
+        
         //ARM
         aPV = aPos();
         double aOutput = aPID.calculate(aPV, aSetPoint);
@@ -126,17 +154,17 @@ public class feederSubsystem extends SubsystemBase {
     public void gosState(sState state){
         if(sState == frc.robot.State.sState.OUT)
         {
-            spinSpeed = 0.5;
+            FlywheelSpinSpeed = 0.5;
         }
 
         if(sState == frc.robot.State.sState.IN)
         {
-            spinSpeed = -0.5;
+            FlywheelSpinSpeed = -0.5;
         }
 
         if(sState == frc.robot.State.sState.STOP)
         {
-            spinSpeed = 0.5;
+            FlywheelSpinSpeed = 0.5;
         }
     }
     
@@ -145,17 +173,17 @@ public class feederSubsystem extends SubsystemBase {
     public void goFstate(fState state){
         if(fstate == frc.robot.State.fState.OUT)
         {
-            spinSpeed = 0.5;
+            FeederSpinSpeed = 0.5;
         }
 
         if(fstate == frc.robot.State.fState.IN)
         {
-            spinSpeed = -0.5;
+            FeederSpinSpeed = -0.5;
         }
 
         if(fstate == frc.robot.State.fState.STOP)
         {
-            spinSpeed = 0.5;
+            FeederSpinSpeed = 0.5;
         }
     }
 

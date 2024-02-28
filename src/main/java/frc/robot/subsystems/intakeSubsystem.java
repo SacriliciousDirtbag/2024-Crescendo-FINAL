@@ -8,6 +8,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.State.iState;
 
+import frc.lib.util.CANSparkFlexUtil;
+import frc.lib.util.CANSparkFlexUtil.Usage;;
+
+
 public class intakeSubsystem extends SubsystemBase {
     public CANSparkFlex m_wheelMotor;
     public iState Istate;
@@ -18,9 +22,10 @@ public class intakeSubsystem extends SubsystemBase {
 
     public intakeSubsystem(){
         m_wheelMotor = new CANSparkFlex(Constants.IntakeSystem.IntakeWheel.wheelMotorID, MotorType.kBrushless);
+        m_wheelMotor.setIdleMode(IdleMode.kBrake);
 
 
-
+        CANSparkFlexUtil.setCANSparkFlexBusUsage(m_wheelMotor, Usage.kVelocityOnly);
         Istate = frc.robot.State.iState.STOP;
     }
 

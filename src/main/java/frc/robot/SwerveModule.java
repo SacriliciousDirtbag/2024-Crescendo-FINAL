@@ -17,6 +17,8 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import frc.lib.util.CANSparkMaxUtil;
+
 
 public class SwerveModule {
     public int moduleNumber;
@@ -52,7 +54,7 @@ public class SwerveModule {
         
         
         /* -- designating a canbus explicitly states where the motor controller is passing from, default seems to be roborio -- */
-        angleEncoder = new CANcoder(moduleConstants.cancoderID, "rio");
+        angleEncoder = new CANcoder(moduleConstants.cancoderID, "1056_Canivore");
         angleConfigurator = angleEncoder.getConfigurator();
         configAngleEncoder();
         configAngleEncoder();

@@ -56,7 +56,7 @@ public class TrapAmpSubsystem extends SubsystemBase {
         
         t_Encoder = new DutyCycleEncoder(frc.robot.Constants.AmpSystem.ampEncoderID); //PWM Channel
         
-        double ffP = 0;
+        double ffP = 0.05; //TODO: Tune PID
         double ffI = 0;
         double ffD = 0;
         tPID = new PIDController(ffP, ffI, ffD);
@@ -95,7 +95,7 @@ public class TrapAmpSubsystem extends SubsystemBase {
         m_RightArmMotor.set(tOutput);
         m_LeftArmMotor.set(tOutput);
 
-        SmartDashboard.putNumber("Arm Encoder Rot:", tPos());
+        SmartDashboard.putNumber("Arm Encoder Rot:",tPV);
 
     }
 

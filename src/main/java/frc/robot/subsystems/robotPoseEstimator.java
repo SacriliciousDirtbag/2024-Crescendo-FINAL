@@ -10,11 +10,13 @@ import edu.wpi.first.math.geometry.Pose2d;
 public class robotPoseEstimator extends SubsystemBase
 {
   private SwerveDrivePoseEstimator swervePose;
+  private photonSubsystem s_PhotonCamera;
   private Swerve s_Swerve;
 
-  public robotPoseEstimator(Swerve s_Swerve)
+  public robotPoseEstimator(Swerve s_Swerve, photonSubsystem s_PhotonCamera)
   {
     this.s_Swerve = s_Swerve;
+    this.s_PhotonCamera = s_PhotonCamera;
     swervePose = new SwerveDrivePoseEstimator(frc.robot.Constants.Swerve.swerveKinematics, 
     s_Swerve.getYaw(), 
     s_Swerve.getModulePositions(), 
@@ -25,7 +27,7 @@ public class robotPoseEstimator extends SubsystemBase
   //update swerve pose estimator
   public void periodic()
   {
-    //swervePose.update(s_Swerve.getYaw(), s_Swerve.getModulePositions()); //Commenting out to check for BUS Usage
+    //swervePose.addVisionMeasurement(s_PhotonCamera.getVisionMeasurement().toPose2d(), s_PhotonCamera.getTimeStamp());
   }
 
   public void setCurrentPose(Pose2d newPose) {

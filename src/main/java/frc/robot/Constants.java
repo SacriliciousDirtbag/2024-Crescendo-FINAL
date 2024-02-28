@@ -196,15 +196,15 @@ public final class Constants {
         public static final int rightMotorID = 20; //Vortex
         public static final int leftMotorID = 21; //Vortex
 
-        public static final int feederEncoderID = 2;  //TODO: Find PWM Channel
+        public static final int feederEncoderID = 6;  //TODO: Find PWM Channel
         
 
     }
 
     
     public static final class shooterSystem {
-        public static final int m_shoot1 = 22; //Neo
-        public static final int m_shoot2 = 23; //Neo
+        public static final int LeftFlyWheelID = 22; //Neo
+        public static final int RightFlyWheelID = 23; //Neo
     }
     
 
@@ -252,7 +252,7 @@ public final class Constants {
 
     public static final class PhotonConfig
     {
-
+        
     }
 }
 

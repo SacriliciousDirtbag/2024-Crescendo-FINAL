@@ -29,7 +29,7 @@ public class Swerve extends SubsystemBase {
 
      public Swerve() {
         
-        gyro = new Pigeon2(Constants.Swerve.pigeonID, "rio");
+        gyro = new Pigeon2(Constants.Swerve.pigeonID, "1056_Canivore");
 
         gyroConfigurator =  gyro.getConfigurator();
         gyroConfig = new Pigeon2Configuration();
