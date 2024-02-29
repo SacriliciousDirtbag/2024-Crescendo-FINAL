@@ -110,11 +110,11 @@ public class TrapAmpSubsystem extends SubsystemBase {
     //TRAP AMP Spinner
     public void goTState(tState state){
         if(state == frc.robot.State.tState.IN){
-            spinSpeed = -0.75;
+            spinSpeed = 1;
         }
 
         if(state == frc.robot.State.tState.OUT){
-            spinSpeed = 0.75;
+            spinSpeed = -1;
             
         }
 

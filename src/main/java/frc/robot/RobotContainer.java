@@ -28,8 +28,7 @@ import frc.robot.commands.feederCmds.flyOut;
 import frc.robot.commands.feederCmds.flyStop;
 import frc.robot.commands.trapCmds.trapIn;
 import frc.robot.commands.trapCmds.trapOut;
-
-
+import frc.robot.commands.trapCmds.trapStop;
 import frc.robot.commands.intakeCmds.intakeIn;
 import frc.robot.commands.intakeCmds.intakeStop;
 
@@ -75,7 +74,7 @@ public class RobotContainer {
     private final JoystickButton photonToggle = new JoystickButton(driver, XboxController.Button.kA.value); //TODO: Implement Photon As Button
     
     //TRAP AMP SUBSYSTEM
-    private final JoystickButton trapToggle = new JoystickButton(driver, XboxController.Button.kB.value); //HOLD
+    private final JoystickButton trapToggle = new JoystickButton(driver, 2); //HOLD
 
     //AMP
     private final JoystickButton ampScoreButton = new JoystickButton(driver, XboxController.Button.kY.value); //POSITION
@@ -120,13 +119,15 @@ public class RobotContainer {
     
     
     
-    public final Command c_feederStart = new feedIn(s_feederSubsystem);
-    public final Command c_feederStop = new feedStop(s_feederSubsystem);
+    public final feedIn c_feederStart = new feedIn(s_feederSubsystem);
+    public final feedStop c_feederStop = new feedStop(s_feederSubsystem);
 
     public final trapIn s_trapIn = new trapIn(s_TrapAmpSubsystem);
     public final trapOut s_trapOut = new trapOut(s_TrapAmpSubsystem);
+    public final trapStop s_trapStop = new trapStop(s_TrapAmpSubsystem);
 
-    public final intakeIn s_IntakeIn = new intakeIn(s_IntakeSubsystem);
+
+    public final intakeIn s_IntakeIn = new intakeIn(s_IntakeSubsystem, s_feederSubsystem);
     public final intakeStop s_IntakeStop = new intakeStop(s_IntakeSubsystem);
 
     public final feedIn s_FeedIn = new feedIn(s_feederSubsystem);
@@ -200,11 +201,13 @@ public class RobotContainer {
         spinToggle.onFalse(s_IntakeStop);
 
         spinAmp.onTrue(s_trapIn);
-        spinAmp.onFalse(s_trapOut);
+        spinAmp.onFalse(s_trapStop);
+
+        trapScoreButton.onTrue(s_trapOut);
+        trapScoreButton.onFalse(s_trapStop);
         
         spinFeederIntake.onTrue(s_feedIntake);
         spinFeederIntake.onFalse(s_FeedStop);
-        spinFeederIntake.onFalse(s_IntakeStop);
 
         spinShooter.onTrue(s_flyIn);
         spinShooter.onFalse(s_FlyStop);

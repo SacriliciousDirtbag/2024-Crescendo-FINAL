@@ -129,12 +129,11 @@ public class feederSubsystem extends SubsystemBase {
     public void periodic(){
         //SPINNER
         m_LeftFeederMotor.set(FeederSpinSpeed);
-
         m_RightFeederMotor.set(FeederSpinSpeed);
 
         //FLY
-        m_leftFlyMotor.set(FlywheelSpinSpeed);
-        m_rightFlyMotor.set(FlywheelSpinSpeed);
+        m_leftFlyMotor.set(0.5);
+        m_rightFlyMotor.set(-0.5);
         
         //ARM
         // aPV = aPos();
