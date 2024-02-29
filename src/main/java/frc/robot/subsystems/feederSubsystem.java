@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.State.aState;
@@ -35,8 +36,8 @@ public class feederSubsystem extends SubsystemBase {
 
 
     //FLYWHEEL MOVEMENT
-    public CANSparkMax m_leftFlyMotor;
-    public CANSparkMax m_rightFlyMotor;
+    public PWMSparkMax m_leftFlyMotor;
+    public PWMSparkMax m_rightFlyMotor;
 
     private double FlywheelSpinSpeed;
 
@@ -72,13 +73,13 @@ public class feederSubsystem extends SubsystemBase {
 
 
         //FLYWHEEL SPINNER
-        m_leftFlyMotor = new CANSparkMax(Constants.shooterSystem.LeftFlyWheelID, MotorType.kBrushless);
-        m_rightFlyMotor = new CANSparkMax(Constants.shooterSystem.RightFlyWheelID, MotorType.kBrushless);
+        m_leftFlyMotor = new PWMSparkMax(Constants.shooterSystem.LeftFlyWheelID);
+        m_rightFlyMotor = new PWMSparkMax(Constants.shooterSystem.RightFlyWheelID);
 
 
         //ARM MOVEMENT
-        m_RightAimingMotor = new CANSparkFlex(frc.robot.Constants.shooterAimingSystem.m_aim1, MotorType.kBrushless);
-        m_LeftAimingMotor = new CANSparkFlex(frc.robot.Constants.shooterAimingSystem.m_aim2, MotorType.kBrushless);
+        m_RightAimingMotor = new CANSparkFlex(frc.robot.Constants.shooterAimingSystem.RightAimID, MotorType.kBrushless);
+        m_LeftAimingMotor = new CANSparkFlex(frc.robot.Constants.shooterAimingSystem.LeftAimID, MotorType.kBrushless);
 
         m_RightAimingMotor.setIdleMode(IdleMode.kCoast);
         m_LeftAimingMotor.setIdleMode(IdleMode.kCoast);
@@ -105,11 +106,12 @@ public class feederSubsystem extends SubsystemBase {
         CANSparkFlexUtil.setCANSparkFlexBusUsage(m_LeftAimingMotor, CANSparkFlexUtil.Usage.kPositionOnly);
         CANSparkFlexUtil.setCANSparkFlexBusUsage(m_RightAimingMotor, CANSparkFlexUtil.Usage.kPositionOnly);
 
-        CANSparkMaxUtil.setCANSparkMaxBusUsage(m_leftFlyMotor, Usage.kVelocityOnly);
-        CANSparkMaxUtil.setCANSparkMaxBusUsage(m_rightFlyMotor, Usage.kVelocityOnly);
+        // CANSparkMaxUtil.setCANSparkMaxBusUsage(m_leftFlyMotor, Usage.kVelocityOnly);
+        // CANSparkMaxUtil.setCANSparkMaxBusUsage(m_rightFlyMotor, Usage.kVelocityOnly);
 
 
-
+        m_LeftFeederMotor.setInverted(true);
+        m_RightFeederMotor.setInverted(true);
 
         fstate = frc.robot.State.fState.STOP;
         sState = frc.robot.State.sState.STOP;
@@ -129,7 +131,7 @@ public class feederSubsystem extends SubsystemBase {
 
         //FLY
         m_leftFlyMotor.set(FlywheelSpinSpeed);
-        m_RightFeederMotor.set(FlywheelSpinSpeed);
+        m_rightFlyMotor.set(FlywheelSpinSpeed);
         
         //ARM
         aPV = aPos();
@@ -164,7 +166,7 @@ public class feederSubsystem extends SubsystemBase {
 
         if(sState == frc.robot.State.sState.STOP)
         {
-            FlywheelSpinSpeed = 0.5;
+            FlywheelSpinSpeed = 0;
         }
     }
     
@@ -183,7 +185,7 @@ public class feederSubsystem extends SubsystemBase {
 
         if(fstate == frc.robot.State.fState.STOP)
         {
-            FeederSpinSpeed = 0.5;
+            FeederSpinSpeed = 0;
         }
     }
 

@@ -31,9 +31,9 @@ public class Swerve extends SubsystemBase {
         
         gyro = new Pigeon2(Constants.Swerve.pigeonID, "1056_Canivore");
 
-        gyroConfigurator =  gyro.getConfigurator();
+        //gyroConfigurator =  gyro.getConfigurator();
         gyroConfig = new Pigeon2Configuration();
-        gyroConfigurator.apply(gyroConfig);
+        //gyroConfigurator.apply(gyroConfig);
 
         //Config factory default
         gyro.getConfigurator().apply(new Pigeon2Configuration());

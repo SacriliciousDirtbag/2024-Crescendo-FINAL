@@ -7,6 +7,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.lib.math.Conversions;
 import frc.lib.util.CTREModuleState;
 import frc.lib.util.SwerveModuleConstants;
+import frc.lib.util.CANSparkFlexUtil.Usage;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.DeviceIdentifier;
@@ -17,6 +18,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import frc.lib.util.CANSparkFlexUtil;
 import frc.lib.util.CANSparkMaxUtil;
 
 
@@ -145,13 +147,12 @@ public class SwerveModule {
 
         angleEncoder.getConfigurator().apply(new CANcoderConfiguration());
 
-        //CANSparkMaxUtil.setCANCoderBusUsage(angleEncoder, null);
         //angleEncoder.configAllSettings(Robot.ctreConfigs.swerveCanCoderConfig);
     }
 
     private void configAngleMotor(){        
         mAngleMotor.restoreFactoryDefaults();
-        //CANSparkMaxUtil.setCANSparkMaxBusUsage(mAngleMotor, Usage.kPositionOnly);
+        CANSparkFlexUtil.setCANSparkFlexBusUsage(mAngleMotor, Usage.kPositionOnly);
         mAngleMotor.setSmartCurrentLimit(Constants.Swerve.angleContinuousCurrentLimit);
         mAngleMotor.setInverted(true);
         mAngleMotor.setIdleMode(Constants.Swerve.angleNeutralMode);
@@ -168,7 +169,7 @@ public class SwerveModule {
 
     private void configDriveMotor(){        
         mDriveMotor.restoreFactoryDefaults();
-        //CANSparkMaxUtil.setCANSparkMaxBusUsage(mDriveMotor, Usage.kAll);
+        CANSparkFlexUtil.setCANSparkFlexBusUsage(mDriveMotor, Usage.kAll);
         mDriveMotor.setSmartCurrentLimit(Constants.Swerve.driveContinuousCurrentLimit);
         mDriveMotor.setInverted(Constants.Swerve.driveMotorInvert);
         mDriveMotor.setIdleMode(Constants.Swerve.driveNeutralMode);

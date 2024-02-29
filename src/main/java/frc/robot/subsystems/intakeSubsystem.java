@@ -16,7 +16,7 @@ public class intakeSubsystem extends SubsystemBase {
     public CANSparkFlex m_wheelMotor;
     public iState Istate;
 
-    private double spinSpeed;
+    private double spinSpeed = 0;
     private double spinCurrentLimit;
     
 
@@ -40,6 +40,7 @@ public class intakeSubsystem extends SubsystemBase {
         return m_wheelMotor.getEncoder().getPosition();
     }
 
+    //INTAKE SPIN
     public void goIstate(iState state){
         if(state == frc.robot.State.iState.IN){
             spinSpeed = -0.4;
@@ -58,7 +59,4 @@ public class intakeSubsystem extends SubsystemBase {
 
     }
 
-    public void stopWheels(){
-            goIstate(frc.robot.State.iState.STOP);
-        }
 }

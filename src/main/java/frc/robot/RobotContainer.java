@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.autos.*;
-import frc.robot.commands.*;
+//import frc.robot.commands.*;
 
 import frc.robot.commands.feederCmds.feedIn;
 import frc.robot.commands.feederCmds.feedOut;
@@ -34,7 +34,7 @@ import frc.robot.commands.intakeCmds.intakeStop;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import frc.robot.subsystems.Swerve;
+//import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.TrapAmpSubsystem;
 import frc.robot.subsystems.intakeSubsystem;
 import frc.robot.subsystems.photonSubsystem;
@@ -81,7 +81,7 @@ public class RobotContainer {
     private final JoystickButton ampScoreButton = new JoystickButton(driver, XboxController.Button.kY.value); //POSITION
     
     //TRAP
-    private final JoystickButton trapScoreButton = new JoystickButton(driver, XboxController.Button.kY.value); //POSITION
+    private final JoystickButton trapScoreButton = new JoystickButton(driver, XboxController.Button.kX.value); //POSITION
 
 
 
@@ -92,7 +92,7 @@ public class RobotContainer {
     private final JoystickButton spinFeeder = new JoystickButton(driver, XboxController.Button.kX.value);
 
     //SHOOTER
-    private final JoystickButton spinShooter = new JoystickButton(driver, XboxController.Button.kY.value);
+    private final JoystickButton spinShooter = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
     
     private final JoystickButton aimFarButton = new JoystickButton(driver, XboxController.Button.kY.value); //TODO: Remap all Buttons
     private final JoystickButton aimNearButton = new JoystickButton(driver, XboxController.Button.kY.value);
@@ -104,7 +104,7 @@ public class RobotContainer {
     private final JoystickButton spinAmp = new JoystickButton(driver, XboxController.Button.kY.value);
 
     private final JoystickButton zeroGyro = new JoystickButton(driver, 4); //TODO: Implement ZerGyro As Button
-    private final JoystickButton robotCentric = new JoystickButton(driver2, XboxController.Button.kLeftBumper.value);
+    //private final JoystickButton robotCentric = new JoystickButton(driver2, XboxController.Button.kLeftBumper.value);
    
 
     private final JoystickButton safeButton = new JoystickButton(driver2, 12); //Reset Button - use later for Assist Controller
@@ -113,7 +113,7 @@ public class RobotContainer {
  
 
     /* Subsystems & Commands */
-    public final Swerve s_Swerve = new Swerve();
+    //public final Swerve s_Swerve = new Swerve();
     public final LEDSubsystem s_lightSubsystem = new LEDSubsystem();
     public final TrapAmpSubsystem s_TrapAmpSubsystem = new TrapAmpSubsystem();
     public final feederSubsystem s_feederSubsystem = new feederSubsystem();
@@ -142,25 +142,25 @@ public class RobotContainer {
     //PHOTON
     public final photonSubsystem s_PhotonSubsystem = new photonSubsystem(); //TODO: Finish Photon if Possible
 
-    public final Command m_leftCommand = new left(s_Swerve);
-    public final Command m_middleCommand = new middle(s_Swerve);    
+    //public final Command m_leftCommand = new left(s_Swerve);
+    //public final Command m_middleCommand = new middle(s_Swerve);    
 
  //PHOTON COMMAND
     PIDController phController = new PIDController(Constants.AutoConstants.kPXController, Constants.AutoConstants.kPYController, Constants.AutoConstants.kPThetaController);
     
 
     
-    public final Command s_Pose2dMovement = new Pose2dMovement(s_Swerve, new Translation2d(2,0), 180, true, false);
+    //public final Command s_Pose2dMovement = new Pose2dMovement(s_Swerve, new Translation2d(2,0), 180, true, false);
 
 
    
-    public final PhotonSwerve m_photonCommand = new PhotonSwerve(s_PhotonSubsystem, s_Swerve);
+    //public final PhotonSwerve m_photonCommand = new PhotonSwerve(s_PhotonSubsystem, s_Swerve);
 
 
 
     //NEW CHOREO AUTO
     public final Command s_swerveMovement = new SequentialCommandGroup(
-        new choreoTest(s_Swerve)
+        //new choreoTest(s_Swerve)
     );
    
 
@@ -168,15 +168,15 @@ public class RobotContainer {
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
-        s_Swerve.setDefaultCommand(
-            new TeleopSwerve(
-                s_Swerve, 
-                () -> -(driver.getRawAxis(translationAxis))/2, //setting to the power of 3 makes for smoother decceleration 
-                () -> -(driver.getRawAxis(strafeAxis))/2, // was pow(, 3);
-                () -> -driver.getRawAxis(rotationAxis), 
-                () -> robotCentric.getAsBoolean()
-            )
-        );
+        // s_Swerve.setDefaultCommand(
+        //     new TeleopSwerve(
+        //         s_Swerve, 
+        //         () -> -(driver.getRawAxis(translationAxis))/2, //setting to the power of 3 makes for smoother decceleration 
+        //         () -> -(driver.getRawAxis(strafeAxis))/2, // was pow(, 3);
+        //         () -> -driver.getRawAxis(rotationAxis), 
+        //         () -> robotCentric.getAsBoolean()
+        //     )
+        // );
         
         // Configure the button bindings
         configureButtonBindings();
@@ -233,11 +233,11 @@ public class RobotContainer {
     public Command getBalanceCommand() {
         // An ExampleCommand will run in autonomous
         return Commands.sequence(
-            new RunCommand(() -> s_Swerve.drive(new Translation2d(-2, 0), 0, true, true), s_Swerve).withTimeout(1)
+            //new RunCommand(() -> s_Swerve.drive(new Translation2d(-2, 0), 0, true, true), s_Swerve).withTimeout(1)
         );
     }
 
-    public Command getTurnCommand(){
-        return new autoTurn();
-    }
+    // public Command getTurnCommand(){
+    //     return new autoTurn();
+    // }
 }

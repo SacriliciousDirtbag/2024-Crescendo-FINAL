@@ -177,15 +177,15 @@ public final class Constants {
     public static final class IntakeSystem {
             
         public static final class IntakeWheel {
-            public static final int frontMotorID = 13; //Neo
+            public static final int frontMotorID = 13; //NeoPWM
             public static final int wheelMotorID = 14; //Vortex
             public static final int backMotorID = 15; //Vortex
         } 
     } 
 
     public static final class shooterAimingSystem {
-        public static final int m_aim2 = 18; //Vortex
-        public static final int m_aim1 = 19; //Vortex
+        public static final int LeftAimID = 18; //Vortex
+        public static final int RightAimID = 19; //Vortex
         
 
     }
@@ -201,19 +201,20 @@ public final class Constants {
 
     }
 
+    //22,23,24, 16, 17, 18, 13 ON PWM
     
     public static final class shooterSystem {
-        public static final int LeftFlyWheelID = 22; //Neo
-        public static final int RightFlyWheelID = 23; //Neo
+        public static final int LeftFlyWheelID = 22; //NeoPWM
+        public static final int RightFlyWheelID = 23; //NeoPWM
     }
     
 
     public static final class AmpSystem {
-        public static final int LeftAimMotorID = 16; //Neo
-        public static final int RightAimMotorID = 17; //Neo
+        public static final int LeftAmpArmID = 16; //NeoPWM
+        public static final int RightAmArmID = 17; //NeoPWM
         
         
-        public static final int trapScorerID = 24; //Neo
+        public static final int trapScorerID = 24; //NeoPWM
 
         public static final int ampEncoderID = 1; //TODO: Find PWM Channel
     }
@@ -252,7 +253,7 @@ public final class Constants {
 
     public static final class PhotonConfig
     {
-        
+
     }
 }
 
