@@ -57,7 +57,7 @@ public class TrapAmpSubsystem extends SubsystemBase {
         
         t_Encoder = new DutyCycleEncoder(frc.robot.Constants.AmpSystem.ampEncoderID); //PWM Channel
         
-        double ffP = 0.05; //TODO: Tune PID
+        double ffP = 0.5; //TODO: Tune PID
         double ffI = 0;
         double ffD = 0;
         tPID = new PIDController(ffP, ffI, ffD);
@@ -73,6 +73,8 @@ public class TrapAmpSubsystem extends SubsystemBase {
         toAim = 0; 
 
 
+        m_RightArmMotor.disable();
+        m_LeftArmMotor.disable();
         //CANBUS USAGE
         //CANSparkMaxUtil.setCANSparkMaxBusUsage(m_trapMotor, Usage.kAll);
         //CANSparkMaxUtil.setCANSparkMaxBusUsage(m_RightArmMotor, Usage.kPositionOnly);
@@ -98,7 +100,7 @@ public class TrapAmpSubsystem extends SubsystemBase {
         // m_LeftArmMotor.set(tOutput);
 
         SmartDashboard.putNumber("Arm Encoder Rot:",tPV);
-
+        SmartDashboard.putNumber("Trap Encoder ID", t_Encoder.getSourceChannel());
     }
 
     public double TPos(){

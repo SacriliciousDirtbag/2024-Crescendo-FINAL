@@ -18,10 +18,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
   public static CTREConfigs ctreConfigs;
 
-  private Command m_autonomousCommand;
-  private Command m_balanceCommand;
-  private Command m_turnCommand;
-  private Command m_shooterCommand;
 
   private RobotContainer m_robotContainer;
 
@@ -60,7 +56,6 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    m_robotContainer.s_lightSubsystem.disableInit();
   }
 
   @Override

@@ -4,6 +4,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.motorcontrol.PWMSparkFlex;
 import frc.lib.math.Conversions;
 import frc.lib.util.CTREModuleState;
 import frc.lib.util.SwerveModuleConstants;
@@ -12,10 +13,13 @@ import frc.lib.util.CANSparkFlexUtil.Usage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.DeviceIdentifier;
 import com.ctre.phoenix6.configs.*;
-
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkFlexExternalEncoder;
+import com.revrobotics.SparkFlexExternalEncoder.Type;
 import com.revrobotics.SparkPIDController;
+import com.revrobotics.SparkRelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import frc.lib.util.CANSparkFlexUtil;
@@ -37,11 +41,8 @@ public class SwerveModule {
     private final SparkPIDController driveController;
     private final SparkPIDController angleController;
 
-    private CANcoderConfigurator angleConfigurator;
-    private CANcoderConfiguration angleConfig;
-     private CANcoder angleEncoder;
+    private CANcoder angleEncoder;
 
-    private CANcoderConfigurator AbsoluteConfigurator;
     DeviceIdentifier DevIdentifier;
 
     public double CANcoderInitTime = 0.0;
@@ -57,30 +58,25 @@ public class SwerveModule {
         
         /* -- designating a canbus explicitly states where the motor controller is passing from, default seems to be roborio -- */
         angleEncoder = new CANcoder(moduleConstants.cancoderID, "1056_Canivore");
-        angleConfigurator = angleEncoder.getConfigurator();
-        configAngleEncoder();
-        configAngleEncoder();
+        //angleConfigurator = angleEncoder.getConfigurator();
         configAngleEncoder();
         
         /* Angle Motor Config */ 
         mAngleMotor = new CANSparkFlex(moduleConstants.angleMotorID, MotorType.kBrushless);
         integratedAngleEncoder = mAngleMotor.getEncoder();
         angleController = mAngleMotor.getPIDController();
-        configAngleMotor();
-        configAngleMotor();
+        CANSparkFlexUtil.setCANSparkFlexBusUsage(mAngleMotor, Usage.kPositionOnly);
         configAngleMotor();
 
         /* Drive Motor Config */
         mDriveMotor = new CANSparkFlex(moduleConstants.driveMotorID, MotorType.kBrushless);
         driveEncoder = mDriveMotor.getEncoder();
         driveController = mDriveMotor.getPIDController();
-        configDriveMotor();
-        configDriveMotor();
+        CANSparkFlexUtil.setCANSparkFlexBusUsage(mDriveMotor, Usage.kAll);
         configDriveMotor();
 
         lastAngle = getState().angle;
 
-        // angleConfig.MagnetSensor.MagnetOffset = 0; //for each mod, reference to offset
     }
 
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop){

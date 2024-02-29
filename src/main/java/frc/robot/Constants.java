@@ -52,7 +52,7 @@ public final class Constants {
 
         /* Motor Inverts */
         public static final boolean angleMotorInvert = chosenModule.angleMotorInvert;
-        public static final boolean driveMotorInvert = chosenModule.driveMotorInvert;
+        public static final boolean driveMotorInvert = true; //chosenModule.driveMotorInvert
 
         
 
@@ -106,7 +106,7 @@ public final class Constants {
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double maxSpeed = 3.3; //was 4
+        public static final double maxSpeed = 3; //was 4
         /** Radians per Second */
         public static final double maxAngularVelocity = 2.5; //was 10
 
@@ -118,9 +118,9 @@ public final class Constants {
         /* Front Left Module - Module 0 */
          public static final class Mod0 { 
             public static final int driveMotorID = 1;
-            public static final int angleMotorID = 2; //arbitrary TODO: wierd,change
+            public static final int angleMotorID = 2; 
             public static final int canCoderID = 3;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(243.63); /*197.22 */
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(27.29); /*179.94 */
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -130,17 +130,17 @@ public final class Constants {
             public static final int driveMotorID = 7;
             public static final int angleMotorID = 8;
             public static final int canCoderID = 9;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(152.57); /*266.83 */
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(44.29); /*266.83 */
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
         
-        /* Back Left Module - Module 2 */
+        /* Back Left Module - Module 2 */ 
         public static final class Mod2 { 
             public static final int driveMotorID = 4;
             public static final int angleMotorID = 5;
             public static final int canCoderID = 6;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(93.60); /*303.52 */
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(41.41); /*230.54 */
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -150,7 +150,7 @@ public final class Constants {
             public static final int driveMotorID = 10;
             public static final int angleMotorID = 11;
             public static final int canCoderID = 12;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(44.30); /*161.58, was 28.30 */
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(43.61); /*161.58, was 28.30 */
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -172,12 +172,19 @@ public final class Constants {
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
     }
     
-    
+    //22,23,24, 16, 17, 13 ON PWM
+
+     //PWM 0 - Amp Spinner - 24
+    //PWM 1 - Left Amp Arm - 16
+    //PWM 2 - Right Amp Arm - 17
+    //PWM 3 - Floor Intake - 13
+    //PWM 4 - Right Feed Aim - 23
+    //PWM 5 - Left Feed Aim - 22
 
     public static final class IntakeSystem {
             
         public static final class IntakeWheel {
-            public static final int frontMotorID = 13; //NeoPWM
+            public static final int frontMotorID = 3; //NeoPWM, 13
             public static final int wheelMotorID = 14; //Vortex
             public static final int backMotorID = 15; //Vortex
         } 
@@ -196,27 +203,27 @@ public final class Constants {
         public static final int rightMotorID = 20; //Vortex
         public static final int leftMotorID = 21; //Vortex
 
-        public static final int feederEncoderID = 6;  //TODO: Find PWM Channel
+        public static final int feederEncoderID = 0;  //DIO, 0
         
 
     }
 
-    //22,23,24, 16, 17, 18, 13 ON PWM
+    
     
     public static final class shooterSystem {
-        public static final int LeftFlyWheelID = 22; //NeoPWM
-        public static final int RightFlyWheelID = 23; //NeoPWM
+        public static final int LeftFlyWheelID = 5; //NeoPWM, 22
+        public static final int RightFlyWheelID = 4; //NeoPWM, 23
     }
     
 
     public static final class AmpSystem {
-        public static final int LeftAmpArmID = 16; //NeoPWM
-        public static final int RightAmArmID = 17; //NeoPWM
+        public static final int LeftAmpArmID = 1; //NeoPWM, 16
+        public static final int RightAmArmID = 2; //NeoPWM, 17
         
         
-        public static final int trapScorerID = 24; //NeoPWM
+        public static final int trapScorerID = 0; //NeoPWM, ID 24
 
-        public static final int ampEncoderID = 1; //TODO: Find PWM Channel
+        public static final int ampEncoderID = 1; //DIO, 
     }
 
 

@@ -86,12 +86,12 @@ public class feederSubsystem extends SubsystemBase {
 
         a_Encoder = new DutyCycleEncoder(frc.robot.Constants.feederSubsystem.feederEncoderID); //PWM Channel
         
-        double ffP = 0.05;
+        double ffP = 0.5;
         double ffI = 0;
         double ffD = 0;
         aPID = new PIDController(ffP, ffI, ffD);
 
-        aFeedforward = new ArmFeedforward(0, 0.2, 0); //TODO: Tune Feeder Feedforward
+        aFeedforward = new ArmFeedforward(0, 0, 0); //TODO: Tune Feeder Feedforward
 
         
 
@@ -112,6 +112,9 @@ public class feederSubsystem extends SubsystemBase {
 
         m_LeftFeederMotor.setInverted(true);
         m_RightFeederMotor.setInverted(true);
+
+        m_RightAimingMotor.disable();
+        m_LeftAimingMotor.disable();
 
         fstate = frc.robot.State.fState.STOP;
         sState = frc.robot.State.sState.STOP;
@@ -134,10 +137,10 @@ public class feederSubsystem extends SubsystemBase {
         m_rightFlyMotor.set(FlywheelSpinSpeed);
         
         //ARM
-        aPV = aPos();
-        double aOutput = aPID.calculate(aPV, aSetPoint);
-        m_RightAimingMotor.set(aOutput);
-        m_LeftAimingMotor.set(aOutput);
+        // aPV = aPos();
+        // double aOutput = aPID.calculate(aPV, aSetPoint);
+        // m_RightAimingMotor.set(aOutput);
+        // m_LeftAimingMotor.set(aOutput);
 
         //SmartDashboard.putNumber("Arm Encoder Rot:", aPos());
 
