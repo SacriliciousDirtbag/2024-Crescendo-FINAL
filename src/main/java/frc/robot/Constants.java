@@ -1,14 +1,19 @@
 package frc.robot;
 
+import java.util.Collections;
+import java.util.List;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+
 import frc.lib.util.COTSFalconSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 
@@ -260,7 +265,10 @@ public final class Constants {
 
     public static final class PhotonConfig
     {
-
+        public static final Transform3d CAMERA_TO_ROBOT = new Transform3d();
+        public static final Transform3d ROBOT_TO_CAMERA = CAMERA_TO_ROBOT.inverse();
+        public static final List<Pose3d> targetPoses = Collections.unmodifiableList(List.of(
+            new Pose3d(), new Pose3d()));
     }
 }
 

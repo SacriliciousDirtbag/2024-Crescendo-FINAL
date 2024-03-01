@@ -132,16 +132,19 @@ public class feederSubsystem extends SubsystemBase {
         m_RightFeederMotor.set(FeederSpinSpeed);
 
         //FLY
-        m_leftFlyMotor.set(0.5);
-        m_rightFlyMotor.set(-0.5);
+        m_leftFlyMotor.set(0); //0.5
+        m_rightFlyMotor.set(0); //-0.5, Reverse Polarity
         
         //ARM
-        // aPV = aPos();
+        aPV = aPos();
         // double aOutput = aPID.calculate(aPV, aSetPoint);
         // m_RightAimingMotor.set(aOutput);
         // m_LeftAimingMotor.set(aOutput);
 
         //SmartDashboard.putNumber("Arm Encoder Rot:", aPos());
+
+        SmartDashboard.putNumber("Feeder Arm Pos", aPV); //Measured in Degrees
+        SmartDashboard.putNumber("Feeder Encoder DIO#", a_Encoder.getSourceChannel());
 
     }
 

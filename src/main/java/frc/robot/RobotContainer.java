@@ -30,6 +30,7 @@ import frc.robot.commands.trapCmds.trapIn;
 import frc.robot.commands.trapCmds.trapOut;
 import frc.robot.commands.trapCmds.trapStop;
 import frc.robot.commands.intakeCmds.intakeIn;
+import frc.robot.commands.intakeCmds.intakeOut;
 import frc.robot.commands.intakeCmds.intakeStop;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -52,7 +53,7 @@ public class RobotContainer {
 
     /* Controllers */
     private final XboxController driver = new XboxController(0); //Logitech XboxController
-    private final Joystick driver2 = new Joystick(0); //Logitech Extreme3D Pro
+    //private final Joystick driver2 = new Joystick(0); //Logitech Extreme3D Pro
     public final Joystick buttonBoard = new Joystick(1);//External Driver
     public final Joystick buttonBoard2 = new Joystick(2); //External Driver 2
 
@@ -69,47 +70,33 @@ public class RobotContainer {
     SendableChooser<Command> m_Chooser = new SendableChooser<>();
 
     // XBOX CONTROLLER //
+    private final JoystickButton X_BUTTON = new JoystickButton(driver, XboxController.Button.kX.value); //POSITION
 
-    //DRIVE
-    private final JoystickButton photonToggle = new JoystickButton(driver, XboxController.Button.kA.value); //TODO: Implement Photon As Button
+    private final JoystickButton Y_BUTTON = new JoystickButton(driver, XboxController.Button.kY.value); //POSITION
     
-    //TRAP AMP SUBSYSTEM
-    private final JoystickButton trapToggle = new JoystickButton(driver, 2); //HOLD
-
-    //AMP
-    private final JoystickButton ampScoreButton = new JoystickButton(driver, XboxController.Button.kY.value); //POSITION
+    private final JoystickButton A_BUTTON = new JoystickButton(driver, XboxController.Button.kA.value); //TODO: Implement Photon As Button
     
-    //TRAP
-    private final JoystickButton trapScoreButton = new JoystickButton(driver, XboxController.Button.kX.value); //POSITION
+    private final JoystickButton B_BUTTON = new JoystickButton(driver, XboxController.Button.kB.value);
 
+    private final JoystickButton RIGHT_TRIGGER = new JoystickButton(driver, XboxController.Axis.kRightTrigger.value); //HOLD
 
+    private final JoystickButton RIGHT_BUMPER = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
 
-    //INTAKE SUBSYSTEM
-    private final JoystickButton spinToggle = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+    private final JoystickButton LEFT_TRIGGER = new JoystickButton(driver, XboxController.Axis.kLeftTrigger.value); //TODO: Remap all Buttons
 
-    //FEEDER SUBSYSTEM
-    private final JoystickButton spinFeederIntake = new JoystickButton(driver, XboxController.Button.kX.value);
+    private final JoystickButton LEFT_BUMPER = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
-    //SHOOTER
-    private final JoystickButton spinShooter = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+    //private final JoystickButton spinAmp = new JoystickButton(driver, XboxController.Button.kY.value);
     
-    private final JoystickButton aimFarButton = new JoystickButton(driver, XboxController.Button.kY.value); //TODO: Remap all Buttons
-    private final JoystickButton aimNearButton = new JoystickButton(driver, XboxController.Button.kY.value);
+    
 
-
-
-
-    //AMP SUBSYSTEM
-    private final JoystickButton spinAmp = new JoystickButton(driver, XboxController.Button.kY.value);
-
+    //BUTTON BOARD
     private final JoystickButton zeroGyro = new JoystickButton(driver, 4); //TODO: Implement ZerGyro As Button
-    private final JoystickButton robotCentric = new JoystickButton(driver2, XboxController.Button.kStart.value);
+    private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kStart.value);
    
 
-    private final JoystickButton safeButton = new JoystickButton(driver2, 12); //Reset Button - use later for Assist Controller
-    // private final JoystickButton safeButton2 = new JoystickButton(driver2, 12); //Reset Button
-    
- 
+    //private final JoystickButton safeButton = new JoystickButton(buttonBoard, 12); //Reset Button - use later for Assist Controller
+     
 
     /* Subsystems & Commands */
     public final Swerve s_Swerve = new Swerve();
@@ -117,28 +104,23 @@ public class RobotContainer {
     public final feederSubsystem s_feederSubsystem = new feederSubsystem();
     public final intakeSubsystem s_IntakeSubsystem = new intakeSubsystem();
     
-    
-    
-    public final feedIn c_feederStart = new feedIn(s_feederSubsystem);
-    public final feedStop c_feederStop = new feedStop(s_feederSubsystem);
+    public final trapIn c_trapIn = new trapIn(s_TrapAmpSubsystem);
+    public final trapOut c_trapOut = new trapOut(s_TrapAmpSubsystem);
+    public final trapStop c_trapStop = new trapStop(s_TrapAmpSubsystem);
 
-    public final trapIn s_trapIn = new trapIn(s_TrapAmpSubsystem);
-    public final trapOut s_trapOut = new trapOut(s_TrapAmpSubsystem);
-    public final trapStop s_trapStop = new trapStop(s_TrapAmpSubsystem);
+    public final intakeIn c_IntakeIn = new intakeIn(s_IntakeSubsystem, s_feederSubsystem);
+    public final intakeOut c_IntakeOut = new intakeOut(s_IntakeSubsystem);
+    public final intakeStop c_IntakeStop = new intakeStop(s_IntakeSubsystem);
 
+    public final feedIn c_feedIn = new feedIn(s_feederSubsystem);
+    public final feedOut c_FeedOut = new feedOut(s_feederSubsystem);
+    public final feedStop c_FeedStop = new feedStop(s_feederSubsystem);
 
-    public final intakeIn s_IntakeIn = new intakeIn(s_IntakeSubsystem, s_feederSubsystem);
-    public final intakeStop s_IntakeStop = new intakeStop(s_IntakeSubsystem);
+    public final flyIn c_flyIn = new flyIn(s_feederSubsystem);
+    public final flyOut c_flyOut = new flyOut(s_feederSubsystem);
+    public final flyStop c_FlyStop = new flyStop(s_feederSubsystem);
 
-    public final feedIn s_FeedIn = new feedIn(s_feederSubsystem);
-    public final feedOut s_FeedOut = new feedOut(s_feederSubsystem);
-    public final feedStop s_FeedStop = new feedStop(s_feederSubsystem);
-
-    public final flyIn s_flyIn = new flyIn(s_feederSubsystem);
-    public final flyOut s_flyOut = new flyOut(s_feederSubsystem);
-    public final flyStop s_FlyStop = new flyStop(s_feederSubsystem);
-
-    public final FeedertoIntake s_feedIntake = new FeedertoIntake(s_feederSubsystem, s_IntakeSubsystem);
+    public final FeedertoIntake c_feederToIntake = new FeedertoIntake(s_feederSubsystem, s_IntakeSubsystem);
 
     //PHOTON
     public final photonSubsystem s_PhotonSubsystem = new photonSubsystem(); //TODO: Finish Photon if Possible
@@ -155,7 +137,7 @@ public class RobotContainer {
 
 
    
-    public final PhotonSwerve m_photonCommand = new PhotonSwerve(s_PhotonSubsystem, s_Swerve);
+    //public final PhotonSwerve m_photonCommand = new PhotonSwerve(s_PhotonSubsystem, s_Swerve);
 
 
 
@@ -194,24 +176,33 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
 
-        trapToggle.onTrue(c_feederStart);
-        trapToggle.onFalse(c_feederStop);
 
-        spinToggle.onTrue(s_IntakeIn);
-        spinToggle.onFalse(s_IntakeStop);
+        //FEEDER SUBSYSTEM
+        RIGHT_TRIGGER.onTrue(c_flyIn);
+        RIGHT_TRIGGER.onFalse(c_FeedStop);
 
-        spinAmp.onTrue(s_trapIn);
-        spinAmp.onFalse(s_trapStop);
+        LEFT_BUMPER.onTrue(c_flyOut);
+        LEFT_BUMPER.onFalse(c_FlyStop);
 
-        trapScoreButton.onTrue(s_trapOut);
-        trapScoreButton.onFalse(s_trapStop);
-        
-        spinFeederIntake.onTrue(s_feedIntake);
-        spinFeederIntake.onFalse(s_FeedStop);
+        B_BUTTON.onTrue(c_feedIn);
+        B_BUTTON.onFalse(c_FeedStop);
 
-        spinShooter.onTrue(s_flyIn);
-        spinShooter.onFalse(s_FlyStop);
+        A_BUTTON.onTrue(c_FeedOut);
+        A_BUTTON.onFalse(c_FeedStop);
 
+        //INTAKE SUBSYSTEM
+        RIGHT_BUMPER.onTrue(c_IntakeIn);
+        RIGHT_BUMPER.onFalse(c_IntakeStop);
+
+        RIGHT_BUMPER.onTrue(c_IntakeOut);
+        RIGHT_BUMPER.onFalse(c_IntakeStop);
+
+        //AMP SUBSYSTEM
+        Y_BUTTON.onTrue(c_trapIn);
+        Y_BUTTON.onFalse(c_trapStop);
+
+        X_BUTTON.onTrue(c_trapOut);
+        X_BUTTON.onFalse(c_trapStop);
         
         // photonToggle.onTrue(m_photonCommand);
         // photonToggle.onFalse(new InstantCommand(() -> s_Swerve.drive(new Translation2d(), 0,false, false)));
@@ -219,11 +210,6 @@ public class RobotContainer {
 
         // trapToggle.onTrue(new InstantCommand(()-> s_trapIn.initialize()));
         // trapToggle.onFalse(new InstantCommand(()-> s_TrapAmpSubsystem.stopWheels()));
-
-
-
-        
-   
     }
 
     /**

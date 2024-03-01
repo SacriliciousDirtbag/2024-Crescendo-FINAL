@@ -68,7 +68,7 @@ public class TrapAmpSubsystem extends SubsystemBase {
 
 
         //ARM SETPOINTS
-        toHome = 0; //TODO: calibrate Trap ARM Setpoints
+        toHome = t_Encoder.getAbsolutePosition(); //TODO: calibrate Trap ARM Setpoints
         toTrap = 0; 
         toAim = 0; 
 
@@ -99,8 +99,8 @@ public class TrapAmpSubsystem extends SubsystemBase {
         // m_RightArmMotor.set(tOutput);
         // m_LeftArmMotor.set(tOutput);
 
-        SmartDashboard.putNumber("Arm Encoder Rot:",tPV);
-        SmartDashboard.putNumber("Trap Encoder ID", t_Encoder.getSourceChannel());
+        SmartDashboard.putNumber("Arm Encoder Rot:",tPV); //Measured in Degrees
+        SmartDashboard.putNumber("Trap Encoder DIO#", t_Encoder.getSourceChannel());
     }
 
     public double TPos(){
