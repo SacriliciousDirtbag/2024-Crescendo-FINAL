@@ -9,6 +9,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
+import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import java.io.File;
+import java.io.IOException;
+import swervelib.parser.SwerveParser;
+
+
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -16,12 +26,11 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * project.
  */
 public class Robot extends TimedRobot {
-  public static CTREConfigs ctreConfigs;
 
 
   private RobotContainer m_robotContainer;
 
-  Thread m_visionThread;
+
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -29,7 +38,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    ctreConfigs = new CTREConfigs();
 
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
@@ -64,45 +72,12 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    m_robotContainer.setMotorBrake(true);
 
     if (m_robotContainer.m_Chooser.getSelected() != null) {
       m_robotContainer.m_Chooser.getSelected().schedule();
     }
-    
 
-    //m_shooterCommand = m_robotContainer.getShooterCommand();
-    //m_turnCommand = m_robotContainer.getTurnCommand();
-/*     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
- */    //m_balanceCommand = m_robotContainer.getBalanceCommand();
-
-    
-    /*if(m_turnCommand != null) {
-      m_turnCommand.schedule();
-    }*/
-/*
-    m_robotContainer.s_ScoreCubeHigh.initialize();
-    Timer.delay(0.25);
-    m_robotContainer.s_IntakeSubsystem.wheelForward();
-    Timer.delay(1.25);
-    m_robotContainer.s_IntakeReset.initialize();
-    m_robotContainer.s_IntakeSubsystem.resetAll();
-
-    Timer.delay(0.5);
-    */
-
-    /*m_balanceCommand = m_robotContainer.getBalanceCommand();
-    if (m_balanceCommand != null) {
-      m_balanceCommand.schedule();
-    }*/
-
-    // schedule the autonomous commands (example)
-    /*if (m_shooterCommand != null) {
-      m_shooterCommand.schedule();
-    }*/
-    
-    /* if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    } */
   }
 
   /** This function is called periodically during autonomous. */
@@ -123,6 +98,8 @@ public class Robot extends TimedRobot {
       // m_balanceCommand.cancel();
       autoComm.cancel();
     }
+    m_robotContainer.setDriveMode();
+    m_robotContainer.setMotorBrake(true);
   }
 
   /** This function is called periodically during operator control. */

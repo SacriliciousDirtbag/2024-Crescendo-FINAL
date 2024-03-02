@@ -4,7 +4,12 @@
 
 package frc.robot.subsystems;
 
-
+// import com.pathplanner.lib.auto.AutoBuilder;
+// import com.pathplanner.lib.commands.PathPlannerAuto;
+// import com.pathplanner.lib.path.PathConstraints;
+// import com.pathplanner.lib.path.PathPlannerPath;
+// import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+// import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -32,13 +37,13 @@ import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
-public class YAGSL extends SubsystemBase
+public class SwerveSubsystem extends SubsystemBase
 {
 
   /**
    * Swerve drive object.
    */
-  private final YAGSL swerveDrive;
+  private final SwerveDrive swerveDrive;
   /**
    * Maximum speed of the robot in meters per second, used to limit acceleration.
    */
@@ -78,7 +83,7 @@ public class YAGSL extends SubsystemBase
     }
     swerveDrive.setHeadingCorrection(false); // Heading correction should only be used while controlling the robot via angle.
     swerveDrive.setCosineCompensator(!SwerveDriveTelemetry.isSimulation); // Disables cosine compensation for simulations since it causes discrepancies not seen in real life.
-    setupPathPlanner();
+    //setupPathPlanner();
   }
 
   /**
@@ -91,6 +96,93 @@ public class YAGSL extends SubsystemBase
   {
     swerveDrive = new SwerveDrive(driveCfg, controllerCfg, maximumSpeed);
   }
+
+  /**
+   * Setup AutoBuilder for PathPlanner.
+   */
+  // public void setupPathPlanner()
+  // {
+  //   AutoBuilder.configureHolonomic(
+  //       this::getPose, // Robot pose supplier
+  //       this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+  //       this::getRobotVelocity, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+  //       this::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+  //       new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+  //                                        AutonConstants.TRANSLATION_PID,
+  //                                        // Translation PID constants
+  //                                        AutonConstants.ANGLE_PID,
+  //                                        // Rotation PID constants
+  //                                        4.5,
+  //                                        // Max module speed, in m/s
+  //                                        swerveDrive.swerveDriveConfiguration.getDriveBaseRadiusMeters(),
+  //                                        // Drive base radius in meters. Distance from robot center to furthest module.
+  //                                        new ReplanningConfig()
+  //                                        // Default path replanning config. See the API for the options here
+  //       ),
+  //       () -> {
+  //         // Boolean supplier that controls when the path will be mirrored for the red alliance
+  //         // This will flip the path being followed to the red side of the field.
+  //         // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+  //         var alliance = DriverStation.getAlliance();
+  //         return alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;
+  //       },
+  //       this // Reference to this subsystem to set requirements
+  //                                 );
+  // }
+
+  /**
+   * Aim the robot at the target returned by PhotonVision.
+   *
+   * @param camera {@link PhotonCamera} to communicate with.
+   * @return A {@link Command} which will run the alignment.
+   */
+  public Command aimAtTarget(PhotonCamera camera)
+  {
+    return run(() -> {
+      PhotonPipelineResult result = camera.getLatestResult();
+      if (result.hasTargets())
+      {
+        drive(getTargetSpeeds(0,
+                              0,
+                              Rotation2d.fromDegrees(result.getBestTarget()
+                                                           .getYaw()))); // Not sure if this will work, more math may be required.
+      }
+    });
+  }
+
+  /**
+   * Get the path follower with events.
+   *
+   * @param pathName       PathPlanner path name.
+   * @return {@link AutoBuilder#followPath(PathPlannerPath)} path command.
+   */
+  // public Command getAutonomousCommand(String pathName)
+  // {
+  //   Create a path following command using AutoBuilder. This will also trigger event markers.
+  //   return new PathPlannerAuto(pathName);
+  // }
+
+  /**
+   * Use PathPlanner Path finding to go to a point on the field.
+   *
+   * @param pose Target {@link Pose2d} to go to.
+   * @return PathFinding command
+   */
+//   public Command driveToPose(Pose2d pose)
+//   {
+// // Create the constraints to use while pathfinding
+//     PathConstraints constraints = new PathConstraints(
+//         swerveDrive.getMaximumVelocity(), 4.0,
+//         swerveDrive.getMaximumAngularVelocity(), Units.degreesToRadians(720));
+
+// // Since AutoBuilder is configured, we can use it to build pathfinding commands
+//     return AutoBuilder.pathfindToPose(
+//         pose,
+//         constraints,
+//         0.0, // Goal end velocity in meters/sec
+//         0.0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
+//                                      );
+//   }
 
   /**
    * Command to drive the robot using translative values and heading as a setpoint.
@@ -110,10 +202,10 @@ public class YAGSL extends SubsystemBase
       double yInput = Math.pow(translationY.getAsDouble(), 3); // Smooth controll out
       // Make the robot move
       driveFieldOriented(swerveDrive.swerveController.getTargetSpeeds(xInput, yInput,
-                                                                      headingX.getAsDouble(),
-                                                                      headingY.getAsDouble(),
-                                                                      swerveDrive.getOdometryHeading().getRadians(),
-                                                                      swerveDrive.getMaximumVelocity()));
+                                        headingX.getAsDouble(),
+                                        headingY.getAsDouble(),
+                                        swerveDrive.getOdometryHeading().getRadians(),
+                                        swerveDrive.getMaximumVelocity()));
     });
   }
 
@@ -230,6 +322,11 @@ public class YAGSL extends SubsystemBase
 
   @Override
   public void periodic()
+  {
+  }
+
+  @Override
+  public void simulationPeriodic()
   {
   }
 
