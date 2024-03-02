@@ -84,10 +84,10 @@ public final class Constants {
         public static final double closedLoopRamp = 0.0;
 
         /* Angle Motor PID Values */
-        public static final double angleKP = 1; //chosenModule.angleKP;
-        public static final double angleKI = 0; //chosenModule.angleKI;
-        public static final double angleKD = 0; //chosenModule.angleKD;
-        public static final double angleKF = 0; //chosenModule.angleKF;
+        public static final double angleKP = chosenModule.angleKP;
+        public static final double angleKI = chosenModule.angleKI;
+        public static final double angleKD = chosenModule.angleKD;
+        public static final double angleKF = chosenModule.angleKF;
 
 
         /* Drive Motor PID Values */
@@ -271,5 +271,4 @@ public final class Constants {
             new Pose3d(), new Pose3d()));
     }
 }
-
 
