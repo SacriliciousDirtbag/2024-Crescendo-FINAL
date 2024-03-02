@@ -63,7 +63,7 @@ public class PhotonSwerve extends Command{
     @Override
     public void initialize() 
     {
-        theataPidController.reset(s_Swerve.getGyroYaw().getRadians());
+        theataPidController.reset(s_Swerve.getYaw().getRadians());
         var robotPose = supplier.get();
         // xPidController.setSetpoint(1);
         // yPidController.setSetpoint(0);

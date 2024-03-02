@@ -180,12 +180,12 @@ public class feederSubsystem extends SubsystemBase {
     public void goFstate(fState state){
         if(fstate == frc.robot.State.fState.OUT)
         {
-            FeederSpinSpeed = 0.5;
+            FeederSpinSpeed = 0.75;
         }
 
         if(fstate == frc.robot.State.fState.IN)
         {
-            FeederSpinSpeed = -0.5;
+            FeederSpinSpeed = -0.75;
         }
 
         if(fstate == frc.robot.State.fState.STOP)

@@ -187,8 +187,8 @@ public class RobotContainer {
         B_BUTTON.onTrue(c_feedIn);
         B_BUTTON.onFalse(c_FeedStop);
 
-        A_BUTTON.onTrue(c_FeedOut);
-        A_BUTTON.onFalse(c_FeedStop);
+        // A_BUTTON.onTrue(c_FeedOut);
+        // A_BUTTON.onFalse(c_FeedStop);
 
         //INTAKE SUBSYSTEM
         RIGHT_BUMPER.onTrue(c_IntakeIn);
@@ -203,7 +203,7 @@ public class RobotContainer {
 
         X_BUTTON.onTrue(c_trapOut);
         X_BUTTON.onFalse(c_trapStop);
-        
+
         // photonToggle.onTrue(m_photonCommand);
         // photonToggle.onFalse(new InstantCommand(() -> s_Swerve.drive(new Translation2d(), 0,false, false)));
         // 

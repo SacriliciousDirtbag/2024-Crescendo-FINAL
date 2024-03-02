@@ -52,7 +52,7 @@ public final class Constants {
             new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0));
 
         /* Module Gear Ratios */
-        public static final double driveGearRatio = chosenModule.driveGearRatio;
+        public static final double driveGearRatio = (75/4);  //New Ratio
         public static final double angleGearRatio = chosenModule.angleGearRatio;
 
         /* Motor Inverts */
@@ -84,10 +84,11 @@ public final class Constants {
         public static final double closedLoopRamp = 0.0;
 
         /* Angle Motor PID Values */
-        public static final double angleKP = chosenModule.angleKP;
-        public static final double angleKI = chosenModule.angleKI;
-        public static final double angleKD = chosenModule.angleKD;
-        public static final double angleKF = chosenModule.angleKF;
+        public static final double angleKP = 1; //chosenModule.angleKP;
+        public static final double angleKI = 0; //chosenModule.angleKI;
+        public static final double angleKD = 0; //chosenModule.angleKD;
+        public static final double angleKF = 0; //chosenModule.angleKF;
+
 
         /* Drive Motor PID Values */
         public static final double driveKP = 0.2; //TODO: This must be tuned to specific robot
@@ -111,7 +112,7 @@ public final class Constants {
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double maxSpeed = 3; //was 4
+        public static final double maxSpeed = 3.3; //was 4
         /** Radians per Second */
         public static final double maxAngularVelocity = 2.5; //was 10
 
@@ -125,7 +126,7 @@ public final class Constants {
             public static final int driveMotorID = 1;
             public static final int angleMotorID = 2; 
             public static final int canCoderID = 3;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(27.29); /*179.94 */
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(34.71); /*179.94 */
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -135,7 +136,7 @@ public final class Constants {
             public static final int driveMotorID = 7;
             public static final int angleMotorID = 8;
             public static final int canCoderID = 9;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(44.29); /*266.83 */
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(20.03); /*266.83 */
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -145,7 +146,7 @@ public final class Constants {
             public static final int driveMotorID = 4;
             public static final int angleMotorID = 5;
             public static final int canCoderID = 6;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(41.41); /*230.54 */
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(26.45); /*230.54 */
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -155,7 +156,7 @@ public final class Constants {
             public static final int driveMotorID = 10;
             public static final int angleMotorID = 11;
             public static final int canCoderID = 12;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(43.61); /*161.58, was 28.30 */
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(110.74); /*161.58, was 28.30 */
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -213,7 +214,6 @@ public final class Constants {
 
     }
 
-    
     
     public static final class shooterSystem {
         public static final int LeftFlyWheelID = 5; //NeoPWM, 22
