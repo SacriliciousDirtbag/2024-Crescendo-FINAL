@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -38,6 +39,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.subsystems.TrapAmpSubsystem;
 import frc.robot.subsystems.intakeSubsystem;
 import frc.robot.subsystems.photonSubsystem;
+import swervelib.SwerveDrive;
 import frc.robot.subsystems.feederSubsystem;
 import frc.robot.subsystems.*;
 
@@ -109,8 +111,8 @@ public class RobotContainer {
     
 
     //BUTTON BOARD
-    private final JoystickButton zeroGyro = new JoystickButton(driver, 4); //TODO: Implement ZerGyro As Button
-    private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kStart.value);
+    //private final JoystickButton zeroGyro = new JoystickButton(driver, 4); //TODO: Implement ZerGyro As Button
+    //private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kStart.value);
    
 
     //private final JoystickButton safeButton = new JoystickButton(buttonBoard, 12); //Reset Button - use later for Assist Controller
@@ -120,7 +122,7 @@ public class RobotContainer {
     public final TrapAmpSubsystem s_TrapAmpSubsystem = new TrapAmpSubsystem();
     public final feederSubsystem s_feederSubsystem = new feederSubsystem();
     public final intakeSubsystem s_IntakeSubsystem = new intakeSubsystem();
-    
+
     public final trapIn c_trapIn = new trapIn(s_TrapAmpSubsystem);
     public final trapOut c_trapOut = new trapOut(s_TrapAmpSubsystem);
     public final trapStop c_trapStop = new trapStop(s_TrapAmpSubsystem);
@@ -166,9 +168,19 @@ public class RobotContainer {
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
-        // Configure the button bindings
-        configureButtonBindings();
 
+    AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
+                                                                   () -> -MathUtil.applyDeadband(driver.getLeftY(),
+                                                                                                OperatorConstants.LEFT_Y_DEADBAND),
+                                                                   () -> -MathUtil.applyDeadband(driver.getLeftX(),
+                                                                                                OperatorConstants.LEFT_X_DEADBAND),
+                                                                   () -> -MathUtil.applyDeadband(driver.getRightX(),
+                                                                                                OperatorConstants.RIGHT_X_DEADBAND),
+                                                                   driver::getYButtonPressed,
+                                                                   driver::getAButtonPressed,
+                                                                   driver::getXButtonPressed,
+                                                                   driver::getBButtonPressed);
+        
         SmartDashboard.putData(m_Chooser);
 
     // Applies deadbands and inverts controls because joysticks
@@ -188,18 +200,23 @@ public class RobotContainer {
     // left stick controls translation
     // right stick controls the angular velocity of the robot
     Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
-        () -> MathUtil.applyDeadband(driver.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(driver.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> driver.getRightX() * 0.5);
+        () -> -MathUtil.applyDeadband(driver.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+        () -> -MathUtil.applyDeadband(driver.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+        () -> driver.getRightX()); //* 0.5
 
     Command driveFieldOrientedDirectAngleSim = drivebase.simDriveCommand(
         () -> MathUtil.applyDeadband(driver.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
         () -> MathUtil.applyDeadband(driver.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> driver.getRawAxis(2));
+        () -> driver.getRightX());
 
 
         drivebase.setDefaultCommand(
-        !RobotBase.isSimulation() ? driveFieldOrientedDirectAngle : driveFieldOrientedDirectAngleSim);
+        !RobotBase.isSimulation() ? driveFieldOrientedAnglularVelocity : driveFieldOrientedDirectAngleSim);
+
+      
+      // Configure the button bindings
+        configureButtonBindings();
+
     }
         
     /**
@@ -216,6 +233,7 @@ public class RobotContainer {
       // driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
 
         /* Driver Buttons */
+
 
 
         //FEEDER SUBSYSTEM
@@ -265,7 +283,7 @@ public class RobotContainer {
 
     public void setDriveMode()
   {
-    //drivebase.setDefaultCommand();
+    //drivebase.setDefaultCommand(closedAbsoluteDriveAdv);
   }
 
   public void setMotorBrake(boolean brake)
