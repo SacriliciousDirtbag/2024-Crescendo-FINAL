@@ -157,3 +157,29 @@ public final class Constants
     }
 }
 
+
+
+//PID NOTES
+
+
+/* 
+
+{
+  "drive": {
+
+    "p": 1,
+    "i": 0,
+    "d": 0,
+    "f": 0,
+    "iz": 0
+  },
+  "angle": {
+    "p": 4,
+    "i": 1.25,
+    "d": 0,
+    "f": 0,
+    "iz": 0
+  }
+}
+
+*/ 

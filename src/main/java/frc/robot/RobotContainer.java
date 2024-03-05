@@ -283,7 +283,7 @@ public class RobotContainer {
 
     public void setDriveMode()
   {
-    //drivebase.setDefaultCommand(closedAbsoluteDriveAdv);
+    //drivebase.setDefaultCommand();
   }
 
   public void setMotorBrake(boolean brake)
