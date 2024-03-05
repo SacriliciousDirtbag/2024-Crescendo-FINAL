@@ -106,7 +106,17 @@ public class RobotContainer {
 
     private final JoystickButton LEFT_BUMPER = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
-    //private final JoystickButton spinAmp = new JoystickButton(driver, XboxController.Button.kY.value);
+    // BUTTON BOARD //
+
+      private final JoystickButton TOP_ORANGE = new JoystickButton(buttonBoard, 1); //TOP ORANGE
+      private final JoystickButton BOTTOM_ORANGE = new JoystickButton(buttonBoard, 3); //BOTTOM ORANGE
+      private final JoystickButton TOP_RED = new JoystickButton(buttonBoard, 2); //TOP RED
+      private final JoystickButton BOTTOM_RED = new JoystickButton(buttonBoard, 4); //BTTOM RED
+      private final JoystickButton TOP_BLUE = new JoystickButton(buttonBoard, 10); //TOP BLUE
+      private final JoystickButton MIDDLE_BLUE = new JoystickButton(buttonBoard, 5);
+      private final JoystickButton BOTTOM_BLUE = new JoystickButton(buttonBoard, 6); //BOTTOM BLUE
+      private final JoystickButton TOP_GREEN = new JoystickButton(buttonBoard, 7); //TOP GREEN
+      private final JoystickButton BOTTOM_GREEN = new JoystickButton(buttonBoard, 9); //BOTTOM GREEN
     
     
 
@@ -234,8 +244,6 @@ public class RobotContainer {
 
         /* Driver Buttons */
 
-
-
         //FEEDER SUBSYSTEM
         RIGHT_TRIGGER.onTrue(c_flyIn);
         RIGHT_TRIGGER.onFalse(c_FeedStop);
@@ -246,8 +254,8 @@ public class RobotContainer {
         B_BUTTON.onTrue(c_feedIn);
         B_BUTTON.onFalse(c_FeedStop);
 
-        // A_BUTTON.onTrue(c_FeedOut);
-        // A_BUTTON.onFalse(c_FeedStop);
+        A_BUTTON.onTrue(c_FeedOut);
+        A_BUTTON.onFalse(c_FeedStop);
 
         //INTAKE SUBSYSTEM
         RIGHT_BUMPER.onTrue(c_IntakeIn);
