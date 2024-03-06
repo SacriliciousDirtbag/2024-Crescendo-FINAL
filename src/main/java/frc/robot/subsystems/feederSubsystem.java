@@ -110,8 +110,8 @@ public class feederSubsystem extends SubsystemBase {
         // CANSparkMaxUtil.setCANSparkMaxBusUsage(m_rightFlyMotor, Usage.kVelocityOnly);
 
 
-        m_LeftFeederMotor.setInverted(true);
-        m_RightFeederMotor.setInverted(true);
+        // m_LeftFeederMotor.setInverted(true);
+        // m_RightFeederMotor.setInverted(true);
 
         m_RightAimingMotor.disable();
         m_LeftAimingMotor.disable();
@@ -132,8 +132,8 @@ public class feederSubsystem extends SubsystemBase {
         m_RightFeederMotor.set(FeederSpinSpeed);
 
         //FLY
-        m_leftFlyMotor.set(0); //0.5
-        m_rightFlyMotor.set(0); //-0.5, Reverse Polarity
+        // m_leftFlyMotor.set(FlywheelSpinSpeed); //0.5
+        // m_rightFlyMotor.set(FlywheelSpinSpeed); //-0.5, Reverse Polarity
         
         //ARM
         aPV = aPos();
@@ -161,17 +161,20 @@ public class feederSubsystem extends SubsystemBase {
     public void gosState(sState state){
         if(sState == frc.robot.State.sState.OUT)
         {
-            FlywheelSpinSpeed = 0.5;
+            m_leftFlyMotor.set(-0.5); //0.5
+            m_rightFlyMotor.set(-0.5);
         }
 
         if(sState == frc.robot.State.sState.IN)
         {
-            FlywheelSpinSpeed = -0.5;
+            m_leftFlyMotor.set(0.5); //0.5
+            m_rightFlyMotor.set(0.5);
         }
 
         if(sState == frc.robot.State.sState.STOP)
         {
-            FlywheelSpinSpeed = 0;
+            m_leftFlyMotor.set(0); //0.5
+            m_rightFlyMotor.set(0);
         }
     }
     

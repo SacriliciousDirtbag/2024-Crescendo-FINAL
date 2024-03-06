@@ -14,7 +14,7 @@ public class feedIn extends Command {
 
     @Override
     public void initialize() {
-        s_feederSubsystem.goFstate(fState.IN);
+        s_feederSubsystem.goFstate(fState.OUT);
     }
 
     @Override

@@ -43,6 +43,16 @@ import swervelib.SwerveDrive;
 import frc.robot.subsystems.feederSubsystem;
 import frc.robot.subsystems.*;
 
+import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -54,10 +64,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.subsystems.SwerveSubsystem;
 import java.io.File;
+
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
 
 /**
@@ -67,16 +78,25 @@ import java.io.File;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+      private double MaxSpeed = Constants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
+      private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
-  
-  // The robot's subsystems and commands are defined here...
-  private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
-                                                                         "swerve"));
+      /* Setting up bindings for necessary control of the swerve drive platform */
+      private final SwerveSubsystem drivetrain = Constants.DriveTrain; // My drivetrain
+
+      private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+          .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+          .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
+                                                                  // driving in open loop
+      private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+      private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+      private final Telemetry logger = new Telemetry(MaxSpeed);
+      
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
     /* Controllers */
-    private final XboxController driver = new XboxController(0); //Logitech XboxController
+    private final CommandXboxController driver = new CommandXboxController(0); //Logitech XboxController
     //private final Joystick driver2 = new Joystick(0); //Logitech Extreme3D Pro
     public final Joystick buttonBoard = new Joystick(1);//External Driver
     public final Joystick buttonBoard2 = new Joystick(2); //External Driver 2
@@ -89,22 +109,22 @@ public class RobotContainer {
 
     SendableChooser<Command> m_Chooser = new SendableChooser<>();
 
-    // XBOX CONTROLLER //
-    private final JoystickButton X_BUTTON = new JoystickButton(driver, XboxController.Button.kX.value); //POSITION
+    // OLD XBOX CONTROLLER //
+    // private final JoystickButton X_BUTTON = new JoystickButton(driver, XboxController.Button.kX.value); //POSITION
 
-    private final JoystickButton Y_BUTTON = new JoystickButton(driver, XboxController.Button.kY.value); //POSITION
+    // private final JoystickButton Y_BUTTON = new JoystickButton(driver, XboxController.Button.kY.value); //POSITION
     
-    private final JoystickButton A_BUTTON = new JoystickButton(driver, XboxController.Button.kA.value); //TODO: Implement Photon As Button
+    // private final JoystickButton A_BUTTON = new JoystickButton(driver, XboxController.Button.kA.value); //TODO: Implement Photon As Button
     
-    private final JoystickButton B_BUTTON = new JoystickButton(driver, XboxController.Button.kB.value);
+    // private final JoystickButton B_BUTTON = new JoystickButton(driver, XboxController.Button.kB.value);
 
-    private final JoystickButton RIGHT_TRIGGER = new JoystickButton(driver, XboxController.Axis.kRightTrigger.value); //HOLD
+    // private final JoystickButton RIGHT_TRIGGER = new JoystickButton(driver, XboxController.Axis.kRightTrigger.value); //HOLD
 
-    private final JoystickButton RIGHT_BUMPER = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+    // private final JoystickButton RIGHT_BUMPER = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
 
-    private final JoystickButton LEFT_TRIGGER = new JoystickButton(driver, XboxController.Axis.kLeftTrigger.value); //TODO: Remap all Buttons
+    // private final JoystickButton LEFT_TRIGGER = new JoystickButton(driver, XboxController.Axis.kLeftTrigger.value); //TODO: Remap all Buttons
 
-    private final JoystickButton LEFT_BUMPER = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+    // private final JoystickButton LEFT_BUMPER = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
     // BUTTON BOARD //
 
@@ -178,52 +198,6 @@ public class RobotContainer {
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
-
-    AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
-                                                                   () -> -MathUtil.applyDeadband(driver.getLeftY(),
-                                                                                                OperatorConstants.LEFT_Y_DEADBAND),
-                                                                   () -> -MathUtil.applyDeadband(driver.getLeftX(),
-                                                                                                OperatorConstants.LEFT_X_DEADBAND),
-                                                                   () -> -MathUtil.applyDeadband(driver.getRightX(),
-                                                                                                OperatorConstants.RIGHT_X_DEADBAND),
-                                                                   driver::getYButtonPressed,
-                                                                   driver::getAButtonPressed,
-                                                                   driver::getXButtonPressed,
-                                                                   driver::getBButtonPressed);
-        
-        SmartDashboard.putData(m_Chooser);
-
-    // Applies deadbands and inverts controls because joysticks
-    // are back-right positive while robot
-    // controls are front-left positive
-    // left stick controls translation
-    // right stick controls the desired angle NOT angular rotation
-    Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
-        () -> MathUtil.applyDeadband(driver.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(driver.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> driver.getRightX(),
-        () -> driver.getRightY());
-
-    // Applies deadbands and inverts controls because joysticks
-    // are back-right positive while robot
-    // controls are front-left positive
-    // left stick controls translation
-    // right stick controls the angular velocity of the robot
-    Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
-        () -> -MathUtil.applyDeadband(driver.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> -MathUtil.applyDeadband(driver.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> driver.getRightX()); //* 0.5
-
-    Command driveFieldOrientedDirectAngleSim = drivebase.simDriveCommand(
-        () -> MathUtil.applyDeadband(driver.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(driver.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> driver.getRightX());
-
-
-        drivebase.setDefaultCommand(
-        !RobotBase.isSimulation() ? driveFieldOrientedAnglularVelocity : driveFieldOrientedDirectAngleSim);
-
-      
       // Configure the button bindings
         configureButtonBindings();
 
@@ -236,6 +210,26 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
+      drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
+          drivetrain.applyRequest(() -> drive.withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
+                                                                                            // negative Y (forward)
+              .withVelocityY(-driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+              .withRotationalRate(-driver.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+          ));
+
+      //driver.a().whileTrue(drivetrain.applyRequest(() -> brake));
+      //Invert Button?
+      // driver.b().whileTrue(drivetrain
+      //     .applyRequest(() -> point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))));
+
+      // reset the field-centric heading on left bumper press
+      driver.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+
+      if (Utils.isSimulation()) {
+        drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
+      }
+      drivetrain.registerTelemetry(logger::telemeterize);
+
        // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
       //driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
@@ -245,31 +239,32 @@ public class RobotContainer {
         /* Driver Buttons */
 
         //FEEDER SUBSYSTEM
-        RIGHT_TRIGGER.onTrue(c_flyIn);
-        RIGHT_TRIGGER.onFalse(c_FeedStop);
+        driver.rightTrigger().onTrue(c_flyIn);
+        driver.rightTrigger().onFalse(c_FlyStop);
 
-        LEFT_BUMPER.onTrue(c_flyOut);
-        LEFT_BUMPER.onFalse(c_FlyStop);
 
-        B_BUTTON.onTrue(c_feedIn);
-        B_BUTTON.onFalse(c_FeedStop);
+        // driver.leftBumper().onTrue(c_flyOut);
+        // driver.leftBumper().onFalse(c_FlyStop);
 
-        A_BUTTON.onTrue(c_FeedOut);
-        A_BUTTON.onFalse(c_FeedStop);
+        driver.b().onTrue(c_feedIn);
+        driver.b().onFalse(c_FeedStop);
+
+        driver.a().onTrue(c_FeedOut);
+        driver.a().onFalse(c_FeedStop);
 
         //INTAKE SUBSYSTEM
-        RIGHT_BUMPER.onTrue(c_IntakeIn);
-        RIGHT_BUMPER.onFalse(c_IntakeStop);
+        driver.rightBumper().onTrue(c_IntakeOut); //Intake Wheels
+        driver.rightBumper().onFalse(c_IntakeStop);
 
-        RIGHT_BUMPER.onTrue(c_IntakeOut);
-        RIGHT_BUMPER.onFalse(c_IntakeStop);
+        driver.rightBumper().onTrue(c_IntakeOut);
+        driver.rightBumper().onFalse(c_IntakeStop);
 
         //AMP SUBSYSTEM
-        Y_BUTTON.onTrue(c_trapIn);
-        Y_BUTTON.onFalse(c_trapStop);
+        driver.y().onTrue(c_trapIn);
+        driver.y().onFalse(c_trapStop);
 
-        X_BUTTON.onTrue(c_trapOut);
-        X_BUTTON.onFalse(c_trapStop);
+        driver.x().onTrue(c_trapOut);
+        driver.x().onFalse(c_trapStop);
 
         // photonToggle.onTrue(m_photonCommand);
         // photonToggle.onFalse(new InstantCommand(() -> s_Swerve.drive(new Translation2d(), 0,false, false)));
@@ -294,8 +289,5 @@ public class RobotContainer {
     //drivebase.setDefaultCommand();
   }
 
-  public void setMotorBrake(boolean brake)
-  {
-    drivebase.setMotorBrake(brake);
-  }
+  
 }

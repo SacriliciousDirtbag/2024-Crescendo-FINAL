@@ -1,17 +1,17 @@
 {
   "location": {
-    "front": 11.9375,
-    "left": -11.90625
+    "front": -12,
+    "left": 12
   },
-  "absoluteEncoderOffset": 332.666015625,
+  "absoluteEncoderOffset": 208.828125,
   "drive": {
     "type": "falcon",
-    "id": 10,
+    "id": 4,
     "canbus": "1056_Canivore"
   },
   "angle": {
     "type": "falcon",
-    "id": 11,
+    "id": 5,
     "canbus": "1056_Canivore"
   },
   "conversionFactor": {
@@ -20,7 +20,7 @@
   },
   "encoder": {
     "type": "cancoder",
-    "id": 12,
+    "id": 6,
     "canbus": "1056_Canivore"
   },
   "inverted": {
