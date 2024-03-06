@@ -8,8 +8,10 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.State.aState;
@@ -58,11 +60,13 @@ public class feederSubsystem extends SubsystemBase {
     private double aSetPoint; //destination we want to go to
 
     //POSE PARAMETERS
+    double MIN;
     double toHome;
     double toIntake;
     double toTrap;
     double toFar;//Arbitrary value based on distance, shoots
     double toNear;//Arbitrary value based on distance, shoots
+    double MAX;
     
 
     public feederSubsystem(){
@@ -70,7 +74,6 @@ public class feederSubsystem extends SubsystemBase {
         //FEEDER SPINNER
         m_LeftFeederMotor = new CANSparkFlex(Constants.feederSubsystem.leftMotorID, MotorType.kBrushless); //Fixed, Had to Reconfigure Motor 21
         m_RightFeederMotor = new CANSparkFlex(Constants.feederSubsystem.rightMotorID, MotorType.kBrushless);
-
 
         //FLYWHEEL SPINNER
         m_leftFlyMotor = new PWMSparkMax(Constants.shooterSystem.LeftFlyWheelID);
@@ -86,7 +89,7 @@ public class feederSubsystem extends SubsystemBase {
 
         a_Encoder = new DutyCycleEncoder(frc.robot.Constants.feederSubsystem.feederEncoderID); //PWM Channel
         
-        double ffP = 0.5;
+        double ffP = 0.05;
         double ffI = 0;
         double ffD = 0;
         aPID = new PIDController(ffP, ffI, ffD);
@@ -97,10 +100,12 @@ public class feederSubsystem extends SubsystemBase {
 
 
         //ARM SETPOINTS
+        MIN = 9.131346228365;
         toIntake = 0; //TODO: calibrate Feeder ARM Setpoints
         toTrap = 0; 
         toFar = 0;
         toNear = 0;
+        MAX = 105.35;
 
         //CANBUS USAGE CONSTRAINTS
         CANSparkFlexUtil.setCANSparkFlexBusUsage(m_LeftAimingMotor, CANSparkFlexUtil.Usage.kPositionOnly);
@@ -110,11 +115,10 @@ public class feederSubsystem extends SubsystemBase {
         // CANSparkMaxUtil.setCANSparkMaxBusUsage(m_rightFlyMotor, Usage.kVelocityOnly);
 
 
-        // m_LeftFeederMotor.setInverted(true);
-        // m_RightFeederMotor.setInverted(true);
+        m_LeftFeederMotor.setInverted(true);
+        m_RightFeederMotor.setInverted(true);
 
-        m_RightAimingMotor.disable();
-        m_LeftAimingMotor.disable();
+        m_leftFlyMotor.setInverted(true);
 
         fstate = frc.robot.State.fState.STOP;
         sState = frc.robot.State.sState.STOP;
@@ -124,76 +128,78 @@ public class feederSubsystem extends SubsystemBase {
         return a_Encoder.getAbsolutePosition() * 360;
     }
 
-
-    @Override
+     @Override
     public void periodic(){
         //SPINNER
         m_LeftFeederMotor.set(FeederSpinSpeed);
         m_RightFeederMotor.set(FeederSpinSpeed);
 
         //FLY
-        // m_leftFlyMotor.set(FlywheelSpinSpeed); //0.5
-        // m_rightFlyMotor.set(FlywheelSpinSpeed); //-0.5, Reverse Polarity
+        m_leftFlyMotor.set(FlywheelSpinSpeed); //0.5
+        m_rightFlyMotor.set(FlywheelSpinSpeed); //-0.5, Reverse Polarity
         
         //ARM
         aPV = aPos();
-        // double aOutput = aPID.calculate(aPV, aSetPoint);
-        // m_RightAimingMotor.set(aOutput);
+        double aOutput = -aPID.calculate(aPV, aSetPoint);
+        //m_RightAimingMotor.set(-aOutput);
         // m_LeftAimingMotor.set(aOutput);
 
-        //SmartDashboard.putNumber("Arm Encoder Rot:", aPos());
+        SmartDashboard.putNumber("Feeder Arm Encoder Rot:", aPos());
 
         SmartDashboard.putNumber("Feeder Arm Pos", aPV); //Measured in Degrees
         SmartDashboard.putNumber("Feeder Encoder DIO#", a_Encoder.getSourceChannel());
 
-    }
+        SmartDashboard.putNumber("Feeder Fly Speed", FeederSpinSpeed);
+        SmartDashboard.putString("Feeder State", sState.name());
 
-    public double FPos1(){
-        return m_LeftFeederMotor.getEncoder().getPosition();
-    }
+        SmartDashboard.putNumber("A Setpoint", aSetPoint);
 
-    public double FPos2(){
-        return m_RightFeederMotor.getEncoder().getPosition();
     }
 
 
     //FLYWHEEL SPIN STATE
     public void gosState(sState state){
-        if(sState == frc.robot.State.sState.OUT)
+        if(state == frc.robot.State.sState.OUT)
         {
-            m_leftFlyMotor.set(-0.5); //0.5
-            m_rightFlyMotor.set(-0.5);
+            FlywheelSpinSpeed = 0.4;
+            sState = frc.robot.State.sState.OUT;
         }
 
-        if(sState == frc.robot.State.sState.IN)
+        if(state == frc.robot.State.sState.IN)
         {
-            m_leftFlyMotor.set(0.5); //0.5
-            m_rightFlyMotor.set(0.5);
+            FlywheelSpinSpeed = -0.4;
+            sState = frc.robot.State.sState.IN;
         }
 
-        if(sState == frc.robot.State.sState.STOP)
+        if(state == frc.robot.State.sState.STOP)
         {
-            m_leftFlyMotor.set(0); //0.5
-            m_rightFlyMotor.set(0);
+            FlywheelSpinSpeed = 0;
+            sState = frc.robot.State.sState.STOP;
         }
     }
     
 
     //AIM SPIN STATE
     public void goFstate(fState state){
-        if(fstate == frc.robot.State.fState.OUT)
+        if(state == frc.robot.State.fState.OUT)
         {
             FeederSpinSpeed = 0.75;
+            fstate = frc.robot.State.fState.OUT;
+            
         }
 
-        if(fstate == frc.robot.State.fState.IN)
+        if(state == frc.robot.State.fState.IN)
         {
             FeederSpinSpeed = -0.75;
+            fstate = frc.robot.State.fState.IN;
         }
 
-        if(fstate == frc.robot.State.fState.STOP)
+        if(state == frc.robot.State.fState.STOP)
         {
             FeederSpinSpeed = 0;
+            fstate = frc.robot.State.fState.STOP;
+
+            
         }
     }
 
@@ -201,6 +207,11 @@ public class feederSubsystem extends SubsystemBase {
     //ARM SET SETPOINT
     public void setASetPoint(double setpoint){
         aSetPoint = setpoint;
+    }
+
+    //ARM SET SETPOINT
+    public double getASetPoint(){
+        return aSetPoint;
     }
 
     //ARM MOVEMENT STATE
@@ -225,9 +236,14 @@ public class feederSubsystem extends SubsystemBase {
             setASetPoint(toNear);
             aState = frc.robot.State.aState.AIM_NEAR;
         }
+        if (state == frc.robot.State.aState.HOME) {
+            //she P on my I till i D
+            setASetPoint(MIN);
+            aState = frc.robot.State.aState.HOME;
+        }
     }
 
     public void stopWheels(){
         goFstate(frc.robot.State.fState.STOP);
     }
-}
+   }

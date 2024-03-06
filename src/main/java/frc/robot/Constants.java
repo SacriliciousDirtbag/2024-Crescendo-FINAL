@@ -200,7 +200,7 @@ public final class Constants{
         public static final int rightMotorID = 20; //Vortex
         public static final int leftMotorID = 21; //Vortex
 
-        public static final int feederEncoderID = 0;  //DIO, 0
+        public static final int feederEncoderID = 1;  //DIO, 1
         
 
     }
@@ -219,7 +219,7 @@ public final class Constants{
         
         public static final int trapScorerID = 0; //NeoPWM, ID 24
 
-        public static final int ampEncoderID = 1; //DIO, 
+        public static final int ampEncoderID = 0; //DIO, 0
     }
 
 

@@ -35,9 +35,11 @@ public class TrapAmpSubsystem extends SubsystemBase {
     private double tSetPoint; //destination we want to go to
 
     //POSE PARAMETERS
+    double MIN;
     double toHome;
     double toTrap;
     double toAim; //Arbitrary value based on distance, shoots
+    double MAX;
     
 
     
@@ -57,24 +59,25 @@ public class TrapAmpSubsystem extends SubsystemBase {
         
         t_Encoder = new DutyCycleEncoder(frc.robot.Constants.AmpSystem.ampEncoderID); //PWM Channel
         
-        double ffP = 0.5; //TODO: Tune PID
+        double ffP = 0.025; //TODO: Tune PID
         double ffI = 0;
         double ffD = 0;
         tPID = new PIDController(ffP, ffI, ffD);
 
-        tFeedforward = new ArmFeedforward(0, 0.2, 0); //-0.15
+        tFeedforward = new ArmFeedforward(0, 0, 0); //-0.15
 
-        eState = frc.robot.State.eState.HOME;
+        //eState = frc.robot.State.eState.HOME;
 
 
         //ARM SETPOINTS
-        toHome = t_Encoder.getAbsolutePosition(); //TODO: calibrate Trap ARM Setpoints
+        MIN = 8.42;
+        toHome = 0; //TODO: calibrate Trap ARM Setpoints
         toTrap = 0; 
         toAim = 0; 
+        MAX = 161.54;
 
 
-        m_RightArmMotor.disable();
-        m_LeftArmMotor.disable();
+
         //CANBUS USAGE
         //CANSparkMaxUtil.setCANSparkMaxBusUsage(m_trapMotor, Usage.kAll);
         //CANSparkMaxUtil.setCANSparkMaxBusUsage(m_RightArmMotor, Usage.kPositionOnly);
@@ -95,31 +98,33 @@ public class TrapAmpSubsystem extends SubsystemBase {
 
         //ARM
         tPV = tPos();
-        // double tOutput = tPID.calculate(tPV, tSetPoint);
-        // m_RightArmMotor.set(tOutput);
-        // m_LeftArmMotor.set(tOutput);
+        double tOutput = tPID.calculate(tPV, 75);
+        m_RightArmMotor.set(tOutput);
+        m_LeftArmMotor.set(-tOutput);
 
-        SmartDashboard.putNumber("Arm Encoder Rot:",tPV); //Measured in Degrees
+        SmartDashboard.putNumber("Trap Arm Encoder Rot:",tPV); //Measured in Degrees
         SmartDashboard.putNumber("Trap Encoder DIO#", t_Encoder.getSourceChannel());
-    }
+        SmartDashboard.putNumber("T Setpoint", 75);
+        SmartDashboard.putNumber("T Output", tOutput);
 
-    public double TPos(){
-        return t_Encoder.getAbsolutePosition();
     }
 
     //TRAP AMP Spinner
     public void goTState(tState state){
         if(state == frc.robot.State.tState.IN){
             spinSpeed = 1;
+            tState = frc.robot.State.tState.IN;
         }
 
         if(state == frc.robot.State.tState.OUT){
             spinSpeed = -1;
+             tState = frc.robot.State.tState.OUT;
             
         }
 
         if(state == frc.robot.State.tState.STOP){
             spinSpeed = 0;
+             tState = frc.robot.State.tState.STOP;
 
         }
 
@@ -130,23 +135,28 @@ public class TrapAmpSubsystem extends SubsystemBase {
         tSetPoint = setpoint;
     }
 
+    //ARM GET SETPOINT
+    public double getTSetPoint(){
+        return tSetPoint;
+    }
+
 
     //Arm
     public void goEState(eState state){
         if(state == frc.robot.State.eState.HOME){
-            tSetPoint = toHome;
+            setTSetPoint(toHome);
             eState = frc.robot.State.eState.HOME;
             
         }
 
         if(state == frc.robot.State.eState.TRAP_POS){
-            tSetPoint = toTrap;
+            setTSetPoint(toTrap);
             eState = frc.robot.State.eState.TRAP_POS;
             
         }
 
         if(state == frc.robot.State.eState.AIM_POS){
-            tSetPoint = toAim;
+            setTSetPoint(toAim);
             eState = frc.robot.State.eState.AIM_POS;
 
         }

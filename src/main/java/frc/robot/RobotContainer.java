@@ -243,8 +243,8 @@ public class RobotContainer {
         driver.rightTrigger().onFalse(c_FlyStop);
 
 
-        // driver.leftBumper().onTrue(c_flyOut);
-        // driver.leftBumper().onFalse(c_FlyStop);
+        driver.leftBumper().onTrue(c_flyOut);
+        driver.leftBumper().onFalse(c_FlyStop);
 
         driver.b().onTrue(c_feedIn);
         driver.b().onFalse(c_FeedStop);
