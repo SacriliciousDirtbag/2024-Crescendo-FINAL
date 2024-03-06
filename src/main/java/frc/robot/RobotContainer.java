@@ -97,6 +97,8 @@ public class RobotContainer {
 
     /* Controllers */
     private final CommandXboxController driver = new CommandXboxController(0); //Logitech XboxController
+    private final CommandXboxController driver2 = new CommandXboxController(1); 
+
     //private final Joystick driver2 = new Joystick(0); //Logitech Extreme3D Pro
     public final Joystick buttonBoard = new Joystick(1);//External Driver
     public final Joystick buttonBoard2 = new Joystick(2); //External Driver 2
@@ -126,17 +128,17 @@ public class RobotContainer {
 
     // private final JoystickButton LEFT_BUMPER = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
-    // BUTTON BOARD //
+    // //OLD BUTTON BOARD //
 
-      private final JoystickButton TOP_ORANGE = new JoystickButton(buttonBoard, 1); //TOP ORANGE
-      private final JoystickButton BOTTOM_ORANGE = new JoystickButton(buttonBoard, 3); //BOTTOM ORANGE
-      private final JoystickButton TOP_RED = new JoystickButton(buttonBoard, 2); //TOP RED
-      private final JoystickButton BOTTOM_RED = new JoystickButton(buttonBoard, 4); //BTTOM RED
-      private final JoystickButton TOP_BLUE = new JoystickButton(buttonBoard, 10); //TOP BLUE
-      private final JoystickButton MIDDLE_BLUE = new JoystickButton(buttonBoard, 5);
-      private final JoystickButton BOTTOM_BLUE = new JoystickButton(buttonBoard, 6); //BOTTOM BLUE
-      private final JoystickButton TOP_GREEN = new JoystickButton(buttonBoard, 7); //TOP GREEN
-      private final JoystickButton BOTTOM_GREEN = new JoystickButton(buttonBoard, 9); //BOTTOM GREEN
+    //   private final JoystickButton TOP_ORANGE = new JoystickButton(buttonBoard, 1); //TOP ORANGE
+    //   private final JoystickButton BOTTOM_ORANGE = new JoystickButton(buttonBoard, 3); //BOTTOM ORANGE
+    //   private final JoystickButton TOP_RED = new JoystickButton(buttonBoard, 2); //TOP RED
+    //   private final JoystickButton BOTTOM_RED = new JoystickButton(buttonBoard, 4); //BTTOM RED
+    //   private final JoystickButton TOP_BLUE = new JoystickButton(buttonBoard, 10); //TOP BLUE
+    //   private final JoystickButton MIDDLE_BLUE = new JoystickButton(buttonBoard, 5);
+    //   private final JoystickButton BOTTOM_BLUE = new JoystickButton(buttonBoard, 6); //BOTTOM BLUE
+    //   private final JoystickButton TOP_GREEN = new JoystickButton(buttonBoard, 7); //TOP GREEN
+    //   private final JoystickButton BOTTOM_GREEN = new JoystickButton(buttonBoard, 9); //BOTTOM GREEN
     
     
 
@@ -236,17 +238,16 @@ public class RobotContainer {
       //driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
       // driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
 
-        /* Driver Buttons */
+        /* Driver Buttons, driver or driver2 */ 
 
         //FEEDER SUBSYSTEM
-        driver.rightTrigger().onTrue(c_flyIn);
+        driver.rightTrigger().onTrue(c_flyIn); //Black Wheels
         driver.rightTrigger().onFalse(c_FlyStop);
 
+        driver2.leftBumper().onTrue(c_flyOut);
+        driver2.leftBumper().onFalse(c_FlyStop);
 
-        driver.leftBumper().onTrue(c_flyOut);
-        driver.leftBumper().onFalse(c_FlyStop);
-
-        driver.b().onTrue(c_feedIn);
+        driver.b().onTrue(c_feedIn); //Aiming Wheels
         driver.b().onFalse(c_FeedStop);
 
         driver.a().onTrue(c_FeedOut);
@@ -260,7 +261,7 @@ public class RobotContainer {
         driver.rightBumper().onFalse(c_IntakeStop);
 
         //AMP SUBSYSTEM
-        driver.y().onTrue(c_trapIn);
+        driver.y().onTrue(c_trapIn); //Trap Wheels
         driver.y().onFalse(c_trapStop);
 
         driver.x().onTrue(c_trapOut);

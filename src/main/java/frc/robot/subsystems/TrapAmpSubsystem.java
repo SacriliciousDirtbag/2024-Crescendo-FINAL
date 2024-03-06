@@ -77,16 +77,33 @@ public class TrapAmpSubsystem extends SubsystemBase {
         MAX = 161.54;
 
 
+        m_RightArmMotor.setInverted(true);
 
-        //CANBUS USAGE
-        //CANSparkMaxUtil.setCANSparkMaxBusUsage(m_trapMotor, Usage.kAll);
-        //CANSparkMaxUtil.setCANSparkMaxBusUsage(m_RightArmMotor, Usage.kPositionOnly);
-        //CANSparkMaxUtil.setCANSparkMaxBusUsage(m_LeftArmMotor, Usage.kPositionOnly);
-
+        //FAILSAFE
+        m_LeftArmMotor.disable();
+        m_RightArmMotor.disable();
     }
 
     private double tPos() {
         return t_Encoder.getAbsolutePosition() * 360;
+    }
+
+     @Override
+    public void periodic(){
+
+        m_trapMotor.set(spinSpeed);
+
+        //ARM
+        tPV = tPos();
+        double tOutput = tPID.calculate(tPV, 90);
+        m_RightArmMotor.set(0.1);
+        m_LeftArmMotor.set(0.1);
+
+        SmartDashboard.putNumber("Trap Arm Encoder Rot:",tPV); //Measured in Degrees
+        SmartDashboard.putNumber("Trap Encoder DIO#", t_Encoder.getSourceChannel());
+        SmartDashboard.putNumber("T Setpoint", 90);
+        SmartDashboard.putNumber("T Output", tOutput);
+
     }
 
 
@@ -141,24 +158,6 @@ public class TrapAmpSubsystem extends SubsystemBase {
             eState = frc.robot.State.eState.AIM_POS;
 
         }
-
-    }
-
-     @Override
-    public void periodic(){
-
-        m_trapMotor.set(spinSpeed);
-
-        //ARM
-        tPV = tPos();
-        double tOutput = tPID.calculate(tPV, 90);
-        m_RightArmMotor.set(tOutput);
-        m_LeftArmMotor.set(tOutput);
-
-        SmartDashboard.putNumber("Trap Arm Encoder Rot:",tPV); //Measured in Degrees
-        SmartDashboard.putNumber("Trap Encoder DIO#", t_Encoder.getSourceChannel());
-        SmartDashboard.putNumber("T Setpoint", 90);
-        SmartDashboard.putNumber("T Output", tOutput);
 
     }
 }

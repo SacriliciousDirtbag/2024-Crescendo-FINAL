@@ -122,6 +122,8 @@ public class feederSubsystem extends SubsystemBase {
 
         fstate = frc.robot.State.fState.STOP;
         sState = frc.robot.State.sState.STOP;
+
+        setASetPoint(10);
     }
 
     private double aPos() {
@@ -140,9 +142,10 @@ public class feederSubsystem extends SubsystemBase {
         
         //ARM
         aPV = aPos();
+        
         double aOutput = -aPID.calculate(aPV, aSetPoint);
-        //m_RightAimingMotor.set(-aOutput);
-        // m_LeftAimingMotor.set(aOutput);
+        m_RightAimingMotor.set(-aOutput);
+        m_LeftAimingMotor.set(aOutput);
 
         SmartDashboard.putNumber("Feeder Arm Encoder Rot:", aPos());
 
