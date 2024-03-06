@@ -21,6 +21,7 @@ public class TrapAmpSubsystem extends SubsystemBase {
     public PWMSparkMax m_trapMotor;
     public PWMSparkMax m_RightArmMotor;
     public PWMSparkMax m_LeftArmMotor;
+    
     public tState tState; //Spinner
     public eState eState; //Arm
 
@@ -41,7 +42,6 @@ public class TrapAmpSubsystem extends SubsystemBase {
     double toAim; //Arbitrary value based on distance, shoots
     double MAX;
     
-
     
 
     public TrapAmpSubsystem(){
@@ -89,25 +89,6 @@ public class TrapAmpSubsystem extends SubsystemBase {
         return t_Encoder.getAbsolutePosition() * 360;
     }
 
-
-
-    @Override
-    public void periodic(){
-        
-        m_trapMotor.set(spinSpeed);
-
-        //ARM
-        tPV = tPos();
-        double tOutput = tPID.calculate(tPV, 75);
-        m_RightArmMotor.set(tOutput);
-        m_LeftArmMotor.set(-tOutput);
-
-        SmartDashboard.putNumber("Trap Arm Encoder Rot:",tPV); //Measured in Degrees
-        SmartDashboard.putNumber("Trap Encoder DIO#", t_Encoder.getSourceChannel());
-        SmartDashboard.putNumber("T Setpoint", 75);
-        SmartDashboard.putNumber("T Output", tOutput);
-
-    }
 
     //TRAP AMP Spinner
     public void goTState(tState state){
@@ -163,4 +144,21 @@ public class TrapAmpSubsystem extends SubsystemBase {
 
     }
 
+     @Override
+    public void periodic(){
+
+        m_trapMotor.set(spinSpeed);
+
+        //ARM
+        tPV = tPos();
+        double tOutput = tPID.calculate(tPV, 90);
+        m_RightArmMotor.set(tOutput);
+        m_LeftArmMotor.set(tOutput);
+
+        SmartDashboard.putNumber("Trap Arm Encoder Rot:",tPV); //Measured in Degrees
+        SmartDashboard.putNumber("Trap Encoder DIO#", t_Encoder.getSourceChannel());
+        SmartDashboard.putNumber("T Setpoint", 90);
+        SmartDashboard.putNumber("T Output", tOutput);
+
+    }
 }
