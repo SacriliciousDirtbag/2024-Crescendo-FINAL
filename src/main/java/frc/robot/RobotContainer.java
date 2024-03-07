@@ -215,8 +215,8 @@ public class RobotContainer {
       drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
           drivetrain.applyRequest(() -> drive.withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
                                                                                             // negative Y (forward)
-              .withVelocityY(-driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-              .withRotationalRate(-driver.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+              .withVelocityY(-driver.getLeftX() * MaxSpeed/2) // Drive left with negative X (left)
+              .withRotationalRate(-driver.getRightX() * MaxAngularRate/2) // Drive counterclockwise with negative X (left)
           ));
 
       //driver.a().whileTrue(drivetrain.applyRequest(() -> brake));
@@ -244,17 +244,17 @@ public class RobotContainer {
         driver.rightTrigger().onTrue(c_flyIn); //Black Wheels
         driver.rightTrigger().onFalse(c_FlyStop);
 
-        driver2.leftBumper().onTrue(c_flyOut);
-        driver2.leftBumper().onFalse(c_FlyStop);
+        driver.leftBumper().onTrue(c_flyOut);
+        driver.leftBumper().onFalse(c_FlyStop);
 
-        driver.b().onTrue(c_feedIn); //Aiming Wheels
+        driver.b().onTrue(c_feedIn); //Blue/Orang Wheels
         driver.b().onFalse(c_FeedStop);
 
         driver.a().onTrue(c_FeedOut);
         driver.a().onFalse(c_FeedStop);
 
         //INTAKE SUBSYSTEM
-        driver.rightBumper().onTrue(c_IntakeOut); //Intake Wheels
+        driver.rightBumper().onTrue(c_IntakeOut); //All Intake Wheels
         driver.rightBumper().onFalse(c_IntakeStop);
 
         driver.rightBumper().onTrue(c_IntakeOut);

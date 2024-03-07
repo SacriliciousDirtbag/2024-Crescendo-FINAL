@@ -35,12 +35,15 @@ public class intakeSubsystem extends SubsystemBase {
 
         CANSparkFlexUtil.setCANSparkFlexBusUsage(m_wheelMotor, Usage.kVelocityOnly);
         Istate = frc.robot.State.iState.STOP;
+
+        m_wheelMotor.setInverted(false);
+        m_backMotor.setInverted(true);
     }
 
 
     @Override
     public void periodic(){
-        m_wheelMotor.set(-spinSpeed);
+        m_wheelMotor.set(spinSpeed);
         m_floorMotor.set(spinSpeed);
         m_backMotor.set(spinSpeed);
 
@@ -54,11 +57,11 @@ public class intakeSubsystem extends SubsystemBase {
     //INTAKE SPIN
     public void goIstate(iState state){
         if(state == frc.robot.State.iState.IN){
-            spinSpeed = -0.2;
+            spinSpeed = -0.25;
         }
 
         if(state == frc.robot.State.iState.OUT){
-            spinSpeed = -0.2;
+            spinSpeed = 0.25;
             
         }
 

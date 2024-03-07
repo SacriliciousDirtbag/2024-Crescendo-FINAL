@@ -144,8 +144,8 @@ public class feederSubsystem extends SubsystemBase {
         aPV = aPos();
         
         double aOutput = -aPID.calculate(aPV, aSetPoint);
-        m_RightAimingMotor.set(-aOutput);
-        m_LeftAimingMotor.set(aOutput);
+        // m_RightAimingMotor.set(-aOutput);
+        // m_LeftAimingMotor.set(aOutput);
 
         SmartDashboard.putNumber("Feeder Arm Encoder Rot:", aPos());
 
@@ -164,13 +164,13 @@ public class feederSubsystem extends SubsystemBase {
     public void gosState(sState state){
         if(state == frc.robot.State.sState.OUT)
         {
-            FlywheelSpinSpeed = 0.4;
+            FlywheelSpinSpeed = 0.2; //0.4 BLACK wheels
             sState = frc.robot.State.sState.OUT;
         }
 
         if(state == frc.robot.State.sState.IN)
         {
-            FlywheelSpinSpeed = -0.4;
+            FlywheelSpinSpeed = -0.2;
             sState = frc.robot.State.sState.IN;
         }
 
@@ -183,10 +183,10 @@ public class feederSubsystem extends SubsystemBase {
     
 
     //AIM SPIN STATE
-    public void goFstate(fState state){
+    public void goFstate(fState state){ //shooter state
         if(state == frc.robot.State.fState.OUT)
         {
-            FeederSpinSpeed = 0.75;
+            FeederSpinSpeed = 0.75; //Blue wheels
             fstate = frc.robot.State.fState.OUT;
             
         }

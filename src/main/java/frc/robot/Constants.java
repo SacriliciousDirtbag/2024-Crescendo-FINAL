@@ -10,6 +10,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SteerFeedbackTy
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
 import com.revrobotics.CANSparkBase.IdleMode;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -18,6 +19,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.simulation.PDPSim;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
@@ -58,6 +60,7 @@ public final class Constants{
         .withKP(3).withKI(0).withKD(0)
         .withKS(0).withKV(0).withKA(0);
 
+    
     // The closed-loop output type to use for the steer motors;
     // This affects the PID/FF gains for the steer motors
     private static final ClosedLoopOutputType steerClosedLoopOutput = ClosedLoopOutputType.Voltage;
@@ -178,6 +181,21 @@ public final class Constants{
     //PWM 3 - Floor Intake - 13
     //PWM 4 - Right Feed Aim - 23
     //PWM 5 - Left Feed Aim - 22
+    public static final class AutoConstants
+    {
+        public static final double driveKP = driveGains.kP;
+        public static final double driveKI = driveGains.kI;
+        public static final double driveKD = driveGains.kD;
+
+        public static final double angleKP = steerGains.kP;
+        public static final double angleKI = steerGains.kI;
+        public static final double angleKD = steerGains.kD;
+
+        public static final PIDController xDrivePID = new PIDController(driveKP, driveKI, driveKD);
+        public static final PIDController yDrivePID = new PIDController(driveKP, driveKI, driveKD);
+        public static final PIDController anglePID = new PIDController(angleKP, angleKI, angleKD);
+
+    }
 
     public static final class IntakeSystem {
             

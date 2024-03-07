@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.State.eState;
 import frc.robot.State.tState;
 
@@ -90,14 +91,13 @@ public class TrapAmpSubsystem extends SubsystemBase {
 
      @Override
     public void periodic(){
-
         m_trapMotor.set(spinSpeed);
 
         //ARM
         tPV = tPos();
         double tOutput = tPID.calculate(tPV, 90);
-        m_RightArmMotor.set(0.1);
-        m_LeftArmMotor.set(0.1);
+        // m_RightArmMotor.set(0.1);
+        // m_LeftArmMotor.set(0.1);
 
         SmartDashboard.putNumber("Trap Arm Encoder Rot:",tPV); //Measured in Degrees
         SmartDashboard.putNumber("Trap Encoder DIO#", t_Encoder.getSourceChannel());
