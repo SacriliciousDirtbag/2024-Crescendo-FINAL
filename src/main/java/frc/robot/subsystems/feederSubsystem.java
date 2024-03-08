@@ -94,16 +94,16 @@ public class feederSubsystem extends SubsystemBase {
         double ffD = 0;
         aPID = new PIDController(ffP, ffI, ffD);
 
-        aFeedforward = new ArmFeedforward(0, 0, 0); //TODO: Tune Feeder Feedforward
+        aFeedforward = new ArmFeedforward(0, 0.05, 0); //TODO: Tune Feeder Feedforward
 
         
 
 
         //ARM SETPOINTS
-        MIN = 9.131346228365;
+        MIN = 12;
         toIntake = 0; //TODO: calibrate Feeder ARM Setpoints
         toTrap = 0; 
-        toFar = 0;
+        toFar = 50;
         toNear = 0;
         MAX = 105.35;
 
@@ -123,7 +123,6 @@ public class feederSubsystem extends SubsystemBase {
         fstate = frc.robot.State.fState.STOP;
         sState = frc.robot.State.sState.STOP;
 
-        setASetPoint(10);
     }
 
     private double aPos() {
@@ -144,10 +143,24 @@ public class feederSubsystem extends SubsystemBase {
         aPV = aPos();
         
         double aOutput = -aPID.calculate(aPV, aSetPoint);
-        // m_RightAimingMotor.set(-aOutput);
-        // m_LeftAimingMotor.set(aOutput);
 
-        SmartDashboard.putNumber("Feeder Arm Encoder Rot:", aPos());
+        //If desired setpoint is greater than MIN or less than MAX, hopefully stops overshoot
+        if(aSetPoint > MIN || aSetPoint <= MAX){
+            //m_LeftAimingMotor.set(aOutput);
+            //m_RightAimingMotor.set(aOutput);
+            }else{ //Failsafe
+                m_LeftAimingMotor.disable();
+                m_LeftAimingMotor.set(0);
+                m_RightAimingMotor.disable();
+                m_RightAimingMotor.set(0);
+            }
+
+        //FAILSAFE
+        if(aPV < MIN){
+            m_LeftAimingMotor.disable();
+            m_RightAimingMotor.disable();
+        }
+
 
         SmartDashboard.putNumber("Feeder Arm Pos", aPV); //Measured in Degrees
         SmartDashboard.putNumber("Feeder Encoder DIO#", a_Encoder.getSourceChannel());

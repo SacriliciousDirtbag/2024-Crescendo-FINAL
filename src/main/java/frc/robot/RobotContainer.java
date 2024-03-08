@@ -21,18 +21,24 @@ import frc.robot.autos.*;
 //import frc.robot.commands.*;
 
 import frc.robot.commands.feederCmds.feedIn;
+import frc.robot.commands.feederCmds.FeederToHome;
 import frc.robot.commands.feederCmds.FeedertoIntake;
 import frc.robot.commands.feederCmds.feedOut;
 import frc.robot.commands.feederCmds.feedStop;
 import frc.robot.commands.feederCmds.flyIn;
 import frc.robot.commands.feederCmds.flyOut;
 import frc.robot.commands.feederCmds.flyStop;
+import frc.robot.commands.feederCmds.setAimFar;
+import frc.robot.commands.feederCmds.shootFar;
+import frc.robot.commands.feederCmds.shootHome;
+import frc.robot.commands.feederCmds.shootNear;
 import frc.robot.commands.trapCmds.trapIn;
 import frc.robot.commands.trapCmds.trapOut;
 import frc.robot.commands.trapCmds.trapStop;
 import frc.robot.commands.intakeCmds.intakeIn;
 import frc.robot.commands.intakeCmds.intakeOut;
 import frc.robot.commands.intakeCmds.intakeStop;
+import frc.robot.commands.feederCmds.setAimFar;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -171,6 +177,14 @@ public class RobotContainer {
     public final flyOut c_flyOut = new flyOut(s_feederSubsystem);
     public final flyStop c_FlyStop = new flyStop(s_feederSubsystem);
 
+    public final shootFar c_Aimfar = new shootFar(s_feederSubsystem);
+    public final shootNear c_Aimnear = new shootNear(s_feederSubsystem);
+    public final shootHome c_Aimhome = new shootHome(s_feederSubsystem);
+
+    public final setAimFar c_SetAimFar = new setAimFar(s_feederSubsystem);
+    public final FeederToHome c_setAimHome = new FeederToHome(s_feederSubsystem);
+
+
     public final FeedertoIntake c_feederToIntake = new FeedertoIntake(s_feederSubsystem, s_IntakeSubsystem);
 
     //PHOTON
@@ -215,7 +229,7 @@ public class RobotContainer {
       drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
           drivetrain.applyRequest(() -> drive.withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
                                                                                             // negative Y (forward)
-              .withVelocityY(-driver.getLeftX() * MaxSpeed/2) // Drive left with negative X (left)
+              .withVelocityY(Math.pow(driver.getLeftX(), 2) * -(Math.abs(driver.getLeftX())/driver.getLeftX()) * MaxSpeed/2) // Drive left with negative X (left)
               .withRotationalRate(-driver.getRightX() * MaxAngularRate/2) // Drive counterclockwise with negative X (left)
           ));
 
@@ -250,8 +264,8 @@ public class RobotContainer {
         driver.b().onTrue(c_feedIn); //Blue/Orang Wheels
         driver.b().onFalse(c_FeedStop);
 
-        driver.a().onTrue(c_FeedOut);
-        driver.a().onFalse(c_FeedStop);
+        // driver.a().onTrue(c_FeedOut);
+        // driver.a().onFalse(c_FeedStop);
 
         //INTAKE SUBSYSTEM
         driver.rightBumper().onTrue(c_IntakeOut); //All Intake Wheels
@@ -267,9 +281,13 @@ public class RobotContainer {
         driver.x().onTrue(c_trapOut);
         driver.x().onFalse(c_trapStop);
 
+        driver.leftTrigger().onTrue(c_Aimnear);
+        driver.leftTrigger().onFalse(c_Aimhome);
         // photonToggle.onTrue(m_photonCommand);
         // photonToggle.onFalse(new InstantCommand(() -> s_Swerve.drive(new Translation2d(), 0,false, false)));
-        
+        driver.a().onTrue(c_SetAimFar);
+        driver.a().onFalse(c_setAimHome);
+
 
         // trapToggle.onTrue(new InstantCommand(()-> s_trapIn.initialize()));
         // trapToggle.onFalse(new InstantCommand(()-> s_TrapAmpSubsystem.stopWheels()));

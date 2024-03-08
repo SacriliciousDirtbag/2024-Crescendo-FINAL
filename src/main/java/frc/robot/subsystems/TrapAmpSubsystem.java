@@ -60,18 +60,19 @@ public class TrapAmpSubsystem extends SubsystemBase {
         
         t_Encoder = new DutyCycleEncoder(frc.robot.Constants.AmpSystem.ampEncoderID); //PWM Channel
         
-        double ffP = 0.025; //TODO: Tune PID
-        double ffI = 0;
-        double ffD = 0;
+        double ffP = 0.02; //TODO: Tune PID
+        double ffI = 0.0050;
+        double ffD = 0; //0.5
         tPID = new PIDController(ffP, ffI, ffD);
 
-        tFeedforward = new ArmFeedforward(0, 0, 0); //-0.15
+        tFeedforward = new ArmFeedforward(0, 0.01, 0.01); //-0.15
 
+        
         //eState = frc.robot.State.eState.HOME;
 
 
         //ARM SETPOINTS
-        MIN = 8.42;
+        MIN = 10;
         toHome = 0; //TODO: calibrate Trap ARM Setpoints
         toTrap = 0; 
         toAim = 0; 
@@ -83,6 +84,8 @@ public class TrapAmpSubsystem extends SubsystemBase {
         //FAILSAFE
         m_LeftArmMotor.disable();
         m_RightArmMotor.disable();
+
+        setTSetPoint(150);
     }
 
     private double tPos() {
@@ -95,13 +98,25 @@ public class TrapAmpSubsystem extends SubsystemBase {
 
         //ARM
         tPV = tPos();
-        double tOutput = tPID.calculate(tPV, 90);
-        // m_RightArmMotor.set(0.1);
-        // m_LeftArmMotor.set(0.1);
+        double tOutput = -(tPID.calculate(tPV, 70));
+        
+        
+        if(tSetPoint > MIN || tSetPoint < MAX){
+        m_LeftArmMotor.set(tOutput);
+        m_RightArmMotor.set(tOutput);
+        }else{ //Failsafe
+            m_LeftArmMotor.disable();
+            m_LeftArmMotor.set(0);
+            m_RightArmMotor.disable();
+            m_RightArmMotor.set(0);
+        }
+        
+            
+        
 
         SmartDashboard.putNumber("Trap Arm Encoder Rot:",tPV); //Measured in Degrees
         SmartDashboard.putNumber("Trap Encoder DIO#", t_Encoder.getSourceChannel());
-        SmartDashboard.putNumber("T Setpoint", 90);
+        SmartDashboard.putNumber("T Setpoint", tSetPoint);
         SmartDashboard.putNumber("T Output", tOutput);
 
     }
