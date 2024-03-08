@@ -144,7 +144,7 @@ public class feederSubsystem extends SubsystemBase {
         
         double aOutput = -aPID.calculate(aPV, aSetPoint);
 
-        //If desired setpoint is greater than MIN or less than MAX, hopefully stops overshoot
+        //If desired setpoint is within MIN/MAX
         if(aSetPoint > MIN || aSetPoint <= MAX){
             //m_LeftAimingMotor.set(aOutput);
             //m_RightAimingMotor.set(aOutput);
@@ -155,18 +155,12 @@ public class feederSubsystem extends SubsystemBase {
                 m_RightAimingMotor.set(0);
             }
 
-        //FAILSAFE
-        if(aPV < MIN){
-            m_LeftAimingMotor.disable();
-            m_RightAimingMotor.disable();
-        }
-
-
         SmartDashboard.putNumber("Feeder Arm Pos", aPV); //Measured in Degrees
         SmartDashboard.putNumber("Feeder Encoder DIO#", a_Encoder.getSourceChannel());
 
         SmartDashboard.putNumber("Feeder Fly Speed", FeederSpinSpeed);
-        SmartDashboard.putString("Feeder State", sState.name());
+        SmartDashboard.putString("Flywheel State", sState.name());
+
 
         SmartDashboard.putNumber("A Setpoint", aSetPoint);
 
