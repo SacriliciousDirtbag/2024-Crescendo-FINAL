@@ -211,9 +211,6 @@ public class RobotContainer {
     //  m_Chooser.addOption("MF Blue Auto 2", new PathPlannerAuto("MF Blue Auto 2"));
  
      SmartDashboard.putData("Auto Chooser", m_Chooser);
-     SmartDashboard.putNumber("Translation Output", -driver.getLeftY() * MaxSpeed);
-     SmartDashboard.putNumber(" Output", -driver.getLeftX() * MaxSpeed);
-     SmartDashboard.putNumber("Rot Output", -driver.getRightX() * MaxAngularRate); 
 
     }
         
@@ -248,14 +245,7 @@ public class RobotContainer {
     // driver.b().whileTrue(drivetrain
     //     .applyRequest(() -> point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))));
 
-    // reset the field-centric heading on left bumper press
-     // driver.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
-       // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-
-      //driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-      //driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-      // driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
 
 
       //* PRIMARY DRIVER */

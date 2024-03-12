@@ -101,7 +101,7 @@ public class TrapAmpSubsystem extends SubsystemBase {
         double tOutput = -(tPID.calculate(tPV, tSetPoint));
         
         
-        if(tSetPoint > MIN || tSetPoint <= MAX){
+        if(tPV > MIN && tPV <= MAX){
         // m_LeftArmMotor.set(tOutput);
         // m_RightArmMotor.set(tOutput);
         }else{ //Failsafe

@@ -2,6 +2,9 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
+
+import java.lang.annotation.Target;
+
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -67,7 +70,7 @@ public class feederSubsystem extends SubsystemBase {
     double toFar;//Arbitrary value based on distance, shoots
     double toNear;//Arbitrary value based on distance, shoots
     double MAX;
-    
+    double TARGET; //temporary
 
     public feederSubsystem(){
 
@@ -89,7 +92,7 @@ public class feederSubsystem extends SubsystemBase {
 
         a_Encoder = new DutyCycleEncoder(frc.robot.Constants.feederSubsystem.feederEncoderID); //PWM Channel
         
-        double ffP = 0.05;
+        double ffP = 0.01; //was 0.05
         double ffI = 0;
         double ffD = 0;
         aPID = new PIDController(ffP, ffI, ffD);
@@ -100,13 +103,13 @@ public class feederSubsystem extends SubsystemBase {
 
 
         //ARM SETPOINTS
-        MIN = 12;
+        MIN = 60; //20
         toIntake = 0; //TODO: calibrate Feeder ARM Setpoints
         toTrap = 0; 
-        toFar = 50;
+        toFar = 70;
         toNear = 0;
         MAX = 105.35;
-
+        TARGET = 80;
         //CANBUS USAGE CONSTRAINTS
         CANSparkFlexUtil.setCANSparkFlexBusUsage(m_LeftAimingMotor, CANSparkFlexUtil.Usage.kPositionOnly);
         CANSparkFlexUtil.setCANSparkFlexBusUsage(m_RightAimingMotor, CANSparkFlexUtil.Usage.kPositionOnly);
@@ -115,11 +118,17 @@ public class feederSubsystem extends SubsystemBase {
         // CANSparkMaxUtil.setCANSparkMaxBusUsage(m_rightFlyMotor, Usage.kVelocityOnly);
 
 
+        //Wheels
         m_LeftFeederMotor.setInverted(true);
         m_RightFeederMotor.setInverted(true);
 
         m_leftFlyMotor.setInverted(true);
 
+        //Arms
+        m_LeftAimingMotor.setInverted(false);
+        m_RightAimingMotor.setInverted(true);
+
+        setASetPoint(TARGET); //init position
         fstate = frc.robot.State.fState.STOP;
         sState = frc.robot.State.sState.STOP;
 
@@ -141,19 +150,22 @@ public class feederSubsystem extends SubsystemBase {
         
         //ARM
         aPV = aPos();
+
+        var isDisabled = false;
         
         double aOutput = -aPID.calculate(aPV, aSetPoint);
 
         //If desired setpoint is within MIN/MAX
-        if(aSetPoint > MIN || aSetPoint <= MAX){
-            //m_LeftAimingMotor.set(aOutput);
-            //m_RightAimingMotor.set(aOutput);
-            }else{ //Failsafe
-                m_LeftAimingMotor.disable();
-                m_LeftAimingMotor.set(0);
-                m_RightAimingMotor.disable();
-                m_RightAimingMotor.set(0);
-            }
+         if(TARGET > MIN && TARGET <= MAX){
+            m_LeftAimingMotor.set(aOutput); //was aOutput
+            m_RightAimingMotor.set(aOutput); //was aOutput
+            isDisabled = false;
+        }else{
+             m_LeftAimingMotor.set(0);
+             m_RightAimingMotor.set(0);
+             isDisabled = true;
+
+        }
 
         SmartDashboard.putNumber("Feeder Arm Pos", aPV); //Measured in Degrees
         SmartDashboard.putNumber("Feeder Encoder DIO#", a_Encoder.getSourceChannel());
@@ -161,8 +173,12 @@ public class feederSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Feeder Fly Speed", FeederSpinSpeed);
         SmartDashboard.putString("Flywheel State", sState.name());
 
+        SmartDashboard.putNumber("A Output", aOutput);
 
-        SmartDashboard.putNumber("A Setpoint", aSetPoint);
+        SmartDashboard.putNumber("A Setpoint", getASetPoint());
+        SmartDashboard.putBoolean("Is Disabled", isDisabled);
+
+        SmartDashboard.putNumber("Target Angle:", TARGET);
 
     }
 
