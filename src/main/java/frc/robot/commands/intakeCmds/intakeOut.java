@@ -14,7 +14,7 @@ public class intakeOut extends Command {
 
     @Override
     public void initialize() {
-        s_IntakeSubsystem.goIstate(iState.OUT);
+        s_IntakeSubsystem.goIntakeWheelState(iState.OUT);
     }
 
     @Override

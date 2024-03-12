@@ -14,7 +14,7 @@ public class trapIn extends Command {
 
     @Override
     public void initialize() {
-        s_TrapAmpSubsystem.goTState(tState.IN);
+        s_TrapAmpSubsystem.goTrapWheelState(tState.IN);
     }
 
     @Override

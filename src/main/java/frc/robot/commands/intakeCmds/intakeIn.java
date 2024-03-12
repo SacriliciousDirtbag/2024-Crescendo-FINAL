@@ -17,8 +17,7 @@ public class intakeIn extends Command {
 
     @Override
     public void initialize() {
-        s_IntakeSubsystem.goIstate(iState.IN);
-        s_feederSubsystem.gosState(sState.IN);
+        s_IntakeSubsystem.goIntakeWheelState(iState.IN);
     }
 
     @Override

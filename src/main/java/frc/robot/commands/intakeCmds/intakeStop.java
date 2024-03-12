@@ -14,7 +14,7 @@ public class intakeStop extends Command {
 
     @Override
     public void initialize() {
-        s_IntakeSubsystem.goIstate(iState.STOP);
+        s_IntakeSubsystem.goIntakeWheelState(iState.STOP);
     }
 
     @Override

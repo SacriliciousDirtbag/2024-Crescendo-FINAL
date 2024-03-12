@@ -14,7 +14,7 @@ public class shootHome extends Command {
 
     @Override
     public void initialize() {
-        s_feederSubsystem.goAState(aState.HOME);
+        s_feederSubsystem.goFeederArmState(aState.HOME);
     }
 
     @Override

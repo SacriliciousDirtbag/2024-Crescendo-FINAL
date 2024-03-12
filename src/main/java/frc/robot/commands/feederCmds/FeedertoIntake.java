@@ -18,9 +18,9 @@ public class FeedertoIntake extends Command {
 
     @Override
     public void initialize() {
-        s_feederSubsystem.goAState(aState.TRAP_POS); //Move Arm to Intake
-        s_intakeSubsystem.goIstate(iState.IN); //Start moving intake
-        s_feederSubsystem.goFstate(fState.IN); //Start moving feeder wheel
+        s_feederSubsystem.goFeederArmState(aState.INTAKE_POS); //Move Arm to Intake
+        s_intakeSubsystem.goIntakeWheelState(iState.IN); //Start moving intake
+        s_feederSubsystem.goAimWheelState(fState.IN); //Start moving feeder wheel
     }
 
     @Override

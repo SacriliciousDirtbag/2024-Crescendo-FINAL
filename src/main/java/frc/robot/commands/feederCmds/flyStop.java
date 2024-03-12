@@ -14,7 +14,7 @@ public class flyStop extends Command {
 
     @Override
     public void initialize() {
-        s_feederSubsystem.gosState(sState.STOP);
+        s_feederSubsystem.goIndexState(sState.STOP, 0);
     }
 
     @Override

@@ -14,7 +14,7 @@ public class trapStop extends Command {
 
     @Override
     public void initialize() {
-        s_TrapAmpSubsystem.goTState(tState.STOP);
+        s_TrapAmpSubsystem.goTrapWheelState(tState.STOP);
     }
 
     @Override

@@ -60,7 +60,6 @@ public final class Constants{
         .withKP(3).withKI(0).withKD(0)
         .withKS(0).withKV(0).withKA(0);
 
-    
     // The closed-loop output type to use for the steer motors;
     // This affects the PID/FF gains for the steer motors
     private static final ClosedLoopOutputType steerClosedLoopOutput = ClosedLoopOutputType.Voltage;
@@ -126,7 +125,7 @@ public final class Constants{
     private static final int kFrontLeftDriveMotorId = 1;
     private static final int kFrontLeftSteerMotorId = 2;
     private static final int kFrontLeftEncoderId = 3;
-    private static final double kFrontLeftEncoderOffset = -0.181640625;
+    private static final double kFrontLeftEncoderOffset = -0.186767578125;
 
     private static final double kFrontLeftXPosInches = 12;
     private static final double kFrontLeftYPosInches = 12;
@@ -135,7 +134,7 @@ public final class Constants{
     private static final int kFrontRightDriveMotorId = 7;
     private static final int kFrontRightSteerMotorId = 8;
     private static final int kFrontRightEncoderId = 9;
-    private static final double kFrontRightEncoderOffset = -0.351806640625;
+    private static final double kFrontRightEncoderOffset = -0.3359375;
 
     private static final double kFrontRightXPosInches = 12;
     private static final double kFrontRightYPosInches = -12;
@@ -144,7 +143,7 @@ public final class Constants{
     private static final int kBackLeftDriveMotorId = 4;
     private static final int kBackLeftSteerMotorId = 5;
     private static final int kBackLeftEncoderId = 6;
-    private static final double kBackLeftEncoderOffset =  -0.40966796875; //-0.08544921875;
+    private static final double kBackLeftEncoderOffset = -0.42431640625;
 
     private static final double kBackLeftXPosInches = -12;
     private static final double kBackLeftYPosInches = 12;
@@ -153,7 +152,7 @@ public final class Constants{
     private static final int kBackRightDriveMotorId = 10;
     private static final int kBackRightSteerMotorId = 11;
     private static final int kBackRightEncoderId = 12;
-    private static final double kBackRightEncoderOffset = -0.087890625;
+    private static final double kBackRightEncoderOffset = -0.083984375;
 
     private static final double kBackRightXPosInches = -12;
     private static final double kBackRightYPosInches = -12;
@@ -170,6 +169,7 @@ public final class Constants{
 
     public static final SwerveSubsystem DriveTrain = new SwerveSubsystem(DrivetrainConstants, FrontLeft,
             FrontRight, BackLeft, BackRight);
+
 
 
 
@@ -195,14 +195,15 @@ public final class Constants{
         public static final PIDController yDrivePID = new PIDController(driveKP, driveKI, driveKD);
         public static final PIDController anglePID = new PIDController(angleKP, angleKI, angleKD);
 
+
     }
 
     public static final class IntakeSystem {
             
         public static final class IntakeWheel {
             public static final int frontMotorID = 3; //NeoPWM, 13
-            public static final int wheelMotorID = 14; //Vortex
-            public static final int backMotorID = 15; //Vortex
+            public static final int wheelMotorID = 15; //Vortex, 15
+            public static final int backMotorID = 14; //Vortex, 14
         } 
     } 
 

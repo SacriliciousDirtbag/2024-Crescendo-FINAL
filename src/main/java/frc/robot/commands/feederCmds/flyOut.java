@@ -14,7 +14,7 @@ public class flyOut extends Command {
 
     @Override
     public void initialize() {
-        s_feederSubsystem.gosState(sState.OUT);
+        s_feederSubsystem.goIndexState(sState.OUT, 0.2);
     }
 
     @Override

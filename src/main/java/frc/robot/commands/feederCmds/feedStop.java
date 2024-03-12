@@ -14,7 +14,7 @@ public class feedStop extends Command {
 
     @Override
     public void initialize() {
-        s_feederSubsystem.goFstate(fState.STOP);
+        s_feederSubsystem.goAimWheelState(fState.STOP);
     }
 
     @Override

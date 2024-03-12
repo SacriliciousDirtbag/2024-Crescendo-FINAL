@@ -1,0 +1,101 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.2003286640025244,
+      "y": 4.158208268966954
+    },
+    "rotation": 124.77783136636388
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "parallel",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "shootCommand"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.0
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BF2 1st"
+                }
+              },
+              {
+                "type": "parallel",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "shootCommand"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.0
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BF2 2nd"
+                }
+              },
+              {
+                "type": "parallel",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "shootCommand"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.0
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BF2 3rd"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

@@ -14,7 +14,7 @@ public class feedOut extends Command {
 
     @Override
     public void initialize() {
-        s_feederSubsystem.goFstate(fState.OUT);
+        s_feederSubsystem.goAimWheelState(fState.OUT);
     }
 
     @Override

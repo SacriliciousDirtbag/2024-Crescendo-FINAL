@@ -17,7 +17,7 @@ public class FeedertoTrap extends Command {
 
     @Override
     public void initialize() {
-        s_feederSubsystem.goAState(aState.INTAKE_POS); //Move Arm to Intake
+        s_feederSubsystem.goFeederArmState(aState.TRAP_POS); //Move Arm to Trap
     }
 
     @Override

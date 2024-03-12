@@ -14,7 +14,7 @@ public class shootNear extends Command {
 
     @Override
     public void initialize() {
-        s_feederSubsystem.goAState(aState.AIM_NEAR);
+        s_feederSubsystem.goFeederArmState(aState.AIM_NEAR);
     }
 
     @Override

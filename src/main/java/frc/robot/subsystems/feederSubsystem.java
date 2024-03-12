@@ -84,8 +84,8 @@ public class feederSubsystem extends SubsystemBase {
         m_RightAimingMotor = new CANSparkFlex(frc.robot.Constants.shooterAimingSystem.RightAimID, MotorType.kBrushless);
         m_LeftAimingMotor = new CANSparkFlex(frc.robot.Constants.shooterAimingSystem.LeftAimID, MotorType.kBrushless);
 
-        m_RightAimingMotor.setIdleMode(IdleMode.kCoast);
-        m_LeftAimingMotor.setIdleMode(IdleMode.kCoast);
+        m_RightAimingMotor.setIdleMode(IdleMode.kBrake);
+        m_LeftAimingMotor.setIdleMode(IdleMode.kBrake);
 
         a_Encoder = new DutyCycleEncoder(frc.robot.Constants.feederSubsystem.feederEncoderID); //PWM Channel
         
@@ -168,16 +168,16 @@ public class feederSubsystem extends SubsystemBase {
 
 
     //FLYWHEEL SPIN STATE
-    public void gosState(sState state){
+    public void goIndexState(sState state, double speed){
         if(state == frc.robot.State.sState.OUT)
         {
-            FlywheelSpinSpeed = 0.2; //0.4 BLACK wheels
+            FlywheelSpinSpeed = speed; //0.4 BLACK wheels
             sState = frc.robot.State.sState.OUT;
         }
 
         if(state == frc.robot.State.sState.IN)
         {
-            FlywheelSpinSpeed = -0.2;
+            FlywheelSpinSpeed = speed;
             sState = frc.robot.State.sState.IN;
         }
 
@@ -190,7 +190,7 @@ public class feederSubsystem extends SubsystemBase {
     
 
     //AIM SPIN STATE
-    public void goFstate(fState state){ //shooter state
+    public void goAimWheelState(fState state){ //shooter state
         if(state == frc.robot.State.fState.OUT)
         {
             FeederSpinSpeed = 0.75; //Blue wheels
@@ -225,7 +225,7 @@ public class feederSubsystem extends SubsystemBase {
     }
 
     //ARM MOVEMENT STATE
-     public void goAState(aState state){ 
+     public void goFeederArmState(aState state){ 
         if (state == frc.robot.State.aState.INTAKE_POS) {
             setASetPoint(toIntake);
             aState = frc.robot.State.aState.INTAKE_POS;
@@ -254,6 +254,6 @@ public class feederSubsystem extends SubsystemBase {
     }
 
     public void stopWheels(){
-        goFstate(frc.robot.State.fState.STOP);
+        goAimWheelState(frc.robot.State.fState.STOP);
     }
    }

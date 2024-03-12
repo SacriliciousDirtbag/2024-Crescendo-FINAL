@@ -50,12 +50,9 @@ public class intakeSubsystem extends SubsystemBase {
 
     }
 
-    public double IPos(){
-        return m_wheelMotor.getEncoder().getPosition();
-    }
 
     //INTAKE SPIN
-    public void goIstate(iState state){
+    public void goIntakeWheelState(iState state){
         if(state == frc.robot.State.iState.IN){
             spinSpeed = -0.25;
         }

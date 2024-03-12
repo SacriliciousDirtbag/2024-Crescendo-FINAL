@@ -17,7 +17,8 @@ public class FeederToHome extends Command {
 
     @Override
     public void initialize() {
-        s_feederSubsystem.goAState(aState.HOME); //Move Arm to Intake
+        s_feederSubsystem.goFeederArmState(aState.HOME); //Move Arm to Intake
+        
     }
 
     @Override

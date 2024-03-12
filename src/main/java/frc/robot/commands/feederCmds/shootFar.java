@@ -14,7 +14,7 @@ public class shootFar extends Command {
 
     @Override
     public void initialize() {
-        s_feederSubsystem.goAState(aState.AIM_FAR);
+        s_feederSubsystem.goFeederArmState(aState.AIM_FAR);
     }
 
     @Override

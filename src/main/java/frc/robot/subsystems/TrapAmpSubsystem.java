@@ -102,8 +102,8 @@ public class TrapAmpSubsystem extends SubsystemBase {
         
         
         if(tSetPoint > MIN || tSetPoint <= MAX){
-        m_LeftArmMotor.set(tOutput);
-        m_RightArmMotor.set(tOutput);
+        // m_LeftArmMotor.set(tOutput);
+        // m_RightArmMotor.set(tOutput);
         }else{ //Failsafe
             m_LeftArmMotor.set(0);
             m_RightArmMotor.set(0);
@@ -121,7 +121,7 @@ public class TrapAmpSubsystem extends SubsystemBase {
 
 
     //TRAP AMP Spinner
-    public void goTState(tState state){
+    public void goTrapWheelState(tState state){
         if(state == frc.robot.State.tState.IN){
             spinSpeed = 1;
             tState = frc.robot.State.tState.IN;
@@ -153,7 +153,7 @@ public class TrapAmpSubsystem extends SubsystemBase {
 
 
     //Arm
-    public void goEState(eState state){
+    public void goTrapArmState(eState state){
         if(state == frc.robot.State.eState.HOME){
             setTSetPoint(toHome);
             eState = frc.robot.State.eState.HOME;
