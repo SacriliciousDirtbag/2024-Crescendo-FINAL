@@ -5,6 +5,8 @@ import com.revrobotics.CANSparkBase.IdleMode;
 
 import java.lang.annotation.Target;
 
+import org.ejml.data.ZMatrix;
+
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -70,17 +72,22 @@ public class feederSubsystem extends SubsystemBase {
     double toFar;//Arbitrary value based on distance, shoots
     double toNear;//Arbitrary value based on distance, shoots
     double MAX;
-    double TARGET; //temporary
+    double toClimb;
+    double TARGET; //target angle
 
     public feederSubsystem(){
 
         //FEEDER SPINNER
         m_LeftFeederMotor = new CANSparkFlex(Constants.feederSubsystem.leftMotorID, MotorType.kBrushless); //Fixed, Had to Reconfigure Motor 21
         m_RightFeederMotor = new CANSparkFlex(Constants.feederSubsystem.rightMotorID, MotorType.kBrushless);
+        m_LeftFeederMotor.setIdleMode(IdleMode.kCoast);
+        m_RightFeederMotor.setIdleMode(IdleMode.kCoast);
 
         //FLYWHEEL SPINNER
         m_leftFlyMotor = new PWMSparkMax(Constants.shooterSystem.LeftFlyWheelID);
         m_rightFlyMotor = new PWMSparkMax(Constants.shooterSystem.RightFlyWheelID);
+        m_leftFlyMotor.setInverted(true);
+        m_rightFlyMotor.setInverted(true);
 
 
         //ARM MOVEMENT
@@ -92,7 +99,7 @@ public class feederSubsystem extends SubsystemBase {
 
         a_Encoder = new DutyCycleEncoder(frc.robot.Constants.feederSubsystem.feederEncoderID); //PWM Channel
         
-        double ffP = 0.01; //was 0.05
+        double ffP = 0.0125; //was 0.05, 0.01
         double ffI = 0;
         double ffD = 0;
         aPID = new PIDController(ffP, ffI, ffD);
@@ -103,13 +110,14 @@ public class feederSubsystem extends SubsystemBase {
 
 
         //ARM SETPOINTS
-        MIN = 60; //20
-        toIntake = 0; //TODO: calibrate Feeder ARM Setpoints
+        MIN = 53; //20
+        toHome = 54;
+        toIntake = MIN+20; //TODO: calibrate Feeder ARM Setpoints
         toTrap = 0; 
         toFar = 70;
-        toNear = 0;
-        MAX = 105.35;
-        TARGET = 80;
+        toNear = 54;
+        toClimb = 169.7;
+        MAX = 169.7; //was 105.35
         //CANBUS USAGE CONSTRAINTS
         CANSparkFlexUtil.setCANSparkFlexBusUsage(m_LeftAimingMotor, CANSparkFlexUtil.Usage.kPositionOnly);
         CANSparkFlexUtil.setCANSparkFlexBusUsage(m_RightAimingMotor, CANSparkFlexUtil.Usage.kPositionOnly);
@@ -119,16 +127,17 @@ public class feederSubsystem extends SubsystemBase {
 
 
         //Wheels
-        m_LeftFeederMotor.setInverted(true);
-        m_RightFeederMotor.setInverted(true);
+        m_LeftFeederMotor.setInverted(false);
+        m_RightFeederMotor.setInverted(false);
 
-        m_leftFlyMotor.setInverted(true);
+        //Aim Motor
+        m_leftFlyMotor.setInverted(false);
 
         //Arms
         m_LeftAimingMotor.setInverted(false);
         m_RightAimingMotor.setInverted(true);
 
-        setASetPoint(TARGET); //init position
+        setASetPoint(toHome); //init position
         fstate = frc.robot.State.fState.STOP;
         sState = frc.robot.State.sState.STOP;
 
@@ -156,7 +165,7 @@ public class feederSubsystem extends SubsystemBase {
         double aOutput = -aPID.calculate(aPV, aSetPoint);
 
         //If desired setpoint is within MIN/MAX
-         if(TARGET > MIN && TARGET <= MAX){
+         if(aSetPoint > MIN && aSetPoint <= MAX){
             m_LeftAimingMotor.set(aOutput); //was aOutput
             m_RightAimingMotor.set(aOutput); //was aOutput
             isDisabled = false;
@@ -164,7 +173,6 @@ public class feederSubsystem extends SubsystemBase {
              m_LeftAimingMotor.set(0);
              m_RightAimingMotor.set(0);
              isDisabled = true;
-
         }
 
         SmartDashboard.putNumber("Feeder Arm Pos", aPV); //Measured in Degrees
@@ -227,6 +235,7 @@ public class feederSubsystem extends SubsystemBase {
 
             
         }
+        
     }
 
 
@@ -266,6 +275,11 @@ public class feederSubsystem extends SubsystemBase {
             //she P on my I till i D
             setASetPoint(MIN);
             aState = frc.robot.State.aState.HOME;
+        }
+        if (state == frc.robot.State.aState.CLIMB) {
+            //she P on my I till i D
+            setASetPoint(toClimb);
+            aState = frc.robot.State.aState.CLIMB;
         }
     }
 

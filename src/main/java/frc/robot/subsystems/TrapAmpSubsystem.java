@@ -49,7 +49,6 @@ public class TrapAmpSubsystem extends SubsystemBase {
         m_trapMotor = new PWMSparkMax(frc.robot.Constants.AmpSystem.trapScorerID);
         m_RightArmMotor = new PWMSparkMax(frc.robot.Constants.AmpSystem.RightAmArmID);
         m_LeftArmMotor = new PWMSparkMax(frc.robot.Constants.AmpSystem.LeftAmpArmID);
-        
         //m_trapMotor.setIdleMode(IdleMode.kBrake);
        // m_RightArmMotor.setIdleMode(IdleMode.kBrake);
         //m_LeftArmMotor.setIdleMode(IdleMode.kBrake);
@@ -80,12 +79,12 @@ public class TrapAmpSubsystem extends SubsystemBase {
 
 
         m_RightArmMotor.setInverted(true);
-
+        m_LeftArmMotor.setInverted(true);
         //FAILSAFE
         m_LeftArmMotor.disable();
         m_RightArmMotor.disable();
 
-        setTSetPoint(90);
+        //setTSetPoint(90);
     }
 
     private double tPos() {
@@ -98,7 +97,7 @@ public class TrapAmpSubsystem extends SubsystemBase {
 
         //ARM
         tPV = tPos();
-        double tOutput = -(tPID.calculate(tPV, tSetPoint));
+        //double tOutput = -(tPID.calculate(tPV, tSetPoint));
         
         
         if(tPV > MIN && tPV <= MAX){
@@ -109,13 +108,12 @@ public class TrapAmpSubsystem extends SubsystemBase {
             m_RightArmMotor.set(0);
             m_LeftArmMotor.disable();
             m_RightArmMotor.disable();
-           
         }
         
         SmartDashboard.putNumber("Trap Arm Encoder Rot:",tPV); //Measured in Degrees
         SmartDashboard.putNumber("Trap Encoder DIO#", t_Encoder.getSourceChannel());
         SmartDashboard.putNumber("T Setpoint", tSetPoint);
-        SmartDashboard.putNumber("T Output", tOutput);
+        //SmartDashboard.putNumber("T Output", tOutput);
 
     }
 

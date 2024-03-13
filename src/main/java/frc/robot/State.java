@@ -36,7 +36,8 @@ public class State {
         INTAKE_POS,
         TRAP_POS,
         AIM_FAR,
-        AIM_NEAR
+        AIM_NEAR,
+        CLIMB
     };
 
     //Trap ARM State

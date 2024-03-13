@@ -32,6 +32,7 @@ import frc.robot.commands.feederCmds.flyStop;
 import frc.robot.commands.feederCmds.shootFar;
 import frc.robot.commands.feederCmds.shootHome;
 import frc.robot.commands.feederCmds.shootNear;
+import frc.robot.commands.feederCmds.toClimb;
 import frc.robot.commands.trapCmds.ampHome;
 import frc.robot.commands.trapCmds.scoreAmp;
 import frc.robot.commands.trapCmds.trapIn;
@@ -152,6 +153,8 @@ public class RobotContainer {
     public final feedIn c_feedIn = new feedIn(s_feederSubsystem);
     public final feedOut c_FeedOut = new feedOut(s_feederSubsystem);
     public final feedStop c_FeedStop = new feedStop(s_feederSubsystem);
+
+    public final toClimb c_ToClimb = new toClimb(s_feederSubsystem);
 
     public final flyIn c_flyIn = new flyIn(s_feederSubsystem);
     public final flyOut c_flyOut = new flyOut(s_feederSubsystem);
@@ -289,11 +292,15 @@ public class RobotContainer {
         driver2.leftTrigger().onTrue(c_flyOut);
         driver2.leftTrigger().onFalse(c_FlyStop);
 
-        driver2.x().toggleOnTrue(c_FeedOut); //Toggle Ramp Wheel
+        driver2.x().toggleOnTrue(c_FeedOut); //Toggle Ramp Wheel (Aim)
         driver2.x().toggleOnFalse(c_FeedStop); 
 
-        driver2.a().onTrue(c_flyOutFast);
-        driver2.a().onFalse(c_FlyStop);
+        driver2.a().onTrue(c_IntakeIn);
+        driver2.a().onFalse(c_IntakeStop);
+
+        //test controls will be changed later if needed
+        driver2.b().onTrue(c_IntakeOut);
+        driver2.b().onFalse(c_IntakeStop);
 
         // driver.start().onTrue(); //TODO: Hangar Down
         // driver.start().onFalse(); //Maintain Pos
@@ -309,9 +316,10 @@ public class RobotContainer {
         driver2.rightTrigger().onFalse(c_trapStop);
 
         driver2.pov(0).onTrue(c_Aimfar);
-        driver2.pov(0).onFalse(c_Aimhome); //Setpoints
-        driver2.pov(180).onTrue(c_scoreAmp);
-        driver2.pov(180).onFalse(c_ampHome); //TODO: Add Trap Home
+        driver2.pov(270).onTrue(c_ToClimb);
+        driver2.pov(180).onTrue(c_Aimnear);
+        //driver2.pov(90).onTrue(c_aim);
+        driver2.pov(-1).onTrue(c_Aimhome); //When not pressed
 
         
         //INTAKE (Temp)
