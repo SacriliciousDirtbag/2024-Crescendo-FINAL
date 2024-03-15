@@ -44,7 +44,7 @@
 //             Constants.AutoConstants.xDrivePID,
 //             Constants.AutoConstants.yDrivePID, 
 //             thetaController, 
-//             (speeds)-> s_Swerve.setControl(null),
+//             s_Swerve.getCurrentRobotChassisSpeeds(),
 //             isBlueField, //Whether or not to mirror the path based on alliance (this assumes the path is created for the blue alliance)
 //             s_Swerve 
 

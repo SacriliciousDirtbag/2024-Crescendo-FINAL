@@ -10,21 +10,45 @@
           "data": {
             "commands": [
               {
+                "type": "named",
+                "data": {
+                  "name": "aimCommand"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "rampCommand"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 3.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shootCommand"
+                }
+              },
+              {
                 "type": "wait",
                 "data": {
                   "waitTime": 1.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "PickUpCommand"
                 }
               },
               {
                 "type": "path",
                 "data": {
                   "pathName": "MN1 1st"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.0
                 }
               }
             ]

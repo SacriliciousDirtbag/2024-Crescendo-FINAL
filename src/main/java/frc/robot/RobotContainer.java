@@ -123,7 +123,6 @@ public class RobotContainer {
     // private final int rotationAxis = XboxController.Axis.kRightX.value;
 
     private final SendableChooser<Command> m_Chooser;
-
   
     //BUTTON BOARD
     //private final JoystickButton zeroGyro = new JoystickButton(driver, 4); //TODO: Implement ZeroGyro As Button
@@ -138,8 +137,8 @@ public class RobotContainer {
     public final feederSubsystem s_feederSubsystem = new feederSubsystem();
     public final intakeSubsystem s_IntakeSubsystem = new intakeSubsystem();
 
-    public final trapIn c_trapIn = new trapIn(s_TrapAmpSubsystem);
-    public final trapOut c_trapOut = new trapOut(s_TrapAmpSubsystem);
+    public final trapIn c_trapWheelIn = new trapIn(s_TrapAmpSubsystem);
+    public final trapOut c_trapWheelOut = new trapOut(s_TrapAmpSubsystem);
     public final trapStop c_trapStop = new trapStop(s_TrapAmpSubsystem);
 
     public final scoreAmp c_scoreAmp = new scoreAmp(s_TrapAmpSubsystem);
@@ -150,20 +149,20 @@ public class RobotContainer {
     public final intakeOut c_IntakeOut = new intakeOut(s_IntakeSubsystem);
     public final intakeStop c_IntakeStop = new intakeStop(s_IntakeSubsystem);
 
-    public final feedIn c_feedIn = new feedIn(s_feederSubsystem);
-    public final feedOut c_FeedOut = new feedOut(s_feederSubsystem);
-    public final feedStop c_FeedStop = new feedStop(s_feederSubsystem);
+    public final feedIn c_RampWheelIn = new feedIn(s_feederSubsystem);
+    public final feedOut c_RampWheelOut = new feedOut(s_feederSubsystem);
+    public final feedStop c_RampStop = new feedStop(s_feederSubsystem);
 
     public final toClimb c_ToClimb = new toClimb(s_feederSubsystem);
 
-    public final flyIn c_flyIn = new flyIn(s_feederSubsystem);
-    public final flyOut c_flyOut = new flyOut(s_feederSubsystem);
+    public final flyIn c_IndexWheelIn = new flyIn(s_feederSubsystem);
+    public final flyOut c_IndexWheelOut = new flyOut(s_feederSubsystem);
     public final flyOutFast c_flyOutFast = new flyOutFast(s_feederSubsystem);
-    public final flyStop c_FlyStop = new flyStop(s_feederSubsystem);
+    public final flyStop c_IndexStop = new flyStop(s_feederSubsystem);
 
-    public final shootFar c_Aimfar = new shootFar(s_feederSubsystem);
-    public final shootNear c_Aimnear = new shootNear(s_feederSubsystem);
-    public final shootHome c_Aimhome = new shootHome(s_feederSubsystem);
+    public final shootFar c_AimFar = new shootFar(s_feederSubsystem);
+    public final shootNear c_AimNear = new shootNear(s_feederSubsystem);
+    public final shootHome c_AimHome = new shootHome(s_feederSubsystem);
 
     public final FeederToHome c_setAimHome = new FeederToHome(s_feederSubsystem);
     
@@ -202,14 +201,18 @@ public class RobotContainer {
     public RobotContainer() {
     // Register Named Commands
     NamedCommands.registerCommand("pickupUpCommand", c_IntakeIn);
-    NamedCommands.registerCommand("shootCommand", c_Aimnear);
+    NamedCommands.registerCommand("aimCommand", c_AimNear);
+    NamedCommands.registerCommand("rampCommand", c_RampWheelOut);
+    NamedCommands.registerCommand("shootCOmmand", c_IndexWheelOut);
 
 
       // Configure the button bindings
       configureButtonBindings();
+      drivetrain.runOnce(() -> drivetrain.seedFieldRelative(drivetrain.getState().Pose));
 
       // Build an auto chooser. This will use Commands.none() as the default option.
      m_Chooser = AutoBuilder.buildAutoChooser();
+     m_Chooser.setDefaultOption("Backup Auto", new PathPlannerAuto("Backup Auto"));
     //  m_Chooser.addOption("BF Blue Auto 3", new PathPlannerAuto("BF Blue Auto 3"));
     //  m_Chooser.addOption("MF Blue Auto 2", new PathPlannerAuto("MF Blue Auto 2"));
  
@@ -253,6 +256,14 @@ public class RobotContainer {
 
       //* PRIMARY DRIVER */
 
+      //INTAKE SUBSYSTEM green wheel intake 
+        // driver.leftTrigger().onTrue(c_IntakeIn);
+        // driver.leftTrigger().onFalse(c_IntakeStop);
+
+        // //test controls will be changed later if needed
+        // driver.rightTrigger().onTrue(c_IntakeOut);
+        // driver.rightTrigger().onFalse(c_IntakeStop);
+
         //FEEDER SUBSYSTEM
         // driver.rightTrigger().onTrue(c_feedIn);  //Blue/Orang Wheels 
         // driver.rightTrigger().onFalse(c_FeedStop);
@@ -286,21 +297,21 @@ public class RobotContainer {
 
         //* EXTERNAL DRIVER */
         //FEEDER
-        driver2.leftBumper().onTrue(c_flyIn); //slow
-        driver2.leftBumper().onFalse(c_FlyStop);
+        driver2.leftBumper().onTrue(c_IndexWheelOut); //Index Wheels Spin 
+        driver2.leftBumper().onTrue(c_IntakeOut);
+        driver2.leftBumper().onFalse(c_IndexStop); //feeder for shooter 
+        driver2.leftBumper().onFalse(c_IntakeStop);
         
-        driver2.leftTrigger().onTrue(c_flyOut);
-        driver2.leftTrigger().onFalse(c_FlyStop);
+        driver2.leftTrigger().onTrue(c_IndexWheelIn);
+        driver2.leftTrigger().onTrue(c_RampWheelIn);
+        driver2.leftTrigger().onFalse(c_IndexStop);
+        driver2.leftTrigger().onFalse(c_RampStop);
 
-        driver2.x().toggleOnTrue(c_FeedOut); //Toggle Ramp Wheel (Aim)
-        driver2.x().toggleOnFalse(c_FeedStop); 
+        driver2.x().toggleOnTrue(c_RampWheelOut); //Toggle Ramp Wheel (Aim)
+        driver2.x().toggleOnFalse(c_RampStop); // shoot wheels 
 
-        driver2.a().onTrue(c_IntakeIn);
-        driver2.a().onFalse(c_IntakeStop);
-
-        //test controls will be changed later if needed
-        driver2.b().onTrue(c_IntakeOut);
-        driver2.b().onFalse(c_IntakeStop);
+        driver2.a().onTrue(c_scoreAmp);
+        driver2.a().onFalse(c_ampHome);
 
         // driver.start().onTrue(); //TODO: Hangar Down
         // driver.start().onFalse(); //Maintain Pos
@@ -309,17 +320,19 @@ public class RobotContainer {
         // driver.back().onFalse(); //Maintain Pos
 
         //AMPER
-        driver2.rightBumper().onTrue(c_trapOut);
+        driver2.rightBumper().onTrue(c_trapWheelOut); //tennis grip bars 
+        driver2.rightTrigger().onTrue(c_IntakeIn);
         driver2.rightBumper().onFalse(c_trapStop);
+        driver2.rightTrigger().onFalse(c_IntakeStop);
         
-        driver2.rightTrigger().onTrue(c_trapIn);
+        driver2.rightTrigger().onTrue(c_trapWheelIn);
         driver2.rightTrigger().onFalse(c_trapStop);
 
-        driver2.pov(0).onTrue(c_Aimfar);
-        driver2.pov(270).onTrue(c_ToClimb);
-        driver2.pov(180).onTrue(c_Aimnear);
-        //driver2.pov(90).onTrue(c_aim);
-        driver2.pov(-1).onTrue(c_Aimhome); //When not pressed
+        driver2.pov(0).onTrue(c_AimFar); //Up D-Pad
+        driver2.pov(270).onTrue(c_ToClimb); //Left D-Pad
+        driver2.pov(180).onTrue(c_AimNear); //Down D-Pad
+        //driver2.pov(90).onTrue(c_aim); //Right D-Pad
+        driver2.pov(-1).onTrue(c_AimHome); //When not pressed
 
         
         //INTAKE (Temp)
@@ -328,7 +341,6 @@ public class RobotContainer {
 
         driver2.back().onTrue(c_IntakeOut);
         driver2.back().onFalse(c_IntakeStop);
-  
 
 
         // photonToggle.onTrue(m_photonCommand);

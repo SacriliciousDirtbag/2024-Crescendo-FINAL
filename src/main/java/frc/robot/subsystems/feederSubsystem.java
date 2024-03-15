@@ -164,16 +164,16 @@ public class feederSubsystem extends SubsystemBase {
         
         double aOutput = -aPID.calculate(aPV, aSetPoint);
 
-        //If desired setpoint is within MIN/MAX
-         if(aSetPoint > MIN && aSetPoint <= MAX){
+        // //If desired setpoint is within MIN/MAX
+        //  if(aSetPoint >= MIN && aSetPoint <= MAX){
             m_LeftAimingMotor.set(aOutput); //was aOutput
             m_RightAimingMotor.set(aOutput); //was aOutput
-            isDisabled = false;
-        }else{
-             m_LeftAimingMotor.set(0);
-             m_RightAimingMotor.set(0);
-             isDisabled = true;
-        }
+            // isDisabled = false;
+        // }else{
+        //      m_LeftAimingMotor.set(0);
+        //      m_RightAimingMotor.set(0);
+        //      isDisabled = true;
+        // }*/
 
         SmartDashboard.putNumber("Feeder Arm Pos", aPV); //Measured in Degrees
         SmartDashboard.putNumber("Feeder Encoder DIO#", a_Encoder.getSourceChannel());
@@ -201,7 +201,7 @@ public class feederSubsystem extends SubsystemBase {
 
         if(state == frc.robot.State.sState.IN)
         {
-            FlywheelSpinSpeed = speed;
+            FlywheelSpinSpeed = -speed/2;
             sState = frc.robot.State.sState.IN;
         }
 

@@ -37,7 +37,9 @@ public class intakeSubsystem extends SubsystemBase {
         Istate = frc.robot.State.iState.STOP;
 
         m_wheelMotor.setInverted(false);
-        m_backMotor.setInverted(true);
+        //used to be false before prac match
+        m_backMotor.setInverted(false); //was true
+        m_floorMotor.setInverted(true); //was false
     }
 
 

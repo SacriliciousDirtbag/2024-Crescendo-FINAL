@@ -10,6 +10,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -65,8 +66,13 @@ public class SwerveSubsystem extends SwerveDrivetrain implements Subsystem {
     }
 
 
+    //Drive Command
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
         return run(() -> this.setControl(requestSupplier.get()));
+    }
+
+    public Command getAutoPath(String pathName) {
+        return new PathPlannerAuto(pathName);
     }
 
     private void startSimThread() {
@@ -106,20 +112,11 @@ public class SwerveSubsystem extends SwerveDrivetrain implements Subsystem {
                                         Constants.kSpeedAt12VoltsMps,
                                         driveBaseRadius,
                                         new ReplanningConfig()),
-        () -> DriverStation.getAlliance().orElse(Alliance.Blue)==Alliance.Red, // Assume the path needs to be flipped for Red vs Blue, this is normally the case
+        () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red, // Assume the path needs to be flipped for Red vs Blue, this is normally the case
         this); // Subsystem for requirements
 
     }
     
-    
-
-    public Pose2d getPose(){
-        return this.getPose();
-    }
-
-    // public void resetPose(){
-       
-    // }
 
     //DRIVER PERSPECTIVE CHECK
 

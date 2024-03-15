@@ -126,6 +126,7 @@ public final class Constants{
     private static final int kFrontLeftSteerMotorId = 2;
     private static final int kFrontLeftEncoderId = 3;
     private static final double kFrontLeftEncoderOffset = -0.186767578125;
+    //-0.33642578125
 
     private static final double kFrontLeftXPosInches = 12;
     private static final double kFrontLeftYPosInches = 12;
@@ -135,6 +136,7 @@ public final class Constants{
     private static final int kFrontRightSteerMotorId = 8;
     private static final int kFrontRightEncoderId = 9;
     private static final double kFrontRightEncoderOffset = -0.3359375;
+
 
     private static final double kFrontRightXPosInches = 12;
     private static final double kFrontRightYPosInches = -12;
@@ -181,6 +183,7 @@ public final class Constants{
     //PWM 3 - Floor Intake - 13
     //PWM 4 - Right Feed Aim - 23
     //PWM 5 - Left Feed Aim - 22
+    
     public static final class AutoConstants
     {
         public static final double driveKP = driveGains.kP;
@@ -226,14 +229,14 @@ public final class Constants{
 
     
     public static final class shooterSystem {
-        public static final int LeftFlyWheelID = 5; //NeoPWM, 22
-        public static final int RightFlyWheelID = 4; //NeoPWM, 23
+        public static final int LeftFlyWheelID = 5; //NeoPWM, CAN 22, PWM 5
+        public static final int RightFlyWheelID = 4; //NeoPWM, CAN 23, PWM 4
     }
     
 
     public static final class AmpSystem {
-        public static final int LeftAmpArmID = 1; //NeoPWM, 16
-        public static final int RightAmArmID = 2; //NeoPWM, 17
+        public static final int LeftAmpArmID = 16; //NeoPWM, 16, 1
+        public static final int RightAmArmID = 17; //NeoPWM, 17, 2
         
         
         public static final int trapScorerID = 0; //NeoPWM, ID 24
