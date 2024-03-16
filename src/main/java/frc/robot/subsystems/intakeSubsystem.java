@@ -23,6 +23,7 @@ public class intakeSubsystem extends SubsystemBase {
 
     private double spinSpeed = 0;
     private double spinCurrentLimit;
+
     
 
     public intakeSubsystem(){
@@ -39,15 +40,14 @@ public class intakeSubsystem extends SubsystemBase {
         m_wheelMotor.setInverted(false);
         //used to be false before prac match
         m_backMotor.setInverted(false); //was true
-        m_floorMotor.setInverted(true); //was false
+        m_floorMotor.setInverted(false); //was true
     }
 
 
     @Override
     public void periodic(){
         m_wheelMotor.set(spinSpeed);
-        m_floorMotor.set(spinSpeed);
-        m_backMotor.set(spinSpeed);
+        
 
 
     }
@@ -57,15 +57,23 @@ public class intakeSubsystem extends SubsystemBase {
     public void goIntakeWheelState(iState state){
         if(state == frc.robot.State.iState.IN){
             spinSpeed = -0.25;
+            m_backMotor.set(-0.25);
+            m_floorMotor.set(0.25);
+
         }
 
         if(state == frc.robot.State.iState.OUT){
             spinSpeed = 0.25;
+            m_backMotor.set(-0.25);
+            m_floorMotor.set(0.25);
+
             
         }
 
         if(state == frc.robot.State.iState.STOP){
             spinSpeed = 0;
+            m_backMotor.set(0);
+
 
         }
 

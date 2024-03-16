@@ -69,11 +69,11 @@ public final class Constants{
 
     // The stator current at which the wheels start to slip;
     // This needs to be tuned to your individual robot
-    private static final double kSlipCurrentA = 300.0;
+    private static final double kSlipCurrentA = 50; // was 300
 
     // Theoretical free speed (m/s) at 12v applied output;
     // This needs to be tuned to your individual robot
-    public static final double kSpeedAt12VoltsMps = 4.73;
+    public static final double kSpeedAt12VoltsMps = 3;
 
     // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
     // This may need to be tuned to your individual robot
@@ -91,6 +91,9 @@ public final class Constants{
     private static final int kPigeonId = 13;
 
 
+    static final double acceleration = 70; //was 100
+    static final double strafeacceleration = 70;
+    static final double turnacceleration = 70;
     // These are only used for simulation
     private static final double kSteerInertia = 0.00001;
     private static final double kDriveInertia = 0.001;
@@ -125,7 +128,7 @@ public final class Constants{
     private static final int kFrontLeftDriveMotorId = 1;
     private static final int kFrontLeftSteerMotorId = 2;
     private static final int kFrontLeftEncoderId = 3;
-    private static final double kFrontLeftEncoderOffset = -0.186767578125;
+    private static final double kFrontLeftEncoderOffset =  -0.195068359375;
     //-0.33642578125
 
     private static final double kFrontLeftXPosInches = 12;
@@ -145,7 +148,7 @@ public final class Constants{
     private static final int kBackLeftDriveMotorId = 4;
     private static final int kBackLeftSteerMotorId = 5;
     private static final int kBackLeftEncoderId = 6;
-    private static final double kBackLeftEncoderOffset = -0.42431640625;
+    private static final double kBackLeftEncoderOffset = -0.409423828125;
 
     private static final double kBackLeftXPosInches = -12;
     private static final double kBackLeftYPosInches = 12;
@@ -154,7 +157,7 @@ public final class Constants{
     private static final int kBackRightDriveMotorId = 10;
     private static final int kBackRightSteerMotorId = 11;
     private static final int kBackRightEncoderId = 12;
-    private static final double kBackRightEncoderOffset = -0.083984375;
+    private static final double kBackRightEncoderOffset =  -0.088134765625;
 
     private static final double kBackRightXPosInches = -12;
     private static final double kBackRightYPosInches = -12;
@@ -171,6 +174,9 @@ public final class Constants{
 
     public static final SwerveSubsystem DriveTrain = new SwerveSubsystem(DrivetrainConstants, FrontLeft,
             FrontRight, BackLeft, BackRight);
+
+
+    
 
 
 

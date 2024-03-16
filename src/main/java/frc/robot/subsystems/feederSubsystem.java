@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.State.aState;
 import frc.robot.State.fState;
 import frc.robot.State.sState;
+import pabeles.concurrency.IntOperatorTask.Max;
 import frc.robot.Constants;
 
 import frc.lib.util.CANSparkMaxUtil;
@@ -67,6 +68,7 @@ public class feederSubsystem extends SubsystemBase {
     //POSE PARAMETERS
     double MIN;
     double toHome;
+    double toFloat;
     double toIntake;
     double toTrap;
     double toFar;//Arbitrary value based on distance, shoots
@@ -74,6 +76,12 @@ public class feederSubsystem extends SubsystemBase {
     double MAX;
     double toClimb;
     double TARGET; //target angle
+
+    double M_UP;
+    double M_DOWN;
+
+    boolean OVERRIDE = false;
+
 
     public feederSubsystem(){
 
@@ -110,8 +118,9 @@ public class feederSubsystem extends SubsystemBase {
 
 
         //ARM SETPOINTS
-        MIN = 53; //20
-        toHome = 54;
+        MIN = 56; //20
+        toHome = 56;
+        toFloat = 60;
         toIntake = MIN+20; //TODO: calibrate Feeder ARM Setpoints
         toTrap = 0; 
         toFar = 70;
@@ -164,10 +173,41 @@ public class feederSubsystem extends SubsystemBase {
         
         double aOutput = -aPID.calculate(aPV, aSetPoint);
 
+        
+
+
+        if(OVERRIDE == true){
+            if(aState == frc.robot.State.aState.M_UP){
+                m_LeftAimingMotor.set(0.1);
+                m_RightAimingMotor.set(0.1);
+
+            }
+
+            if(aState == frc.robot.State.aState.M_DOWN){
+                m_LeftAimingMotor.set(-0.1);
+                m_RightAimingMotor.set(-0.1);
+
+            }
+
+            if(aState == frc.robot.State.aState.IDLE){
+                m_LeftAimingMotor.set(0.01);
+                m_RightAimingMotor.set(0.01);
+
+            }
+        } else {
+            //if within threshold
+            if(aPV < MIN && aPV > MAX){
+            m_LeftAimingMotor.set(0);
+            m_RightAimingMotor.set(0);
+            }
+            m_LeftAimingMotor.set(aOutput);
+            m_RightAimingMotor.set(aOutput);
+        }
+
         // //If desired setpoint is within MIN/MAX
         //  if(aSetPoint >= MIN && aSetPoint <= MAX){
-            m_LeftAimingMotor.set(aOutput); //was aOutput
-            m_RightAimingMotor.set(aOutput); //was aOutput
+            // m_LeftAimingMotor.set(aOutput); //was aOutput
+            // m_RightAimingMotor.set(aOutput); //was aOutput
             // isDisabled = false;
         // }else{
         //      m_LeftAimingMotor.set(0);
@@ -187,6 +227,7 @@ public class feederSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("Is Disabled", isDisabled);
 
         SmartDashboard.putNumber("Target Angle:", TARGET);
+        SmartDashboard.putBoolean("Feeder isOverride", OVERRIDE);
 
     }
 
@@ -219,12 +260,11 @@ public class feederSubsystem extends SubsystemBase {
         {
             FeederSpinSpeed = 0.75; //Blue wheels
             fstate = frc.robot.State.fState.OUT;
-            
         }
 
         if(state == frc.robot.State.fState.IN)
         {
-            FeederSpinSpeed = -0.75;
+            FeederSpinSpeed = -0.2;
             fstate = frc.robot.State.fState.IN;
         }
 
@@ -252,34 +292,60 @@ public class feederSubsystem extends SubsystemBase {
     //ARM MOVEMENT STATE
      public void goFeederArmState(aState state){ 
         if (state == frc.robot.State.aState.INTAKE_POS) {
+            OVERRIDE = false;
             setASetPoint(toIntake);
             aState = frc.robot.State.aState.INTAKE_POS;
              
         }
         if (state == frc.robot.State.aState.TRAP_POS) {
+            OVERRIDE = false;
             //she P on my I till i D
             setASetPoint(toTrap);
             aState = frc.robot.State.aState.TRAP_POS;
         }
         if (state == frc.robot.State.aState.AIM_FAR) {
+            OVERRIDE = false;
             //she P on my I till i D
             setASetPoint(toFar);
             aState = frc.robot.State.aState.AIM_FAR;
         }
         if (state == frc.robot.State.aState.AIM_NEAR) {
+            OVERRIDE = false;
             //she P on my I till i D
             setASetPoint(toNear);
             aState = frc.robot.State.aState.AIM_NEAR;
         }
         if (state == frc.robot.State.aState.HOME) {
+            OVERRIDE = false;
             //she P on my I till i D
             setASetPoint(MIN);
             aState = frc.robot.State.aState.HOME;
         }
         if (state == frc.robot.State.aState.CLIMB) {
+            OVERRIDE = false;
             //she P on my I till i D
             setASetPoint(toClimb);
             aState = frc.robot.State.aState.CLIMB;
+        }
+        if (state == frc.robot.State.aState.FLOAT) {
+            OVERRIDE = false;
+            //she P on my I till i D
+            setASetPoint(toFloat);
+            aState = frc.robot.State.aState.FLOAT;
+        }
+       
+        
+        if (state == frc.robot.State.aState.M_UP) {
+            OVERRIDE = true;
+            aState = frc.robot.State.aState.M_UP;
+        }
+         if (state == frc.robot.State.aState.M_DOWN) {
+            OVERRIDE = true;
+            aState = frc.robot.State.aState.M_DOWN;
+        }
+         if (state == frc.robot.State.aState.M_IDLE) {
+            OVERRIDE = true;
+            aState = frc.robot.State.aState.M_IDLE;
         }
     }
 

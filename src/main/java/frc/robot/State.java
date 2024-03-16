@@ -37,13 +37,15 @@ public class State {
         TRAP_POS,
         AIM_FAR,
         AIM_NEAR,
-        CLIMB
+        CLIMB, FLOAT, M_UP, M_DOWN, IDLE, M_IDLE
     };
 
     //Trap ARM State
     public enum eState {
         HOME,
         TRAP_POS,
-        AIM_POS
+        AIM_POS, 
+        M_UP, 
+        M_DOWN, IDLE, M_IDLE
     };
 }

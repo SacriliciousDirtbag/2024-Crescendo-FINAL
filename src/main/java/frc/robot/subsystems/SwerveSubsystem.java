@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
@@ -21,6 +22,7 @@ import frc.robot.Constants.AutoConstants;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
@@ -63,12 +65,20 @@ public class SwerveSubsystem extends SwerveDrivetrain implements Subsystem {
         if (Utils.isSimulation()) {
             startSimThread();
         }
+
     }
+
+
 
 
     //Drive Command
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
         return run(() -> this.setControl(requestSupplier.get()));
+    }
+
+    public void drive(SwerveRequest SwerveRequest)
+    {
+        this.setControl(SwerveRequest);
     }
 
     public Command getAutoPath(String pathName) {
@@ -94,12 +104,18 @@ public class SwerveSubsystem extends SwerveDrivetrain implements Subsystem {
         return m_kinematics.toChassisSpeeds(getState().ModuleStates);
     }
 
+    public SwerveDriveKinematics getKinematics()
+    {
+        return m_kinematics;
+    }
+
         
     private void configurePathPlanner() {
         double driveBaseRadius = 2; //TODO: get radius
         for (var moduleLocation : m_moduleLocations) {
             driveBaseRadius = Math.max(driveBaseRadius, moduleLocation.getNorm());
         }
+
     
 
     com.pathplanner.lib.auto.AutoBuilder.configureHolonomic(
@@ -114,9 +130,13 @@ public class SwerveSubsystem extends SwerveDrivetrain implements Subsystem {
                                         new ReplanningConfig()),
         () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red, // Assume the path needs to be flipped for Red vs Blue, this is normally the case
         this); // Subsystem for requirements
-
     }
-    
+
+    // public void configStator()
+
+    // {
+        
+    // }
 
     //DRIVER PERSPECTIVE CHECK
 

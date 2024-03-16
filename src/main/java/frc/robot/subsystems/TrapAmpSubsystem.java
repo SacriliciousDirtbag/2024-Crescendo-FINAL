@@ -51,6 +51,7 @@ public class TrapAmpSubsystem extends SubsystemBase {
     private double tPV; //curr position
     private double tSetPoint; //destination we want to go to
     private PIDController armPid;
+    double ArmOutput;
 
     //POSE PARAMETERS
     double MIN;
@@ -58,7 +59,16 @@ public class TrapAmpSubsystem extends SubsystemBase {
     double toTrap;
     double toAmp;
     double toAim; //Arbitrary value based on distance, shoots
+    double M_UP;
+    double M_DOWN;
     double MAX;
+
+    double IDLE;
+
+    boolean OVERRIDE = false;
+
+
+
     
     // private SparkPIDController setPID(CANSparkMax m_motor) {
     //     // SparkPIDController m_pidController = m_motor.getPIDController();
@@ -104,6 +114,9 @@ public class TrapAmpSubsystem extends SubsystemBase {
         toTrap = 0; 
         toAim = 23.1; 
         //toAmp = 23.1;
+        M_UP = tPos() + 1; //increment by 1 
+        M_DOWN = tPos() - 1;
+        IDLE = tPos();
         MAX = 180; //178
 
 
@@ -126,19 +139,75 @@ public class TrapAmpSubsystem extends SubsystemBase {
 
      @Override
     public void periodic(){
-        m_trapMotor.set(spinSpeed); //was sp
+        m_trapMotor.set(spinSpeed);
 
-        // //ARM
+        //ARM
         tPV = tPos();
-        double speed = armPid.calculate(tPV);
 
-        if(tPV < MIN || tPV > MAX)
-        {
-            speed = 0; 
+        // //if under
+        // if(tPV < MIN)
+        // {
+        //     ArmOutput = 0.1; 
+        // }
+        // //if over
+        // if(tPV > MAX){
+        //     ArmOutput = -0.1;
+        // }
+        
+        ArmOutput = armPid.calculate(tPV);
+
+
+
+        
+        
+
+
+        if(OVERRIDE == true){
+            if(eState == frc.robot.State.eState.M_UP){
+                m_LeftArmMotor.set(0.1);
+                m_RightArmMotor.set(0.1);
+
+            }
+
+            if(eState == frc.robot.State.eState.M_DOWN){
+                m_LeftArmMotor.set(-0.1);
+                m_RightArmMotor.set(-0.1);
+
+            }
+
+            if(eState == frc.robot.State.eState.IDLE){
+               m_LeftArmMotor.set(0.01);
+                m_RightArmMotor.set(0.01);
+
+            }
+        } else {
+            //if within threshold
+            if(tPV < MIN && tPV < MAX){
+            m_LeftArmMotor.set(ArmOutput);
+            m_RightArmMotor.set(ArmOutput); 
+            }
+            m_LeftArmMotor.set(ArmOutput);
+            m_RightArmMotor.set(ArmOutput);
         }
+        
 
-        m_LeftArmMotor.set(speed);
-        m_RightArmMotor.set(speed); 
+        // if(!OVERRIDE){ //Normal
+        // m_LeftArmMotor.set(speed);
+        // m_RightArmMotor.set(speed); 
+        // }else{ //Override
+        //     if(eState == frc.robot.State.eState.M_DOWN){
+        //          m_LeftArmMotor.set(-0.1);
+        //         m_RightArmMotor.set(-0.1);
+        //     }
+        //     if(eState == frc.robot.State.eState.M_UP){
+        //          m_LeftArmMotor.set(0.1);
+        //         m_RightArmMotor.set(0.1);
+        //     }
+    
+        
+        
+        
+
         //temp comment
         //m_LeftArmMotor.set(speed);
         // //if(tPV > MIN && tPV <= MAX){
@@ -157,7 +226,8 @@ public class TrapAmpSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Trap Encoder DIO#", t_Encoder.getSourceChannel());
         SmartDashboard.putNumber("T Setpoint", tSetPoint);
         SmartDashboard.putNumber("T encoder", tPos());
-        SmartDashboard.putNumber("motor value", speed);
+        SmartDashboard.putNumber("motor value", ArmOutput);
+        SmartDashboard.putBoolean("Trap isOverride", OVERRIDE);
         //SmartDashboard.putNumber("T Output", tOutput);
 
         
@@ -200,23 +270,49 @@ public class TrapAmpSubsystem extends SubsystemBase {
     //Arm
     public void goTrapArmState(eState state){
         if(state == frc.robot.State.eState.HOME){
+            OVERRIDE = false;
             setTSetPoint(toHome);
             eState = frc.robot.State.eState.HOME;
             
         }
 
         if(state == frc.robot.State.eState.TRAP_POS){
+            OVERRIDE = false;
             setTSetPoint(toTrap);
             eState = frc.robot.State.eState.TRAP_POS;
             
         }
 
         if(state == frc.robot.State.eState.AIM_POS){
+            OVERRIDE = false;
             setTSetPoint(toAim);
             eState = frc.robot.State.eState.AIM_POS;
 
         }
-        armPid.setSetpoint(tSetPoint);
+
+        // OVERRIDE = false;
+
+        if(state == frc.robot.State.eState.M_UP){
+            eState = frc.robot.State.eState.M_UP;
+            OVERRIDE = true;
+        }
+
+        if(state == frc.robot.State.eState.M_DOWN){
+            eState = frc.robot.State.eState.M_DOWN;
+            OVERRIDE = true;
+        }
+
+        if(state == frc.robot.State.eState.M_IDLE){
+            eState = frc.robot.State.eState.M_IDLE;
+            OVERRIDE = true;
+        }
+
+        // if(!OVERRIDE)
+        // {
+        //    armPid.setSetpoint(tSetPoint);
+        // }
 
     }
+
+
 }

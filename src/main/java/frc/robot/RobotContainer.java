@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
 
 
@@ -16,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
+import frc.robot.State.eState;
 import frc.robot.autos.*;
 //import frc.robot.commands.*;
 
@@ -33,7 +34,10 @@ import frc.robot.commands.feederCmds.shootFar;
 import frc.robot.commands.feederCmds.shootHome;
 import frc.robot.commands.feederCmds.shootNear;
 import frc.robot.commands.feederCmds.toClimb;
+import frc.robot.commands.trapCmds.EMERGENCY;
+import frc.robot.commands.trapCmds.HOLDIT;
 import frc.robot.commands.trapCmds.ampHome;
+import frc.robot.commands.trapCmds.hang;
 import frc.robot.commands.trapCmds.scoreAmp;
 import frc.robot.commands.trapCmds.trapIn;
 import frc.robot.commands.trapCmds.trapOut;
@@ -52,6 +56,7 @@ import frc.robot.subsystems.feederSubsystem;
 import frc.robot.subsystems.*;
 
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -96,6 +101,7 @@ public class RobotContainer {
 
       /* Setting up bindings for necessary control of the swerve drive platform */
       private final SwerveSubsystem drivetrain = Constants.DriveTrain; // My drivetrain
+
 
       private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
           .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
@@ -160,15 +166,29 @@ public class RobotContainer {
     public final flyOutFast c_flyOutFast = new flyOutFast(s_feederSubsystem);
     public final flyStop c_IndexStop = new flyStop(s_feederSubsystem);
 
+    public final hang c_FloatFeeder = new hang(s_feederSubsystem, s_TrapAmpSubsystem);
+
     public final shootFar c_AimFar = new shootFar(s_feederSubsystem);
     public final shootNear c_AimNear = new shootNear(s_feederSubsystem);
     public final shootHome c_AimHome = new shootHome(s_feederSubsystem);
 
     public final FeederToHome c_setAimHome = new FeederToHome(s_feederSubsystem);
-    
 
+    public final EMERGENCY c_OhSHit = new EMERGENCY(s_TrapAmpSubsystem, s_feederSubsystem);
+    public final HOLDIT c_HOLDIT = new HOLDIT(s_TrapAmpSubsystem, s_feederSubsystem);
+
+    
+    private final SlewRateLimiter translationlimiter = new SlewRateLimiter(Constants.acceleration);
+    private final SlewRateLimiter rotationlimiter = new SlewRateLimiter(Constants.turnacceleration);
+    private final SlewRateLimiter strafelimiter = new SlewRateLimiter(Constants.strafeacceleration);
 
     public final FeedertoIntake c_feederToIntake = new FeedertoIntake(s_feederSubsystem, s_IntakeSubsystem);
+
+
+    //AUTOS
+    public final Command s_ScoreBlueOne = new SequentialCommandGroup(
+      new Blue1NoteAuto(drivetrain, s_feederSubsystem)
+     );
 
     //PHOTON
     // public final photonSubsystem s_PhotonSubsystem = new photonSubsystem(); //TODO: Finish Photon if Possible
@@ -199,6 +219,7 @@ public class RobotContainer {
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
+    
     // Register Named Commands
     NamedCommands.registerCommand("pickupUpCommand", c_IntakeIn);
     NamedCommands.registerCommand("aimCommand", c_AimNear);
@@ -212,7 +233,8 @@ public class RobotContainer {
 
       // Build an auto chooser. This will use Commands.none() as the default option.
      m_Chooser = AutoBuilder.buildAutoChooser();
-     m_Chooser.setDefaultOption("Backup Auto", new PathPlannerAuto("Backup Auto"));
+     SequentialCommandGroup auto = new SequentialCommandGroup(s_ScoreBlueOne, new PathPlannerAuto("MF Blue Auto 2"));
+     m_Chooser.setDefaultOption("Score Blue Auto", auto);
     //  m_Chooser.addOption("BF Blue Auto 3", new PathPlannerAuto("BF Blue Auto 3"));
     //  m_Chooser.addOption("MF Blue Auto 2", new PathPlannerAuto("MF Blue Auto 2"));
  
@@ -227,11 +249,12 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
+      
       drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-          drivetrain.applyRequest(() -> drive.withVelocityX(-driver.getLeftY() * MaxSpeed) // Math.pow(driver.getLeftY(), 2) * -(Math.abs(driver.getLeftY())/driver.getLeftY()) * MaxSpeed Drive forward with
+          drivetrain.applyRequest(() -> drive.withVelocityX(translationlimiter.calculate(driver.getLeftY()) * -MaxSpeed)// Drive forward with
                                                                                             // negative Y (forward)
-              .withVelocityY(-driver.getLeftX() * MaxSpeed) // Math.pow(driver.getLeftX(), 2) * -(Math.abs(driver.getLeftX())/driver.getLeftX()) * MaxSpeed Drive left with negative X (left)
-              .withRotationalRate(-driver.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+              .withVelocityY(strafelimiter.calculate(driver.getLeftX()) * -MaxSpeed) //Drive left with negative X (left)
+              .withRotationalRate(rotationlimiter.calculate(driver.getRightX()) * -MaxAngularRate) // Drive counterclockwise with negative X (left)
           )); 
 
       //driver.a().whileTrue(drivetrain.applyRequest(() -> brake));
@@ -331,16 +354,20 @@ public class RobotContainer {
         driver2.pov(0).onTrue(c_AimFar); //Up D-Pad
         driver2.pov(270).onTrue(c_ToClimb); //Left D-Pad
         driver2.pov(180).onTrue(c_AimNear); //Down D-Pad
-        //driver2.pov(90).onTrue(c_aim); //Right D-Pad
+        driver2.pov(90).toggleOnTrue(c_FloatFeeder); //Right D-Pad
         driver2.pov(-1).onTrue(c_AimHome); //When not pressed
 
         
-        //INTAKE (Temp)
-        driver2.start().onTrue(c_IntakeIn);
-        driver2.start().onFalse(c_IntakeStop);
+        //INTAKE
+        // driver2.start().onTrue(c_OhSHit); //Move Down
+        // driver2.start().onFalse(c_HOLDIT);
 
-        driver2.back().onTrue(c_IntakeOut);
-        driver2.back().onFalse(c_IntakeStop);
+
+        // driver2.start().onTrue(c_IntakeIn);
+        // driver2.start().onFalse(c_IntakeStop);
+
+        // driver2.back().onTrue(c_IntakeOut);
+        // driver2.back().onFalse(c_IntakeStop);
 
 
         // photonToggle.onTrue(m_photonCommand);
@@ -363,13 +390,5 @@ public class RobotContainer {
         return m_Chooser.getSelected();
      }
 
-    public void setDriveMode()
-  {
-    //drivebase.setDefaultCommand();
-  }
-
-  public Command getAutoCommand(){
-    return m_Chooser.getSelected();
-  }
   
 }

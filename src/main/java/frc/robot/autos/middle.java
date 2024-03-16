@@ -23,9 +23,9 @@
 //     public middle(SwerveSubsystem s_Swerve){
 //         TrajectoryConfig config =
 //             new TrajectoryConfig(
-//                     Constants.AutoConstants.kMaxSpeedMetersPerSecond,
-//                     Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-//                 .setKinematics(Constants.SwerveSubsystem.swerveKinematics);
+//                     3,
+//                     1.5)
+//                 .setKinematics(s_Swerve.getKinematics());
 
 //         // An example trajectory to follow.  All units in meters.
 //         Trajectory exampleTrajectory =
@@ -77,16 +77,16 @@
                 
 //         var thetaController =
 //             new ProfiledPIDController(
-//                 Constants.AutoConstants.kPThetaController, 0, 0, Constants.AutoConstants.kThetaControllerConstraints);
+//                 Constants.AutoConstants.anglePID, 0, 0, Constants.AutoConstants.kThetaControllerConstraints);
 //         thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
 //         SwerveControllerCommand swerveControllerCommand =
 //             new SwerveControllerCommand(
 //                 exampleTrajectory,
 //                 s_Swerve::getPose,
-//                 Constants.Swerve.swerveKinematics,
-//                 new PIDController(Constants.AutoConstants.kPXController, 0, 0),
-//                 new PIDController(Constants.AutoConstants.kPYController, 0, 0),
+//                 s_Swerve.getKinematics(),
+//                 new PIDController(Constants.AutoConstants.driveKD, 0, 0),
+//                 new PIDController(Constants.AutoConstants.driveKD, 0, 0),
 //                 thetaController,
 //                 s_Swerve::setModuleStates,
 //                 s_Swerve);
