@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.CvSink;
+import edu.wpi.first.cscore.CvSource;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -11,6 +15,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import java.io.File;
 import java.io.IOException;
+
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
+
 import swervelib.parser.SwerveParser;
 
 /**
@@ -20,6 +30,7 @@ import swervelib.parser.SwerveParser;
  */
 public class Robot extends TimedRobot
 {
+  Thread m_visionThread;
 
   private static Robot   instance;
   private        Command m_autonomousCommand;
@@ -44,6 +55,7 @@ public class Robot extends TimedRobot
   @Override
   public void robotInit()
   {
+
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
@@ -51,6 +63,40 @@ public class Robot extends TimedRobot
     // Create a timer to disable motor brake a few seconds after disable.  This will let the robot stop
     // immediately when disabled, but then also let it be pushed more 
     disabledTimer = new Timer();
+    m_robotContainer.resetGyroState(); //Resets the Gyro on Startup
+    
+    //Basic Camera
+    //CameraServer.startAutomaticCapture();
+
+
+    //Advanced Camera
+    m_visionThread = new Thread(
+      ()-> {
+        UsbCamera camera = CameraServer.startAutomaticCapture();
+        // camera.setResolution(640, 480);
+        camera.setFPS(30);
+
+        CvSink cvSink = CameraServer.getVideo();
+        CvSource outputStream = CameraServer.putVideo("Rectangle", 640, 480);
+        outputStream.setFPS(30);
+
+        Mat mat = new Mat();
+        while (!Thread.interrupted())
+        {
+          if(cvSink.grabFrame(mat) == 0)
+          {
+            outputStream.notifyError(cvSink.getError());
+            continue;
+          }
+          Imgproc.rectangle(mat, new Point(100, 100), new Point(400, 400), new Scalar(255, 255, 255), 3);
+          outputStream.putFrame(mat);
+        }
+      }
+
+    );
+
+    m_visionThread.setDaemon(true);
+    m_visionThread.start();
   }
 
   /**
@@ -111,6 +157,7 @@ public class Robot extends TimedRobot
   @Override
   public void teleopInit()
   {
+    
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove

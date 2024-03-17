@@ -124,6 +124,8 @@ public class TrapAmpSubsystem extends SubsystemBase {
         m_RightArmMotor.setInverted(true);
         m_LeftArmMotor.setInverted(false);
 
+        
+
         armPid.setSetpoint(toHome);
 
         
@@ -182,12 +184,13 @@ public class TrapAmpSubsystem extends SubsystemBase {
             }
         } else {
             //if within threshold
-            if(tPV < MIN && tPV < MAX){
+            if(tPV > MIN && tPV < MAX){
             m_LeftArmMotor.set(ArmOutput);
             m_RightArmMotor.set(ArmOutput); 
+            } else {
+            m_LeftArmMotor.set(0);
+            m_RightArmMotor.set(0);
             }
-            m_LeftArmMotor.set(ArmOutput);
-            m_RightArmMotor.set(ArmOutput);
         }
         
 
@@ -228,8 +231,6 @@ public class TrapAmpSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("T encoder", tPos());
         SmartDashboard.putNumber("motor value", ArmOutput);
         SmartDashboard.putBoolean("Trap isOverride", OVERRIDE);
-        //SmartDashboard.putNumber("T Output", tOutput);
-
         
 
     }
@@ -290,8 +291,6 @@ public class TrapAmpSubsystem extends SubsystemBase {
 
         }
 
-        // OVERRIDE = false;
-
         if(state == frc.robot.State.eState.M_UP){
             eState = frc.robot.State.eState.M_UP;
             OVERRIDE = true;
@@ -307,10 +306,10 @@ public class TrapAmpSubsystem extends SubsystemBase {
             OVERRIDE = true;
         }
 
-        // if(!OVERRIDE)
-        // {
-        //    armPid.setSetpoint(tSetPoint);
-        // }
+        if(!OVERRIDE)
+        {
+           armPid.setSetpoint(tSetPoint);
+        }
 
     }
 

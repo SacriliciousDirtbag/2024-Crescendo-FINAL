@@ -14,7 +14,7 @@ public class flyIn extends Command {
 
     @Override
     public void initialize() {
-        s_feederSubsystem.goIndexState(sState.IN, -0.2);
+        s_feederSubsystem.goIndexState(sState.IN, 0.2);
     }
 
     @Override

@@ -224,16 +224,16 @@ public class RobotContainer {
     NamedCommands.registerCommand("pickupUpCommand", c_IntakeIn);
     NamedCommands.registerCommand("aimCommand", c_AimNear);
     NamedCommands.registerCommand("rampCommand", c_RampWheelOut);
-    NamedCommands.registerCommand("shootCOmmand", c_IndexWheelOut);
+    NamedCommands.registerCommand("shootCommand", c_IndexWheelOut);
 
 
       // Configure the button bindings
       configureButtonBindings();
-      drivetrain.runOnce(() -> drivetrain.seedFieldRelative(drivetrain.getState().Pose));
 
       // Build an auto chooser. This will use Commands.none() as the default option.
      m_Chooser = AutoBuilder.buildAutoChooser();
-     SequentialCommandGroup auto = new SequentialCommandGroup(s_ScoreBlueOne, new PathPlannerAuto("MF Blue Auto 2"));
+     SequentialCommandGroup auto = new SequentialCommandGroup(//;new PathPlannerAuto("MF Blue Auto 2"));
+      s_ScoreBlueOne, new PathPlannerAuto("MF Blue Auto 2"));
      m_Chooser.setDefaultOption("Score Blue Auto", auto);
     //  m_Chooser.addOption("BF Blue Auto 3", new PathPlannerAuto("BF Blue Auto 3"));
     //  m_Chooser.addOption("MF Blue Auto 2", new PathPlannerAuto("MF Blue Auto 2"));
@@ -262,7 +262,7 @@ public class RobotContainer {
       // driver.b().whileTrue(drivetrain
       //     .applyRequest(() -> point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))));
 
-      // reset the field-centric heading on left bumper press
+      // reset the field-centric heading on Y Button press
       driver.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
       //driver.leftTrigger.onTrue(drivetrain.runOnce(() -> drivetrain));
       // if (Utils.isSimulation()) {
@@ -390,5 +390,8 @@ public class RobotContainer {
         return m_Chooser.getSelected();
      }
 
+     public Command resetGyroState(){
+            return drivetrain.runOnce(() -> drivetrain.seedFieldRelative(drivetrain.getState().Pose));
+     }
   
 }

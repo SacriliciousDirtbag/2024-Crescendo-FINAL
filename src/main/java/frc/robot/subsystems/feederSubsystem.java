@@ -242,7 +242,7 @@ public class feederSubsystem extends SubsystemBase {
 
         if(state == frc.robot.State.sState.IN)
         {
-            FlywheelSpinSpeed = -speed/2;
+            FlywheelSpinSpeed = -speed;
             sState = frc.robot.State.sState.IN;
         }
 
@@ -259,12 +259,16 @@ public class feederSubsystem extends SubsystemBase {
         if(state == frc.robot.State.fState.OUT)
         {
             FeederSpinSpeed = 0.75; //Blue wheels
+            m_LeftFeederMotor.setInverted(false);
+            m_RightFeederMotor.setInverted(false);
             fstate = frc.robot.State.fState.OUT;
         }
 
         if(state == frc.robot.State.fState.IN)
         {
             FeederSpinSpeed = -0.2;
+            m_LeftFeederMotor.setInverted(false);
+            m_RightFeederMotor.setInverted(false);
             fstate = frc.robot.State.fState.IN;
         }
 

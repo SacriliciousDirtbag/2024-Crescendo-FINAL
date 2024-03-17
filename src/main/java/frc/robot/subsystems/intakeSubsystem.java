@@ -46,7 +46,7 @@ public class intakeSubsystem extends SubsystemBase {
 
     @Override
     public void periodic(){
-        m_wheelMotor.set(spinSpeed);
+        
         
 
 
@@ -56,14 +56,14 @@ public class intakeSubsystem extends SubsystemBase {
     //INTAKE SPIN
     public void goIntakeWheelState(iState state){
         if(state == frc.robot.State.iState.IN){
-            spinSpeed = -0.25;
+            m_wheelMotor.set(-0.25);
             m_backMotor.set(-0.25);
             m_floorMotor.set(0.25);
 
         }
 
         if(state == frc.robot.State.iState.OUT){
-            spinSpeed = 0.25;
+            m_wheelMotor.set(0.25);
             m_backMotor.set(-0.25);
             m_floorMotor.set(0.25);
 
@@ -71,8 +71,10 @@ public class intakeSubsystem extends SubsystemBase {
         }
 
         if(state == frc.robot.State.iState.STOP){
-            spinSpeed = 0;
+            m_wheelMotor.set(0);
             m_backMotor.set(0);
+            m_floorMotor.set(0);
+
 
 
         }
