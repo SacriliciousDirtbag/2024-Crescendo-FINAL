@@ -62,6 +62,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -242,15 +243,17 @@ public class RobotContainer {
     NamedCommands.registerCommand("rampCommand", c_RampWheelOut);
     NamedCommands.registerCommand("rampStopCommand", c_RampStop);
 
+
+
       // Configure the button bindings
       configureButtonBindings();
 
       // Build an auto chooser. This will use Commands.none() as the default option.
      m_Chooser = AutoBuilder.buildAutoChooser();
      SequentialCommandGroup auto = new SequentialCommandGroup(//;new PathPlannerAuto("MF Blue Auto 2"));
-      s_ScoreBlueOne, new PathPlannerAuto("MF Blue Auto 2"));
-     m_Chooser.setDefaultOption("Score Blue Auto", auto);
-    //  m_Chooser.addOption("BF Blue Auto 3", new PathPlannerAuto("BF Blue Auto 3"));
+      /*s_ScoreBlueOne,*/ new PathPlannerAuto("MF Blue Auto 2"));
+      m_Chooser.setDefaultOption("Score Blue Auto", auto);
+      // m_Chooser.addOption("Blue Left 4 Note Auto", auto);
     //  m_Chooser.addOption("MF Blue Auto 2", new PathPlannerAuto("MF Blue Auto 2"));
  
      SmartDashboard.putData("Auto Chooser", m_Chooser);
@@ -264,6 +267,7 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
+
       
       drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
           drivetrain.applyRequest(() -> drive.withVelocityX(translationlimiter.calculate(driver.getLeftY()) * -MaxSpeed)// Drive forward with
@@ -271,6 +275,10 @@ public class RobotContainer {
               .withVelocityY(strafelimiter.calculate(driver.getLeftX()) * -MaxSpeed) //Drive left with negative X (left)
               .withRotationalRate(rotationlimiter.calculate(driver.getRightX()) * -MaxAngularRate) // Drive counterclockwise with negative X (left)
           )); 
+
+
+      drivetrain.registerTelemetry(logger::telemeterize);
+
 
       //driver.a().whileTrue(drivetrain.applyRequest(() -> brake));
       //Invert Button?
@@ -283,7 +291,6 @@ public class RobotContainer {
       // if (Utils.isSimulation()) {
       //   drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
       // }
-      // drivetrain.registerTelemetry(logger::telemeterize);
 
     //   driver.a().whileTrue(drivetrain.applyRequest(() -> brake));
     // driver.b().whileTrue(drivetrain
@@ -405,6 +412,10 @@ public class RobotContainer {
      */
 
      public Command getAutonomousCommand(){
+        // PathPlannerPath path = PathPlannerPath.fromPathFile("MF Blue Auto 2");
+
+        // Create a path following command using AutoBuilder. This will also trigger event markers.
+        // return AutoBuilder.followPath(path.);
         return m_Chooser.getSelected();
      }
 

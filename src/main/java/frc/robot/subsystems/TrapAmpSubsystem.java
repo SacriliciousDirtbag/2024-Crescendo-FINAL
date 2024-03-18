@@ -162,7 +162,7 @@ public class TrapAmpSubsystem extends SubsystemBase {
 
         
         
-
+/* 
 
         if(OVERRIDE == true){
             if(eState == frc.robot.State.eState.M_UP){
@@ -225,7 +225,7 @@ public class TrapAmpSubsystem extends SubsystemBase {
         //     // m_LeftArmMotor.disable();
         //     // m_RightArmMotor.disable();
         // //}
-        
+        */
         SmartDashboard.putNumber("Trap Encoder DIO#", t_Encoder.getSourceChannel());
         SmartDashboard.putNumber("T Setpoint", tSetPoint);
         SmartDashboard.putNumber("T encoder", tPos());

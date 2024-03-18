@@ -174,7 +174,7 @@ public class feederSubsystem extends SubsystemBase {
         double aOutput = -aPID.calculate(aPV, aSetPoint);
 
         
-
+        /*
 
         if(OVERRIDE == true){
             if(aState == frc.robot.State.aState.M_UP){
@@ -213,7 +213,7 @@ public class feederSubsystem extends SubsystemBase {
         //      m_LeftAimingMotor.set(0);
         //      m_RightAimingMotor.set(0);
         //      isDisabled = true;
-        // }*/
+        // }*/ 
 
         SmartDashboard.putNumber("Feeder Arm Pos", aPV); //Measured in Degrees
         SmartDashboard.putNumber("Feeder Encoder DIO#", a_Encoder.getSourceChannel());
