@@ -12,7 +12,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "aimCommand"
+                  "name": "aimNearCommand"
                 }
               },
               {
@@ -42,7 +42,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "PickUpCommand"
+                  "name": "pickUpStartCommand"
                 }
               },
               {

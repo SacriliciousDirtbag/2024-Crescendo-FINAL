@@ -233,7 +233,7 @@ public class feederSubsystem extends SubsystemBase {
 
 
     //FLYWHEEL SPIN STATE
-    public void goIndexState(sState state, double speed){
+    public void goIndexWheelState(sState state, double speed){
         if(state == frc.robot.State.sState.OUT)
         {
             FlywheelSpinSpeed = speed; //0.4 BLACK wheels

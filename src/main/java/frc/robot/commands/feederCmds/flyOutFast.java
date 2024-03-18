@@ -14,7 +14,7 @@ public class flyOutFast extends Command {
 
     @Override
     public void initialize() {
-        s_feederSubsystem.goIndexState(sState.OUT, 0.4); //TODO: Change fast index speed
+        s_feederSubsystem.goIndexWheelState(sState.OUT, 0.4); //TODO: Change fast index speed
     }
 
     @Override

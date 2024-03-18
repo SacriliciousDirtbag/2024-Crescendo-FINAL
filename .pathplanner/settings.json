@@ -4,9 +4,10 @@
   "holonomicMode": true,
   "pathFolders": [
     "2-Note Middle Blue",
+    "3-Note Middle Blue",
     "3-Note Top Blue",
     "4-Note Bottom Blue",
-    "3-Note Middle Blue"
+    "Auto Components"
   ],
   "autoFolders": [],
   "defaultMaxVel": 3.0,

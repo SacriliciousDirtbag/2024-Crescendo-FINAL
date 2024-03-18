@@ -14,7 +14,19 @@
         {
           "type": "named",
           "data": {
+            "name": "aimNearCommand"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "rampCommand"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
           }
         },
         {
@@ -26,7 +38,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "New New Path"
+            "pathName": "Left Blue Close Left Note"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left Blue Close Middle Note"
           }
         }
       ]

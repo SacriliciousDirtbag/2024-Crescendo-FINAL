@@ -54,14 +54,14 @@ public class Blue1NoteAuto extends Command{
         
         
         if(t > waitTime){
-            s_Feeder.goIndexState(sState.OUT, 0.4); //feed out
+            s_Feeder.goIndexWheelState(sState.OUT, 0.4); //feed out
         }
     }
 
     @Override
     public void end(boolean isFinished)
     {
-        s_Feeder.goIndexState(sState.STOP, 0);
+        s_Feeder.goIndexWheelState(sState.STOP, 0);
         s_Feeder.goAimWheelState(fState.STOP);
     }
 

@@ -19,7 +19,7 @@ public class accumulateIn extends Command {
     public void initialize() {
         s_feederSubsystem.goFeederArmState(aState.HOME); //Arm Down
         s_IntakeSubsystem.goIntakeWheelState(iState.IN); //Feed In
-        s_feederSubsystem.goIndexState(sState.IN, 0.2); //Wheel In
+        s_feederSubsystem.goIndexWheelState(sState.IN, 0.2); //Wheel In
     }
 
     @Override

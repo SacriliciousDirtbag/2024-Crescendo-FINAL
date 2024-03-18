@@ -30,6 +30,7 @@ import frc.robot.commands.feederCmds.flyIn;
 import frc.robot.commands.feederCmds.flyOut;
 import frc.robot.commands.feederCmds.flyOutFast;
 import frc.robot.commands.feederCmds.flyStop;
+import frc.robot.commands.feederCmds.intakeWithFeed;
 import frc.robot.commands.feederCmds.shootFar;
 import frc.robot.commands.feederCmds.shootHome;
 import frc.robot.commands.feederCmds.shootNear;
@@ -166,6 +167,8 @@ public class RobotContainer {
     public final flyOutFast c_flyOutFast = new flyOutFast(s_feederSubsystem);
     public final flyStop c_IndexStop = new flyStop(s_feederSubsystem);
 
+    public final intakeWithFeed c_intakeWithFeeder = new intakeWithFeed(s_feederSubsystem, s_IntakeSubsystem);
+
     public final hang c_FloatFeeder = new hang(s_feederSubsystem, s_TrapAmpSubsystem);
 
     public final shootFar c_AimFar = new shootFar(s_feederSubsystem);
@@ -221,11 +224,23 @@ public class RobotContainer {
     public RobotContainer() {
     
     // Register Named Commands
-    NamedCommands.registerCommand("pickupUpCommand", c_IntakeIn);
-    NamedCommands.registerCommand("aimCommand", c_AimNear);
-    NamedCommands.registerCommand("rampCommand", c_RampWheelOut);
-    NamedCommands.registerCommand("shootCommand", c_IndexWheelOut);
 
+    // Intake Pickup Commands
+    NamedCommands.registerCommand("pickUpStartCommand", c_IntakeIn);
+    NamedCommands.registerCommand("pickUpStopCommand", c_IntakeStop);
+
+    // Shooter Commands
+    NamedCommands.registerCommand("shootCommand", c_IndexWheelOut);
+    NamedCommands.registerCommand("shootStopCommand", c_IndexStop);
+    
+    // Aim Commands
+    NamedCommands.registerCommand("aimNearCommand", c_AimNear);
+    NamedCommands.registerCommand("aimFarCommand", c_AimFar);
+    NamedCommands.registerCommand("aimIntakeCommand", c_AimHome);
+
+    // Ramp Commands
+    NamedCommands.registerCommand("rampCommand", c_RampWheelOut);
+    NamedCommands.registerCommand("rampStopCommand", c_RampStop);
 
       // Configure the button bindings
       configureButtonBindings();
@@ -320,15 +335,18 @@ public class RobotContainer {
 
         //* EXTERNAL DRIVER */
         //FEEDER
-        driver2.leftBumper().onTrue(c_IndexWheelOut); //Index Wheels Spin 
-        driver2.leftBumper().onTrue(c_IntakeOut);
+        // driver2.leftBumper().onTrue(c_IndexWheelOut); //Index Wheels Spin 
+        // driver2.leftBumper().onTrue(c_IntakeOut);
+
+        driver2.leftBumper().onTrue(c_intakeWithFeeder);
+
         driver2.leftBumper().onFalse(c_IndexStop); //feeder for shooter 
         driver2.leftBumper().onFalse(c_IntakeStop);
         
         driver2.leftTrigger().onTrue(c_IndexWheelIn);
         driver2.leftTrigger().onTrue(c_RampWheelIn);
         driver2.leftTrigger().onFalse(c_IndexStop);
-        driver2.leftTrigger().onFalse(c_RampStop);
+        driver2.leftTrigger().onFalse(c_RampStop); 
 
         driver2.x().toggleOnTrue(c_RampWheelOut); //Toggle Ramp Wheel (Aim)
         driver2.x().toggleOnFalse(c_RampStop); // shoot wheels 
