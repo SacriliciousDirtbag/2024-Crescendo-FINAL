@@ -60,7 +60,7 @@ public class SwerveSubsystem extends SwerveDrivetrain implements Subsystem {
     public SwerveSubsystem(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
 
-        configurePathPlanner();         
+        configurePathPlanner();  //Configure Holonomic      
 
         if (Utils.isSimulation()) {
             startSimThread();
@@ -123,7 +123,7 @@ public class SwerveSubsystem extends SwerveDrivetrain implements Subsystem {
         this::seedFieldRelative,  // Consumer for seeding pose against auto
         this::getCurrentRobotChassisSpeeds,
         (speeds)->this.setControl(AutoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the robot
-        new HolonomicPathFollowerConfig(new PIDConstants(0,0,0),
+        new HolonomicPathFollowerConfig(new PIDConstants(2,0,0.1),
                                         new PIDConstants(0, 0, 0 /*AutoConstants.angleKP, AutoConstants.angleKI, AutoConstants.angleKD*/),
                                         Constants.kSpeedAt12VoltsMps,
                                         driveBaseRadius,
@@ -142,6 +142,10 @@ public class SwerveSubsystem extends SwerveDrivetrain implements Subsystem {
 
     public ChassisSpeeds getRobotRelativeSpeeds() {
         return this.m_kinematics.toChassisSpeeds(this.getState().ModuleStates);       
+    }
+
+    public void driveRobotRelative(ChassisSpeeds speeds) {
+        this.setControl(AutoRequest.withSpeeds(speeds));
     }
 
     //DRIVER PERSPECTIVE CHECK

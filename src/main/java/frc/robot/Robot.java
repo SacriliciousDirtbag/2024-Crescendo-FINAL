@@ -23,6 +23,7 @@ import org.opencv.imgproc.Imgproc;
 
 import swervelib.parser.SwerveParser;
 
+import frc.robot.RobotContainer;
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as
  * described in the TimedRobot documentation. If you change the name of this class or the package after creating this
@@ -122,8 +123,11 @@ public class Robot extends TimedRobot
   @Override
   public void disabledInit()
   {
+    m_robotContainer.resetAutonomousStates();
     disabledTimer.reset();
     disabledTimer.start();
+
+
   }
 
   @Override
@@ -157,11 +161,12 @@ public class Robot extends TimedRobot
   @Override
   public void teleopInit()
   {
-    
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+    m_robotContainer.resetAutonomousStates();
+    m_robotContainer.resetGyroState(); //Resets the Gyro on Startup
     if (m_autonomousCommand != null)
     {
       m_autonomousCommand.cancel();

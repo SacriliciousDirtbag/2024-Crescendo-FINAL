@@ -3,45 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.1711140860004146,
-        "y": 6.612232821144172
+        "x": 1.4,
+        "y": 5.55
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1711140860004132,
-        "y": 6.612232821144172
-      },
-      "isLocked": false,
-      "linkedName": "MSP"
-    },
-    {
-      "anchor": {
-        "x": 2.914250573459629,
-        "y": 5.52155524239874
-      },
-      "prevControl": {
-        "x": 2.7775685260061214,
-        "y": 5.52155524239874
-      },
-      "nextControl": {
-        "x": 3.1779021362861313,
-        "y": 5.52155524239874
+        "x": 1.418203554408146,
+        "y": 5.550752227693158
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.1278541536917,
-        "y": 6.8946404084978985
+        "x": 1.6514600780156785,
+        "y": 5.55
       },
       "prevControl": {
-        "x": 6.009383926751896,
-        "y": 6.8946404084978985
+        "x": 1.6876704339770328,
+        "y": 5.563899853349394
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "MSFar"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -55,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": -0.27083598566307254,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "3-Note Middle Blue",
+  "folder": null,
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": 0.7960491761065268,
     "velocity": 0
   },
   "useDefaultConstraints": true

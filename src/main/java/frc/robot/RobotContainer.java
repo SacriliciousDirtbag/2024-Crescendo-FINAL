@@ -18,10 +18,20 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.State.eState;
+import frc.robot.State.fState;
+import frc.robot.State.iState;
+import frc.robot.State.sState;
 import frc.robot.autos.*;
 //import frc.robot.commands.*;
 
 import frc.robot.commands.feederCmds.feedIn;
+import frc.robot.commands.autoCmds.lbPlusB;
+import frc.robot.commands.autoCmds.leftBumper;
+import frc.robot.commands.autoCmds.leftTrigger;
+import frc.robot.commands.autoCmds.stopAll;
+import frc.robot.commands.autoCmds.xButton;
+import frc.robot.commands.comboCmds.feedWithRamp;
+import frc.robot.commands.comboCmds.intakeWithFeed;
 import frc.robot.commands.feederCmds.FeederToHome;
 import frc.robot.commands.feederCmds.FeedertoIntake;
 import frc.robot.commands.feederCmds.feedOut;
@@ -30,7 +40,6 @@ import frc.robot.commands.feederCmds.flyIn;
 import frc.robot.commands.feederCmds.flyOut;
 import frc.robot.commands.feederCmds.flyOutFast;
 import frc.robot.commands.feederCmds.flyStop;
-import frc.robot.commands.feederCmds.intakeWithFeed;
 import frc.robot.commands.feederCmds.shootFar;
 import frc.robot.commands.feederCmds.shootHome;
 import frc.robot.commands.feederCmds.shootNear;
@@ -60,6 +69,7 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.fasterxml.jackson.core.sym.Name;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -168,7 +178,10 @@ public class RobotContainer {
     public final flyOutFast c_flyOutFast = new flyOutFast(s_feederSubsystem);
     public final flyStop c_IndexStop = new flyStop(s_feederSubsystem);
 
+    //COMBO COMMANDS
     public final intakeWithFeed c_intakeWithFeeder = new intakeWithFeed(s_feederSubsystem, s_IntakeSubsystem);
+    public final feedWithRamp c_FeedWithRamp = new feedWithRamp(s_feederSubsystem, s_TrapAmpSubsystem);
+
 
     public final hang c_FloatFeeder = new hang(s_feederSubsystem, s_TrapAmpSubsystem);
 
@@ -188,6 +201,13 @@ public class RobotContainer {
 
     public final FeedertoIntake c_feederToIntake = new FeedertoIntake(s_feederSubsystem, s_IntakeSubsystem);
 
+
+    //AUTONOMOUS COMMANDS
+    public final lbPlusB c_LbPlusB = new lbPlusB(s_feederSubsystem, s_IntakeSubsystem, s_TrapAmpSubsystem);
+    public final leftBumper c_LeftBumper = new leftBumper(s_feederSubsystem, s_IntakeSubsystem, s_TrapAmpSubsystem);
+    public final leftTrigger c_leftTrigger = new leftTrigger(s_feederSubsystem);
+    public final xButton c_XButton = new xButton(s_feederSubsystem);
+    public final stopAll c_StopAll = new stopAll(s_feederSubsystem, s_IntakeSubsystem, s_TrapAmpSubsystem);
 
     //AUTOS
     public final Command s_ScoreBlueOne = new SequentialCommandGroup(
@@ -227,8 +247,10 @@ public class RobotContainer {
     // Register Named Commands
 
     // Intake Pickup Commands
-    NamedCommands.registerCommand("pickUpStartCommand", c_IntakeIn);
-    NamedCommands.registerCommand("pickUpStopCommand", c_IntakeStop);
+    NamedCommands.registerCommand("pickUpStartCommand", c_intakeWithFeeder);
+    // NamedCommands.registerCommand("pickUpStopCommand", c_IntakeStop);
+    // NamedCommands.registerCommand("pickUpStopCommand", c_IndexStop);
+    NamedCommands.registerCommand("pickUpStopCommand", c_StopAll);
 
     // Shooter Commands
     NamedCommands.registerCommand("shootCommand", c_IndexWheelOut);
@@ -238,13 +260,17 @@ public class RobotContainer {
     NamedCommands.registerCommand("aimNearCommand", c_AimNear);
     NamedCommands.registerCommand("aimFarCommand", c_AimFar);
     NamedCommands.registerCommand("aimIntakeCommand", c_AimHome);
+    NamedCommands.registerCommand("rampCommand", c_RampWheelOut);
 
     // Ramp Commands
-    NamedCommands.registerCommand("rampCommand", c_RampWheelOut);
     NamedCommands.registerCommand("rampStopCommand", c_RampStop);
 
 
-
+    //THE REAL CHEAT CODES (PATHPLANNER COMMANDS)
+    NamedCommands.registerCommand("c_feedAllIn", c_LbPlusB); //Ring to Amp
+    NamedCommands.registerCommand("c_pushBack", c_leftTrigger); //Amp to Shooter
+    NamedCommands.registerCommand("c_rampUp", c_XButton); //Ramp Wheels
+    NamedCommands.registerCommand("c_shootOut", c_LeftBumper); 
       // Configure the button bindings
       configureButtonBindings();
 
@@ -276,10 +302,6 @@ public class RobotContainer {
               .withRotationalRate(rotationlimiter.calculate(driver.getRightX()) * -MaxAngularRate) // Drive counterclockwise with negative X (left)
           )); 
 
-
-      drivetrain.registerTelemetry(logger::telemeterize);
-
-
       //driver.a().whileTrue(drivetrain.applyRequest(() -> brake));
       //Invert Button?
       // driver.b().whileTrue(drivetrain
@@ -288,9 +310,13 @@ public class RobotContainer {
       // reset the field-centric heading on Y Button press
       driver.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
       //driver.leftTrigger.onTrue(drivetrain.runOnce(() -> drivetrain));
-      // if (Utils.isSimulation()) {
-      //   drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
-      // }
+      
+      if (Utils.isSimulation()) {
+        drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
+      }
+
+      drivetrain.registerTelemetry(logger::telemeterize);
+
 
     //   driver.a().whileTrue(drivetrain.applyRequest(() -> brake));
     // driver.b().whileTrue(drivetrain
@@ -350,15 +376,21 @@ public class RobotContainer {
         driver2.leftBumper().onFalse(c_IndexStop); //feeder for shooter 
         driver2.leftBumper().onFalse(c_IntakeStop);
         
-        driver2.leftTrigger().onTrue(c_IndexWheelIn);
-        driver2.leftTrigger().onTrue(c_RampWheelIn);
+        
+        // driver2.leftTrigger().onTrue(c_IndexWheelIn);
+        // driver2.leftTrigger().onTrue(c_RampWheelIn);
+        driver2.leftTrigger().onTrue(c_FeedWithRamp);
+        
         driver2.leftTrigger().onFalse(c_IndexStop);
         driver2.leftTrigger().onFalse(c_RampStop); 
 
         driver2.x().toggleOnTrue(c_RampWheelOut); //Toggle Ramp Wheel (Aim)
         driver2.x().toggleOnFalse(c_RampStop); // shoot wheels 
 
-        driver2.a().onTrue(c_scoreAmp);
+        driver2.b().toggleOnTrue(c_RampWheelIn); 
+        driver2.b().toggleOnFalse(c_RampStop); 
+
+        driver2.a().onTrue(c_scoreAmp); //MOVES AMP ARM
         driver2.a().onFalse(c_ampHome);
 
         // driver.start().onTrue(); //TODO: Hangar Down
@@ -368,13 +400,17 @@ public class RobotContainer {
         // driver.back().onFalse(); //Maintain Pos
 
         //AMPER
-        driver2.rightBumper().onTrue(c_trapWheelOut); //tennis grip bars 
-        driver2.rightTrigger().onTrue(c_IntakeIn);
-        driver2.rightBumper().onFalse(c_trapStop);
-        driver2.rightTrigger().onFalse(c_IntakeStop);
+        driver2.rightBumper().onTrue(c_LeftBumper); //tennis grip bars, was c_trapWheelOut
+        driver2.rightBumper().onFalse(c_StopAll); //c_trapStop
         
-        driver2.rightTrigger().onTrue(c_trapWheelIn);
+        // driver2.rightTrigger().onTrue(c_IntakeIn);
+        // driver2.rightTrigger().onTrue(c_trapWheelIn);
+
+        driver2.rightTrigger().onTrue(c_LbPlusB);
+        
         driver2.rightTrigger().onFalse(c_trapStop);
+        driver2.rightTrigger().onFalse(c_IndexStop);
+        driver2.rightTrigger().onFalse(c_IntakeStop);
 
         driver2.pov(0).onTrue(c_AimFar); //Up D-Pad
         driver2.pov(270).onTrue(c_ToClimb); //Left D-Pad
@@ -421,6 +457,12 @@ public class RobotContainer {
 
      public Command resetGyroState(){
             return drivetrain.runOnce(() -> drivetrain.seedFieldRelative(drivetrain.getState().Pose));
+     }
+
+     public void resetAutonomousStates(){
+        s_feederSubsystem.goAimWheelState(fState.STOP);
+        s_IntakeSubsystem.goIntakeWheelState(iState.STOP);
+        s_feederSubsystem.goIndexWheelState(sState.STOP, 0.0);
      }
   
 }

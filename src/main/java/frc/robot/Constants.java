@@ -212,7 +212,7 @@ public final class Constants{
         public static final class IntakeWheel {
             public static final int frontMotorID = 3; //NeoPWM, 13
             public static final int wheelMotorID = 15; //Vortex, 15
-            public static final int backMotorID = 14; //Vortex, 14
+            public static final int floorMotorID = 14; //Vortex, 14
         } 
     } 
 

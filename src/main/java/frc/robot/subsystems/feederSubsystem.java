@@ -36,16 +36,16 @@ import frc.lib.util.CANSparkFlexUtil;
 public class feederSubsystem extends SubsystemBase {
     
     //FEEDER MOVEMENT
-    public CANSparkFlex m_LeftFeederMotor;
-    public CANSparkFlex m_RightFeederMotor;
+    public CANSparkFlex m_bottomShootMotor;
+    public CANSparkFlex m_topShootMotor;
     public fState fstate;
 
     private double FeederSpinSpeed;
 
 
     //FLYWHEEL MOVEMENT
-    public PWMSparkMax m_leftFlyMotor;
-    public PWMSparkMax m_rightFlyMotor;
+    public PWMSparkMax m_leftIndexMotor;
+    public PWMSparkMax m_rightIndexMotor;
 
     private double FlywheelSpinSpeed;
 
@@ -86,16 +86,16 @@ public class feederSubsystem extends SubsystemBase {
     public feederSubsystem(){
 
         //FEEDER SPINNER
-        m_LeftFeederMotor = new CANSparkFlex(Constants.feederSubsystem.leftMotorID, MotorType.kBrushless); //Fixed, Had to Reconfigure Motor 21
-        m_RightFeederMotor = new CANSparkFlex(Constants.feederSubsystem.rightMotorID, MotorType.kBrushless);
-        m_LeftFeederMotor.setIdleMode(IdleMode.kCoast);
-        m_RightFeederMotor.setIdleMode(IdleMode.kCoast);
+        m_bottomShootMotor = new CANSparkFlex(Constants.feederSubsystem.leftMotorID, MotorType.kBrushless); //Fixed, Had to Reconfigure Motor 21
+        m_topShootMotor = new CANSparkFlex(Constants.feederSubsystem.rightMotorID, MotorType.kBrushless);
+        m_bottomShootMotor.setIdleMode(IdleMode.kCoast);
+        m_topShootMotor.setIdleMode(IdleMode.kCoast);
 
         //FLYWHEEL SPINNER
-        m_leftFlyMotor = new PWMSparkMax(Constants.shooterSystem.LeftFlyWheelID);
-        m_rightFlyMotor = new PWMSparkMax(Constants.shooterSystem.RightFlyWheelID);
-        m_leftFlyMotor.setInverted(true);
-        m_rightFlyMotor.setInverted(true);
+        m_leftIndexMotor = new PWMSparkMax(Constants.shooterSystem.LeftFlyWheelID);
+        m_rightIndexMotor = new PWMSparkMax(Constants.shooterSystem.RightFlyWheelID);
+        m_leftIndexMotor.setInverted(true);
+        m_rightIndexMotor.setInverted(true);
 
 
         //ARM MOVEMENT
@@ -136,17 +136,20 @@ public class feederSubsystem extends SubsystemBase {
 
 
         //Wheels
-        m_LeftFeederMotor.setInverted(false);
-        m_RightFeederMotor.setInverted(false);
+        m_bottomShootMotor.setInverted(false);
+        m_topShootMotor.setInverted(false);
 
         //Aim Motor
-        m_leftFlyMotor.setInverted(false);
+        m_leftIndexMotor.setInverted(false);
 
         //Arms
         m_LeftAimingMotor.setInverted(false);
         m_RightAimingMotor.setInverted(true);
 
         setASetPoint(toHome); //init position
+
+        goAimWheelState(fState.STOP);
+        goIndexWheelState(frc.robot.State.sState.STOP, 0);
         fstate = frc.robot.State.fState.STOP;
         sState = frc.robot.State.sState.STOP;
 
@@ -158,13 +161,13 @@ public class feederSubsystem extends SubsystemBase {
 
      @Override
     public void periodic(){
-        //SPINNER
-        m_LeftFeederMotor.set(FeederSpinSpeed);
-        m_RightFeederMotor.set(FeederSpinSpeed);
+        // //AIM
+        // m_bottomShootMotor.set(FeederSpinSpeed);
+        // m_topShootMotor.set(FeederSpinSpeed);
 
         //FLY
-        m_leftFlyMotor.set(FlywheelSpinSpeed); //0.5
-        m_rightFlyMotor.set(FlywheelSpinSpeed); //-0.5, Reverse Polarity
+        // m_leftIndexMotor.set(FlywheelSpinSpeed); //0.5
+        // m_rightIndexMotor.set(FlywheelSpinSpeed); //-0.5, Reverse Polarity
         
         //ARM
         aPV = aPos();
@@ -174,46 +177,46 @@ public class feederSubsystem extends SubsystemBase {
         double aOutput = -aPID.calculate(aPV, aSetPoint);
 
         
-        /*
+        
 
-        if(OVERRIDE == true){
-            if(aState == frc.robot.State.aState.M_UP){
-                m_LeftAimingMotor.set(0.1);
-                m_RightAimingMotor.set(0.1);
+        // if(OVERRIDE == true){
+        //     if(aState == frc.robot.State.aState.M_UP){
+        //         m_LeftAimingMotor.set(0.1);
+        //         m_RightAimingMotor.set(0.1);
 
-            }
+        //     }
 
-            if(aState == frc.robot.State.aState.M_DOWN){
-                m_LeftAimingMotor.set(-0.1);
-                m_RightAimingMotor.set(-0.1);
+        //     if(aState == frc.robot.State.aState.M_DOWN){
+        //         m_LeftAimingMotor.set(-0.1);
+        //         m_RightAimingMotor.set(-0.1);
 
-            }
+        //     }
 
-            if(aState == frc.robot.State.aState.IDLE){
-                m_LeftAimingMotor.set(0.01);
-                m_RightAimingMotor.set(0.01);
+        //     if(aState == frc.robot.State.aState.IDLE){
+        //         m_LeftAimingMotor.set(0.01);
+        //         m_RightAimingMotor.set(0.01);
 
-            }
-        } else {
-            //if within threshold
-            if(aPV < MIN && aPV > MAX){
-            m_LeftAimingMotor.set(0);
-            m_RightAimingMotor.set(0);
-            }
-            m_LeftAimingMotor.set(aOutput);
-            m_RightAimingMotor.set(aOutput);
+        //     }
+        // } else {
+        //     //if within threshold
+        //     if(aPV < MIN && aPV > MAX){
+        //     m_LeftAimingMotor.set(0);
+        //     m_RightAimingMotor.set(0);
+        //     }
+        //     m_LeftAimingMotor.set(aOutput);
+        //     m_RightAimingMotor.set(aOutput);
+        // }
+
+        //If desired setpoint is within MIN/MAX
+         if(aSetPoint >= MIN && aSetPoint <= MAX){
+            m_LeftAimingMotor.set(aOutput); //was aOutput
+            m_RightAimingMotor.set(aOutput); //was aOutput
+            isDisabled = false;
+        }else{
+             m_LeftAimingMotor.set(0);
+             m_RightAimingMotor.set(0);
+             isDisabled = true;
         }
-
-        // //If desired setpoint is within MIN/MAX
-        //  if(aSetPoint >= MIN && aSetPoint <= MAX){
-            // m_LeftAimingMotor.set(aOutput); //was aOutput
-            // m_RightAimingMotor.set(aOutput); //was aOutput
-            // isDisabled = false;
-        // }else{
-        //      m_LeftAimingMotor.set(0);
-        //      m_RightAimingMotor.set(0);
-        //      isDisabled = true;
-        // }*/ 
 
         SmartDashboard.putNumber("Feeder Arm Pos", aPV); //Measured in Degrees
         SmartDashboard.putNumber("Feeder Encoder DIO#", a_Encoder.getSourceChannel());
@@ -237,18 +240,24 @@ public class feederSubsystem extends SubsystemBase {
         if(state == frc.robot.State.sState.OUT)
         {
             FlywheelSpinSpeed = speed; //0.4 BLACK wheels
+            m_leftIndexMotor.set(FlywheelSpinSpeed); //0.2
+            m_rightIndexMotor.set(FlywheelSpinSpeed); //-0.2, Reverse Polarity
             sState = frc.robot.State.sState.OUT;
         }
 
         if(state == frc.robot.State.sState.IN)
         {
-            FlywheelSpinSpeed = -speed;
+            FlywheelSpinSpeed = -speed; //was 0.2
+            m_leftIndexMotor.set(FlywheelSpinSpeed); //was +
+            m_rightIndexMotor.set(FlywheelSpinSpeed); //-0.5, Reverse Polarity
             sState = frc.robot.State.sState.IN;
         }
 
         if(state == frc.robot.State.sState.STOP)
         {
             FlywheelSpinSpeed = 0;
+            m_leftIndexMotor.set(FlywheelSpinSpeed); //0.5
+            m_rightIndexMotor.set(FlywheelSpinSpeed); //-0.5, Reverse Polarity
             sState = frc.robot.State.sState.STOP;
         }
     }
@@ -259,22 +268,29 @@ public class feederSubsystem extends SubsystemBase {
         if(state == frc.robot.State.fState.OUT)
         {
             FeederSpinSpeed = 0.75; //Blue wheels
-            m_LeftFeederMotor.setInverted(false);
-            m_RightFeederMotor.setInverted(false);
+            m_bottomShootMotor.set(FeederSpinSpeed);
+            m_topShootMotor.set(FeederSpinSpeed);
+            
+            m_bottomShootMotor.setInverted(false);
+            m_topShootMotor.setInverted(false);
             fstate = frc.robot.State.fState.OUT;
         }
 
         if(state == frc.robot.State.fState.IN)
         {
             FeederSpinSpeed = -0.2;
-            m_LeftFeederMotor.setInverted(false);
-            m_RightFeederMotor.setInverted(false);
+            m_bottomShootMotor.set(FeederSpinSpeed);
+            m_topShootMotor.set(0);
+            
+            m_bottomShootMotor.setInverted(false);
+            m_topShootMotor.setInverted(false);
             fstate = frc.robot.State.fState.IN;
         }
 
         if(state == frc.robot.State.fState.STOP)
         {
-            FeederSpinSpeed = 0;
+            m_bottomShootMotor.set(0);
+            m_topShootMotor.set(0);
             fstate = frc.robot.State.fState.STOP;
 
             

@@ -110,7 +110,7 @@ public class TrapAmpSubsystem extends SubsystemBase {
 
         //ARM SETPOINTS
         MIN = 10;
-        toHome = 170; //TODO: calibrate Trap ARM Setpoints
+        toHome = 174; //TODO: calibrate Trap ARM Setpoints
         toTrap = 0; 
         toAim = 23.1; 
         //toAmp = 23.1;
@@ -126,6 +126,7 @@ public class TrapAmpSubsystem extends SubsystemBase {
 
         
 
+        goTrapWheelState(frc.robot.State.tState.STOP);
         armPid.setSetpoint(toHome);
 
         
@@ -146,15 +147,15 @@ public class TrapAmpSubsystem extends SubsystemBase {
         //ARM
         tPV = tPos();
 
-        // //if under
-        // if(tPV < MIN)
-        // {
-        //     ArmOutput = 0.1; 
-        // }
-        // //if over
-        // if(tPV > MAX){
-        //     ArmOutput = -0.1;
-        // }
+        // // //if under
+        //  if(tPV < MIN)
+        //  {
+        //      ArmOutput = 0.1; 
+        //  }
+        //  //if over
+        //  if(tPV > MAX){
+        //      ArmOutput = -0.1;
+        //  }
         
         ArmOutput = armPid.calculate(tPV);
 
@@ -162,7 +163,7 @@ public class TrapAmpSubsystem extends SubsystemBase {
 
         
         
-/* 
+
 
         if(OVERRIDE == true){
             if(eState == frc.robot.State.eState.M_UP){
@@ -225,7 +226,7 @@ public class TrapAmpSubsystem extends SubsystemBase {
         //     // m_LeftArmMotor.disable();
         //     // m_RightArmMotor.disable();
         // //}
-        */
+        
         SmartDashboard.putNumber("Trap Encoder DIO#", t_Encoder.getSourceChannel());
         SmartDashboard.putNumber("T Setpoint", tSetPoint);
         SmartDashboard.putNumber("T encoder", tPos());

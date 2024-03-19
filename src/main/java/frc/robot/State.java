@@ -6,7 +6,7 @@ public class State {
     public enum iState {
         IN, 
         OUT, 
-        STOP
+        STOP, AMP_IN
     };
 
     // Trapper/Amp Spinning State
