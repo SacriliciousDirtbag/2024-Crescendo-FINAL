@@ -77,7 +77,7 @@ public class intakeSubsystem extends SubsystemBase {
     //INTAKE SPIN
     public void goIntakeWheelState(iState state){
         if(state == frc.robot.State.iState.IN){
-            m_wheelMotor.set(-0.25); 
+            m_wheelMotor.set(-0.75); 
             m_frontMotor.set(-0.75); //was 0.25
             m_floorMotor.set(0.75);
 
@@ -85,7 +85,7 @@ public class intakeSubsystem extends SubsystemBase {
         }
 
         if(state == frc.robot.State.iState.OUT){
-            m_wheelMotor.set(0.25);
+            m_wheelMotor.set(0.75);
             m_frontMotor.set(-0.50);
             m_floorMotor.set(0.50);
 

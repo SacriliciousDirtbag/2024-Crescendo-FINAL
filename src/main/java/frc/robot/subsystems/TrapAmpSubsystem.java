@@ -98,9 +98,9 @@ public class TrapAmpSubsystem extends SubsystemBase {
 
         t_Encoder = new DutyCycleEncoder(frc.robot.Constants.AmpSystem.ampEncoderID); //PWM Channel
         
-        double ffP = 0.01; //TODO: Tune PID
+        double ffP = 0.008; //was 0.01 //TODO: Tune PID
         double ffI = 0.0;
-        double ffD = 0.0; //0.5
+        double ffD = 0.0;
 
         tFeedforward = new ArmFeedforward(0, 0.01, 0.01); //-0.15
         armPid = new PIDController(ffP, ffI, ffD);

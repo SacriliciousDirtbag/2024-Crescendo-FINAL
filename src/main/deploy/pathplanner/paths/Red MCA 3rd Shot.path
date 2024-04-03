@@ -3,53 +3,59 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.65,
+        "x": 14.75,
         "y": 5.55
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.65,
-        "y": 5.55
-      },
-      "isLocked": true,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 2.75,
-        "y": 5.63
-      },
-      "prevControl": {
-        "x": 2.7889527706694803,
-        "y": 5.63
-      },
-      "nextControl": {
-        "x": 2.506350497305685,
-        "y": 5.63
+        "x": 15.272017068352048,
+        "y": 5.872130178424058
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.75,
+        "x": 13.6,
+        "y": 6.972545949836858
+      },
+      "prevControl": {
+        "x": 13.698167751723908,
+        "y": 7.072986135909222
+      },
+      "nextControl": {
+        "x": 12.886159864846421,
+        "y": 6.242181499784115
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 14.75,
         "y": 5.55
       },
       "prevControl": {
-        "x": 1.9834397085855775,
-        "y": 5.579179963573198
+        "x": 14.473485269627716,
+        "y": 5.55076982040085
       },
       "nextControl": null,
-      "isLocked": true,
+      "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.8,
+      "rotationDegrees": 149.18768381696128,
+      "rotateFast": true
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [
     {
       "name": "BANG BANG INTAKE",
-      "waypointRelativePos": 0.4,
+      "waypointRelativePos": 0.35,
       "command": {
         "type": "sequential",
         "data": {
@@ -63,7 +69,7 @@
             {
               "type": "wait",
               "data": {
-                "waitTime": 0.65
+                "waitTime": 0.25
               }
             },
             {
@@ -85,13 +91,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
-    "rotateFast": false
+    "rotation": 179.55648388608915,
+    "rotateFast": true
   },
   "reversed": false,
   "folder": "THE 3 NOTE AUTO",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": 179.59431657516305,
     "velocity": 0
   },
   "useDefaultConstraints": true

@@ -186,7 +186,7 @@ public final class Constants{
      //PWM 0 - Amp Spinner - 24
     //PWM 1 - Left Amp Arm - 16
     //PWM 2 - Right Amp Arm - 17
-    //PWM 3 - Floor Intake - 13
+    //PWM 3 - Floor Intake - 13 
     //PWM 4 - Right Feed Aim - 23
     //PWM 5 - Left Feed Aim - 22
     

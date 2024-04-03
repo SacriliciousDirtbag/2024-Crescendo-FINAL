@@ -278,7 +278,9 @@ public class RobotContainer {
      m_Chooser = AutoBuilder.buildAutoChooser();
      SequentialCommandGroup auto = new SequentialCommandGroup(//;new PathPlannerAuto("MF Blue Auto 2"));
       /*s_ScoreBlueOne,*/ new PathPlannerAuto("MF Blue Auto 2"));
-      m_Chooser.setDefaultOption("Score Blue Auto", auto);
+      SequentialCommandGroup noteAuto= new SequentialCommandGroup(s_ScoreBlueOne);
+      //m_Chooser.setDefaultOption("Score Blue Auto", auto);
+      m_Chooser.setDefaultOption("1 note just shoot", noteAuto);
       // m_Chooser.addOption("Blue Left 4 Note Auto", auto);
     //  m_Chooser.addOption("MF Blue Auto 2", new PathPlannerAuto("MF Blue Auto 2"));
  
@@ -427,6 +429,9 @@ public class RobotContainer {
         // driver2.start().onTrue(c_IntakeIn);
         // driver2.start().onFalse(c_IntakeStop);
 
+        //Reset Wheels
+        driver2.start().onTrue(c_StopAll);
+
         // driver2.back().onTrue(c_IntakeOut);
         // driver2.back().onFalse(c_IntakeStop);
 
@@ -454,6 +459,7 @@ public class RobotContainer {
         // return AutoBuilder.followPath(path.);
         return m_Chooser.getSelected();
      }
+     
 
      public Command resetGyroState(){
             return drivetrain.runOnce(() -> drivetrain.seedFieldRelative(drivetrain.getState().Pose));

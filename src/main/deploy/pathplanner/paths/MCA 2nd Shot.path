@@ -3,12 +3,12 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.6514600780156785,
+        "x": 1.75,
         "y": 5.55
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.6486056393575792,
+        "x": 1.7471455613419007,
         "y": 5.541817275846781
       },
       "isLocked": false,
@@ -48,12 +48,12 @@
     },
     {
       "anchor": {
-        "x": 1.6514600780156785,
-        "y": 5.55
+        "x": 1.9793840773921174,
+        "y": 5.3949587377229316
       },
       "prevControl": {
-        "x": 1.9238064046988537,
-        "y": 4.985854037584853
+        "x": 2.2517304040752926,
+        "y": 4.830812775307785
       },
       "nextControl": null,
       "isLocked": false,
@@ -79,7 +79,7 @@
             {
               "type": "wait",
               "data": {
-                "waitTime": 0.55
+                "waitTime": 0.35
               }
             },
             {
@@ -123,7 +123,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "THE 3 NOTE AUTO",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

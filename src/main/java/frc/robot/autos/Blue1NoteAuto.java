@@ -67,6 +67,10 @@ public class Blue1NoteAuto extends Command{
 
     @Override
     public boolean isFinished(){
-        return tim.get() > 3.5;
+        if(tim.get() > 3.5)
+        {
+            return true;
+        }
+        return false;
     }
 }

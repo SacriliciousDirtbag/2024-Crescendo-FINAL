@@ -12,7 +12,19 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "aimNearCommand"
+                  "name": "rampCommand"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 4.0
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Spam 1st"
                 }
               },
               {
@@ -24,7 +36,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 3.0
+                  "waitTime": 1.0
                 }
               },
               {
@@ -36,19 +48,25 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 1.0
+                  "waitTime": 0.7
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "pickUpStartCommand"
+                  "name": "shootStopCommand"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "MN1 1st"
+                  "pathName": "Spam 2nd"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "pickUpStopCommand"
                 }
               }
             ]

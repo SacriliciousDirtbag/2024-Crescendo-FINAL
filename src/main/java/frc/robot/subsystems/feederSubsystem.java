@@ -148,11 +148,11 @@ public class feederSubsystem extends SubsystemBase {
 
         setASetPoint(toHome); //init position
 
+        //Reset Wheels
         goAimWheelState(fState.STOP);
         goIndexWheelState(frc.robot.State.sState.STOP, 0);
+        
         fstate = frc.robot.State.fState.STOP;
-        sState = frc.robot.State.sState.STOP;
-
     }
 
     private double aPos() {
