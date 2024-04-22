@@ -121,8 +121,8 @@ public class TrapAmpSubsystem extends SubsystemBase {
 
 
         
-        m_RightArmMotor.setInverted(true);
-        m_LeftArmMotor.setInverted(false);
+        m_RightArmMotor.setInverted(false); //was true
+        m_LeftArmMotor.setInverted(true); //was false
 
         
 
